@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mission Arabe 🌙</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;700&family=Noto+Naskh+Arabic:wght@500;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -67,16 +67,17 @@
   .progression-mini>div{height:100%;background:var(--vert);border-radius:100px;}
   .scene-lettre{background:var(--carte);border-radius:26px;box-shadow:0 4px 0 rgba(58,50,39,0.06);
     display:flex;align-items:center;justify-content:center;height:170px;margin-bottom:26px;}
-  .lettre-grande{font-family:'El Messiri';font-size:100px;font-weight:700;color:var(--vert);direction:rtl;}
+  .lettre-grande{font-family:'Noto Naskh Arabic',serif;font-weight:700;color:var(--vert);direction:rtl;line-height:1.5;padding:0 10px;}
   .grille-choix{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
   .choix{aspect-ratio:1/1;background:var(--carte);border:3px solid var(--vert-clair);border-radius:18px;
-    font-family:'El Messiri';font-size:38px;color:var(--vert);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    font-family:'Noto Naskh Arabic',serif;font-weight:700;color:var(--vert);direction:rtl;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1.4;padding:6px;text-align:center;}
   .choix.bonne{background:var(--vert-clair);border-color:var(--vert);}
   .choix.mauvaise{background:var(--corail-clair);border-color:var(--corail);}
   .grille-memoire{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
   .carte-memoire{aspect-ratio:3/4;border-radius:12px;cursor:pointer;position:relative;perspective:600px;}
   .carte-memoire .face{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    backface-visibility:hidden;transition:transform .3s ease;font-family:'El Messiri';font-size:26px;}
+    backface-visibility:hidden;transition:transform .3s ease;font-family:'Noto Naskh Arabic',serif;font-weight:700;font-size:26px;}
   .carte-memoire .dos{background:var(--vert);color:var(--or-clair);}
   .carte-memoire .recto{background:var(--carte);border:2px solid var(--vert-clair);color:var(--vert);transform:rotateY(180deg);}
   .carte-memoire.retournee .dos{transform:rotateY(180deg);}
@@ -608,6 +609,16 @@ function majBarreJeu(){
 }
 
 // synthèse vocale arabe — gratuite, pas de fichier audio à héberger
+// adapte la taille du texte arabe : très grand pour une lettre seule,
+// plus petit pour une syllabe ou un mot, afin de rester lisible sans déborder
+function tailleArabe(texte){
+  const n = (texte || '').replace(/[\u064B-\u0652]/g, '').length; // sans compter les harakāt
+  if(n <= 1) return '96px';
+  if(n <= 2) return '76px';
+  if(n <= 4) return '54px';
+  return '38px';
+}
+
 function jouerAudioLettre(texte){
   try{
     speechSynthesis.cancel();
@@ -627,7 +638,7 @@ function jouerDefiCourant(){
   scene.style.display = defi.type === 'memoire' ? 'none' : 'flex';
 
   if(defi.type === 'reconnais' || defi.type === 'trouve'){
-    scene.innerHTML = `<div class="lettre-grande">${defi.question}</div>`;
+    scene.innerHTML = `<div class="lettre-grande" style="font-size:${tailleArabe(defi.question)}">${defi.question}</div>`;
   } else if(defi.type === 'ecoute'){
     scene.innerHTML = `<div onclick="jouerAudioLettre('${defi.question}')" style="cursor:pointer;font-size:64px;">🔊</div>`;
     setTimeout(() => jouerAudioLettre(defi.question), 300);
@@ -639,6 +650,7 @@ function jouerDefiCourant(){
     (defi.reponses || []).forEach(lettre => {
       const b = document.createElement('div');
       b.className = 'choix';
+      b.style.fontSize = tailleArabe(lettre);
       b.textContent = lettre;
       b.onclick = () => validerReponse(b, lettre === defi.bonne_reponse);
       zone.appendChild(b);
