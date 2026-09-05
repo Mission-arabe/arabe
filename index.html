@@ -19,7 +19,7 @@
     --vert:#1F5C4F; --vert-clair:#DCEBE6;
     --or:#D9A441; --or-clair:#F6E4BC;
     --corail:#E4776B; --corail-clair:#FBE1DD;
-    --violet:#9B5DE5;
+    --bleu:#3E8BE0;
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--sable);color:var(--encre);font-family:'Baloo 2',sans-serif;
@@ -236,7 +236,7 @@
           <div class="case" style="background:#2EC4B6;color:#fff;border-color:#2EC4B6;" onclick="choisirCouleur(this,'#2EC4B6')">turquoise</div>
           <div class="case" style="background:#FFC145;color:#5a3d05;border-color:#FFC145;" onclick="choisirCouleur(this,'#FFC145')">jaune</div>
           <div class="case" style="background:#FF6B6B;color:#fff;border-color:#FF6B6B;" onclick="choisirCouleur(this,'#FF6B6B')">corail</div>
-          <div class="case" style="background:#9B5DE5;color:#fff;border-color:#9B5DE5;" onclick="choisirCouleur(this,'#9B5DE5')">violet</div>
+          <div class="case" style="background:#3E8BE0;color:#fff;border-color:#3E8BE0;" onclick="choisirCouleur(this,'#3E8BE0')">bleu</div>
         </div>
         <label>Avatar</label>
         <div class="cases" id="cases-avatars"></div>
@@ -760,7 +760,7 @@ async function chargerDashboard(){
           <div style="font-size:11px;color:#8a7d68;margin-top:4px;">mon école</div>
           <div class="mini-barre"><div style="width:${pctEcole}%;background:#2EC4B6;"></div></div>
           <div style="font-size:11px;color:#8a7d68;">je m'avance</div>
-          <div class="mini-barre"><div style="width:${pctAvance}%;background:#9B5DE5;"></div></div>
+          <div class="mini-barre"><div style="width:${pctAvance}%;background:#3E8BE0;"></div></div>
           ${aRevoir.length ? `<div style="font-size:12px;color:#E4776B;font-weight:600;margin-top:4px;">à revoir : ${aRevoir.map(p=>p.notion).join(', ')}</div>` : ''}
         </div>
       `;
