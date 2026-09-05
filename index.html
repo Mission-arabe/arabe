@@ -101,20 +101,24 @@
   .aperçu-photo{width:100%;border-radius:14px;margin-top:8px;max-height:160px;object-fit:cover;}
 
   /* thème nuit étoilée — écrans enfant uniquement (accueil, mission, jeu, fin) */
-  body.nuit{
+  body{
     background:#171A33;
     background-image:
-      radial-gradient(1.4px 1.4px at 15% 20%, #ffffff55, transparent),
-      radial-gradient(1.4px 1.4px at 80% 15%, #ffffff40, transparent),
-      radial-gradient(1px 1px at 45% 70%, #ffffff45, transparent),
-      radial-gradient(1.4px 1.4px at 65% 85%, #ffffff35, transparent),
-      radial-gradient(1px 1px at 25% 55%, #ffffff40, transparent);
+      radial-gradient(2px 2px at 15% 20%, #ffffffb0, transparent),
+      radial-gradient(2.2px 2.2px at 80% 15%, #ffffff90, transparent),
+      radial-gradient(1.6px 1.6px at 45% 70%, #ffffffa0, transparent),
+      radial-gradient(2.2px 2.2px at 65% 85%, #ffffff85, transparent),
+      radial-gradient(1.6px 1.6px at 25% 55%, #ffffff90, transparent),
+      radial-gradient(1.8px 1.8px at 90% 60%, #ffffff80, transparent),
+      radial-gradient(1.4px 1.4px at 8% 85%, #ffffff85, transparent),
+      radial-gradient(2px 2px at 55% 30%, #F6D98Bcc, transparent),
+      radial-gradient(1.6px 1.6px at 35% 12%, #F6D98Ba0, transparent);
     background-size:360px 320px;
   }
-  body.nuit header.top .titre{color:#F6D98B;}
-  body.nuit .rond-bouton{background:#2A2456;color:#F6D98B;}
-  body.nuit .categorie-toggle div{background:#242850;color:#B9BEE8;border-color:#3A3766;}
-  body.nuit .categorie-toggle div.actif{background:var(--vert);color:#fff;border-color:var(--vert);}
+  header.top .titre{color:#F6D98B;}
+  .rond-bouton{background:#2A2456;color:#F6D98B;}
+  .categorie-toggle div{background:#242850;color:#B9BEE8;border-color:#3A3766;}
+  .categorie-toggle div.actif{background:var(--vert);color:#fff;border-color:var(--vert);}
 
   /* mascotte */
   #mascotte-fin{font-size:70px;}
@@ -373,11 +377,9 @@ let photoBase64 = null;
 let etatJeu = { defis: [], index: 0, bonnes: 0, enfantId: null, categorie: null };
 
 /* ---------- navigation ---------- */
-const ECRANS_NUIT = ['ecran-accueil','ecran-mission','ecran-jeu','ecran-fin'];
 function afficherEcran(id){
   document.querySelectorAll('.ecran').forEach(e => e.classList.remove('actif'));
   document.getElementById(id).classList.add('actif');
-  document.body.classList.toggle('nuit', ECRANS_NUIT.includes(id));
 }
 
 /* ---------- chargement initial ---------- */
