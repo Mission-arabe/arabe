@@ -276,6 +276,7 @@
       <div id="toggle-avance" onclick="choisirCategorieEnfant('avance')">🚀 Je m'avance</div>
     </div>
     <div id="zone-mission-info" class="carte"><p>Chargement…</p></div>
+    <div id="zone-vocab-bonus" class="carte" style="display:none;"></div>
   </section>
 
   <!-- ===================== JEU ===================== -->
@@ -350,6 +351,18 @@ const VOCABULAIRE = [
   { mot:"قِطَّة", emoji:"🐱" }, { mot:"كَلْب", emoji:"🐶" }, { mot:"طَائِرَة", emoji:"✈️" },
   { mot:"سَيَّارَة", emoji:"🚗" }, { mot:"شَجَرَة", emoji:"🌳" }, { mot:"مَاء", emoji:"💧" },
   { mot:"نَجْمَة", emoji:"⭐" }
+];
+// palier simple : mots courts, très concrets — accessible même à ceux qui débutent l'alphabet
+const VOCAB_DEBUTANT = [
+  { mot:"بَيْت", emoji:"🏠" }, { mot:"قِطَّة", emoji:"🐱" }, { mot:"كَلْب", emoji:"🐶" },
+  { mot:"شَمْس", emoji:"☀️" }, { mot:"قَمَر", emoji:"🌙" }, { mot:"مَاء", emoji:"💧" },
+  { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"بَاب", emoji:"🚪" }
+];
+// palier avancé : mots un peu plus longs
+const VOCAB_AVANCE = [
+  { mot:"كِتَاب", emoji:"📕" }, { mot:"قَلَم", emoji:"✏️" }, { mot:"وَرْدَة", emoji:"🌸" },
+  { mot:"سَمَكَة", emoji:"🐟" }, { mot:"طَائِرَة", emoji:"✈️" }, { mot:"سَيَّارَة", emoji:"🚗" },
+  { mot:"شَجَرَة", emoji:"🌳" }, { mot:"نَجْمَة", emoji:"⭐" }
 ];
 
 // phrases très simples associées à une image — pour tester la compréhension
@@ -809,8 +822,16 @@ async function afficherInfoMission(){
       ${(e.badges||[]).length ? `<div style="margin:8px 0;font-size:22px;">${(e.badges||[]).map(id => BADGES.find(b=>b.id===id)?.emoji || '').join(' ')}</div>` : ''}
       <button class="bouton" onclick="lancerMissionAvance()">Commencer</button>
     `;
+    document.getElementById('zone-vocab-bonus').style.display = 'block';
+    document.getElementById('zone-vocab-bonus').innerHTML = `
+      <h3 style="margin-top:0;">🖼️ Séance vocabulaire (bonus, à tout niveau)</h3>
+      <p style="color:#8a7d68;font-size:12px;">image ↔ mot, écoute ↔ image/mot, phonologie</p>
+      <button class="bouton secondaire" onclick="lancerSessionVocabulaireBonus('debutant')">Débutant</button>
+      <button class="bouton secondaire" onclick="lancerSessionVocabulaireBonus('avance')" style="margin-top:8px;">Avancé</button>
+    `;
     return;
   }
+  document.getElementById('zone-vocab-bonus').style.display = 'none';
 
   // catégorie "ecole" : dernier cours non terminé
   const e = enfants.find(x => x.id === enfantActifId);
@@ -879,6 +900,13 @@ function lancerMissionAvance(){
   jouerDefiCourant();
 }
 
+// séance bonus vocabulaire — ne fait pas progresser le niveau principal, juste XP et étoiles
+function lancerSessionVocabulaireBonus(tier){
+  etatJeu = { defis: genererSessionVocabulaireBonus(tier), index:0, bonnes:0, enfantId: enfantActifId, categorie:'vocab' };
+  afficherEcran('ecran-jeu');
+  jouerDefiCourant();
+}
+
 // vocabulaire imagé : associer un mot à son image, dans les deux sens
 function genererDefisVocabulaire(){
   const defis = [];
@@ -892,6 +920,34 @@ function genererDefisVocabulaire(){
     }
   }
   return defis;
+}
+
+// séance bonus "vocabulaire" — accessible à tous, indépendamment du niveau d'alphabet
+// mélange : image→mot, mot→image, écoute→image, écoute→mot, phonologie
+function genererSessionVocabulaireBonus(tier){
+  const mots = tier === 'debutant' ? VOCAB_DEBUTANT : VOCAB_AVANCE;
+  const tirer = () => {
+    const cible = mots[Math.floor(Math.random()*mots.length)];
+    const distracteurs = melange(mots.filter(m => m.mot !== cible.mot)).slice(0,2);
+    return { cible, distracteurs };
+  };
+  const types = ['vocab-image','vocab-mot','vocab-ecoute-image','vocab-ecoute-mot','phonologie','vocab-image'];
+  return types.map(type => {
+    if(type === 'phonologie') return genererDefiPhonologie(mots);
+    const { cible, distracteurs } = tirer();
+    if(type === 'vocab-image') return { type, question:cible.emoji, reponses: melange([cible.mot, ...distracteurs.map(d=>d.mot)]), bonne_reponse: cible.mot };
+    if(type === 'vocab-mot') return { type, question:cible.mot, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse: cible.emoji };
+    if(type === 'vocab-ecoute-image') return { type, question:cible.mot, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse: cible.emoji };
+    return { type:'vocab-ecoute-mot', question:cible.mot, reponses: melange([cible.mot, ...distracteurs.map(d=>d.mot)]), bonne_reponse: cible.mot };
+  });
+}
+
+// phonologie : écoute le son d'une lettre, retrouve le mot (image) qui commence par ce son
+function genererDefiPhonologie(mots){
+  const cible = mots[Math.floor(Math.random()*mots.length)];
+  const premiereLettre = [...cible.mot.replace(/[\u064B-\u0652]/g,'')][0];
+  const distracteurs = melange(mots.filter(m => [...m.mot.replace(/[\u064B-\u0652]/g,'')][0] !== premiereLettre)).slice(0,2);
+  return { type:'phonologie', question: premiereLettre, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse: cible.emoji };
 }
 
 // phrases simples : comprendre une petite phrase et choisir l'image qui correspond
@@ -1029,7 +1085,7 @@ function jouerDefiCourant(){
     scene.innerHTML = `<div class="lettre-grande" style="font-size:${tailleArabe(defi.question)}">${defi.question}</div>`;
   } else if(defi.type === 'vocab-image'){
     scene.innerHTML = `<div style="font-size:90px;">${defi.question}</div>`;
-  } else if(defi.type === 'ecoute'){
+  } else if(defi.type === 'ecoute' || defi.type === 'vocab-ecoute-image' || defi.type === 'vocab-ecoute-mot' || defi.type === 'phonologie'){
     scene.innerHTML = `<div onclick="jouerAudioLettre('${defi.question}')" style="cursor:pointer;font-size:64px;">🔊</div>`;
     setTimeout(() => jouerAudioLettre(defi.question), 300);
   } else if(defi.type === 'texte'){
@@ -1041,7 +1097,7 @@ function jouerDefiCourant(){
   }
 
   if(defi.type !== 'memoire'){
-    const emojiChoix = (defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'texte');
+    const emojiChoix = (defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'texte' || defi.type === 'vocab-ecoute-image' || defi.type === 'phonologie');
     const zone = document.getElementById('zone-choix');
     zone.innerHTML = '';
     (defi.reponses || []).forEach(item => {
@@ -1144,7 +1200,7 @@ async function terminerMission(){
   const xp = Math.round(etatJeu.bonnes * 10);
 
   const e = enfants.find(x => x.id === etatJeu.enfantId);
-  const champXp = etatJeu.categorie === 'avance' ? 'xp_avance' : 'xp_ecole';
+  const champXp = (etatJeu.categorie === 'avance' || etatJeu.categorie === 'vocab') ? 'xp_avance' : 'xp_ecole';
   const nouveauXp = (e[champXp] || 0) + xp;
   const maj = { etoiles: (e.etoiles||0) + etatJeu.bonnes, [champXp]: nouveauXp };
   if(etatJeu.categorie === 'avance' && reussi){
