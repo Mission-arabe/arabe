@@ -192,8 +192,8 @@
       <div class="carte">
         <h3>📸 Cours du samedi</h3>
         <label>Photo du cours (optionnel)</label>
-        <input type="file" accept="image/*" id="champ-photo" onchange="previsualiserPhoto()">
-        <img id="apercu-photo" class="aperçu-photo" style="display:none;">
+        <input type="file" accept="image/*" id="champ-photo" multiple onchange="previsualiserPhoto()">
+        <div id="apercu-photo" style="display:none;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
 
         <label>Enfant</label>
         <select id="champ-enfant-cours"></select>
@@ -491,7 +491,7 @@ const LETTRES_TOUTES = [...new Set(PARCOURS_AVANCE.slice(0,12).flatMap(n => n.un
 let enfants = [];
 let enfantActifId = null;
 let categorieActive = 'ecole';
-let photoBase64 = null;
+let photosBase64 = [];
 
 let etatJeu = { defis: [], index: 0, bonnes: 0, enfantId: null, categorie: null };
 
@@ -733,16 +733,24 @@ async function chargerHistorique(){
     .select('*').eq('enfant_id', enfantId).order('cree_le', { ascending:false });
   if(error){ zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible — vérifie ta connexion internet et réessaie.</p>'; return; }
   if(!cours || cours.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Aucun cours enregistré pour cet enfant.</p>'; return; }
-  zone.innerHTML = cours.map(c => `
+  zone.innerHTML = cours.map(c => {
+    let photos = [];
+    if(c.photo_url){
+      try { photos = JSON.parse(c.photo_url); if(!Array.isArray(photos)) photos = [c.photo_url]; }
+      catch(e){ photos = [c.photo_url]; }
+    }
+    return `
     <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <strong>${new Date(c.cree_le).toLocaleDateString('fr-FR')}</strong>
         <span style="font-size:12px;color:#8a7d68;">${c.categorie === 'avance' ? '🚀 avance' : '📚 école'}</span>
       </div>
       <p style="font-size:13px;color:#6b5f4d;margin:4px 0;">${c.notions || '(pas de note)'}</p>
+      ${photos.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">${photos.map(p=>`<img src="${p}" style="width:56px;height:56px;object-fit:cover;border-radius:8px;">`).join('')}</div>` : ''}
       <button class="bouton petit secondaire" style="color:#E4776B;border-color:#FBE1DD;" onclick="supprimerCours('${c.id}')">supprimer ce cours</button>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 async function supprimerCours(id){
@@ -780,26 +788,34 @@ function choisirCategorie(el){
   el.classList.add('actif');
 }
 function previsualiserPhoto(){
-  const fichier = document.getElementById('champ-photo').files[0];
-  if(!fichier) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    // on redimensionne pour ne pas stocker des photos trop lourdes
-    const img = new Image();
-    img.onload = () => {
-      const maxW = 800;
-      const ratio = Math.min(1, maxW / img.width);
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width * ratio;
-      canvas.height = img.height * ratio;
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      photoBase64 = canvas.toDataURL('image/jpeg', 0.6);
-      document.getElementById('apercu-photo').src = photoBase64;
-      document.getElementById('apercu-photo').style.display = 'block';
+  const fichiers = Array.from(document.getElementById('champ-photo').files);
+  if(fichiers.length === 0) return;
+  photosBase64 = [];
+  const zone = document.getElementById('apercu-photo');
+  zone.innerHTML = '';
+  zone.style.display = 'flex';
+  fichiers.forEach(fichier => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const maxW = 800;
+        const ratio = Math.min(1, maxW / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+        photosBase64.push(dataUrl);
+        const miniature = document.createElement('img');
+        miniature.src = dataUrl;
+        miniature.style.cssText = 'width:64px;height:64px;object-fit:cover;border-radius:10px;';
+        zone.appendChild(miniature);
+      };
+      img.src = e.target.result;
     };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(fichier);
+    reader.readAsDataURL(fichier);
+  });
 }
 
 async function creerCoursEtDefis(){
@@ -812,7 +828,7 @@ async function creerCoursEtDefis(){
 
   const { data: cours, error } = await db.from('cours').insert({
     enfant_id: enfantId,
-    photo_url: photoBase64,
+    photo_url: photosBase64.length ? JSON.stringify(photosBase64) : null,
     notions: contenu,
     categorie
   }).select().single();
@@ -830,7 +846,9 @@ async function creerCoursEtDefis(){
   document.getElementById('champ-lettres').value = '';
   document.getElementById('champ-contenu').value = '';
   document.getElementById('champ-a-revoir').value = '';
-  photoBase64 = null;
+  document.getElementById('champ-photo').value = '';
+  photosBase64 = [];
+  document.getElementById('apercu-photo').innerHTML = '';
   document.getElementById('apercu-photo').style.display = 'none';
 }
 
