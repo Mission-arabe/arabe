@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mission Arabe 🌙</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --sable:#F7F1E3; --carte:#FFFDF7; --encre:#3A3227;
+    --vert:#1F5C4F; --vert-clair:#DCEBE6;
+    --or:#D9A441; --or-clair:#F6E4BC;
+    --corail:#E4776B; --corail-clair:#FBE1DD;
+    --violet:#9B5DE5;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--sable);color:var(--encre);font-family:'Baloo 2',sans-serif;
+    min-height:100vh;display:flex;justify-content:center;user-select:none;-webkit-tap-highlight-color:transparent;}
+  .app{width:100%;max-width:480px;min-height:100vh;padding:18px 16px 44px;}
+  .ecran{display:none;flex-direction:column;}
+  .ecran.actif{display:flex;}
+
+  header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  header.top .titre{font-family:'El Messiri';font-size:23px;font-weight:700;color:var(--vert);}
+  .rond-bouton{width:38px;height:38px;border-radius:12px;background:var(--vert-clair);border:none;
+    display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;color:var(--vert);}
+
+  .carte{background:var(--carte);border-radius:20px;padding:16px;box-shadow:0 4px 0 rgba(58,50,39,0.06);margin-bottom:14px;}
+  h3{margin:0 0 10px;font-size:16px;}
+  label{display:block;font-size:13px;font-weight:600;color:#6b5f4d;margin:10px 0 4px;}
+  input[type=text], input[type=date], textarea, select{
+    width:100%;padding:11px 12px;border-radius:12px;border:2px solid var(--vert-clair);
+    font-family:'Baloo 2';font-size:14px;background:#fff;color:var(--encre);
+  }
+  textarea{min-height:60px;resize:vertical;}
+  .cases{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .case{padding:8px 12px;border-radius:100px;border:2px solid var(--vert-clair);font-size:13px;font-weight:600;cursor:pointer;color:#6b5f4d;}
+  .case.actif{background:var(--vert);border-color:var(--vert);color:#fff;}
+  .bouton{display:block;width:100%;background:var(--vert);color:#fff;border:none;border-radius:100px;
+    padding:14px;font-family:'Baloo 2';font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 4px 0 #143f37;margin-top:14px;}
+  .bouton:active{transform:translateY(2px);box-shadow:0 2px 0 #143f37;}
+  .bouton.secondaire{background:none;color:var(--vert);border:2px solid var(--vert-clair);box-shadow:none;}
+  .bouton.petit{padding:9px 14px;font-size:13px;width:auto;margin:0;box-shadow:none;}
+  .tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .tab{flex:1;text-align:center;padding:10px;border-radius:100px;background:var(--vert-clair);color:var(--vert);
+    font-weight:700;font-size:13px;cursor:pointer;}
+  .tab.actif{background:var(--vert);color:#fff;}
+
+  /* accueil enfants */
+  .grille-enfants{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px;}
+  .carte-enfant{border-radius:20px;padding:16px 8px;text-align:center;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.12);}
+  .carte-enfant .rond{width:56px;height:56px;border-radius:50%;background:#fff;margin:0 auto 8px;
+    display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;}
+  .carte-enfant .rond img{width:100%;height:100%;object-fit:cover;}
+  .carte-enfant .nom{font-weight:700;color:#fff;font-size:14px;}
+  .carte-enfant .etoiles{font-size:11px;color:#fff;opacity:0.9;}
+
+  /* mission enfant */
+  .categorie-toggle{display:flex;gap:8px;margin-bottom:16px;}
+  .categorie-toggle div{flex:1;text-align:center;padding:12px;border-radius:16px;background:var(--carte);
+    font-weight:700;font-size:14px;cursor:pointer;border:2px solid var(--vert-clair);color:#6b5f4d;}
+  .categorie-toggle div.actif{background:var(--vert);color:#fff;border-color:var(--vert);}
+  .barre-jeu{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+  .progression-mini{flex:1;height:10px;background:var(--vert-clair);border-radius:100px;overflow:hidden;}
+  .progression-mini>div{height:100%;background:var(--vert);border-radius:100px;}
+  .scene-lettre{background:var(--carte);border-radius:26px;box-shadow:0 4px 0 rgba(58,50,39,0.06);
+    display:flex;align-items:center;justify-content:center;height:170px;margin-bottom:26px;}
+  .lettre-grande{font-family:'El Messiri';font-size:100px;font-weight:700;color:var(--vert);direction:rtl;}
+  .grille-choix{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .choix{aspect-ratio:1/1;background:var(--carte);border:3px solid var(--vert-clair);border-radius:18px;
+    font-family:'El Messiri';font-size:38px;color:var(--vert);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .choix.bonne{background:var(--vert-clair);border-color:var(--vert);}
+  .choix.mauvaise{background:var(--corail-clair);border-color:var(--corail);}
+  .grille-memoire{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .carte-memoire{aspect-ratio:3/4;border-radius:12px;cursor:pointer;position:relative;perspective:600px;}
+  .carte-memoire .face{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    backface-visibility:hidden;transition:transform .3s ease;font-family:'El Messiri';font-size:26px;}
+  .carte-memoire .dos{background:var(--vert);color:var(--or-clair);}
+  .carte-memoire .recto{background:var(--carte);border:2px solid var(--vert-clair);color:var(--vert);transform:rotateY(180deg);}
+  .carte-memoire.retournee .dos{transform:rotateY(180deg);}
+  .carte-memoire.retournee .recto{transform:rotateY(0deg);}
+  .carte-memoire.trouvee .recto{background:var(--or-clair);border-color:var(--or);}
+
+  #ecran-fin{text-align:center;padding-top:30px;}
+  #ecran-fin .emoji{font-size:70px;}
+  .xp-badge{display:inline-block;background:var(--or-clair);color:#8a6112;font-weight:800;font-size:19px;
+    padding:9px 22px;border-radius:100px;margin:14px 0 26px;}
+
+  /* dashboard */
+  .ligne-enfant{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--vert-clair);}
+  .mini-barre{height:6px;background:var(--vert-clair);border-radius:100px;margin:4px 0;overflow:hidden;}
+  .mini-barre>div{height:100%;border-radius:100px;}
+
+  .aperçu-photo{width:100%;border-radius:14px;margin-top:8px;max-height:160px;object-fit:cover;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===================== ACCUEIL ENFANTS ===================== -->
+  <section id="ecran-accueil" class="ecran actif">
+    <header class="top">
+      <div class="titre">🌙 Mission Arabe</div>
+      <button class="rond-bouton" onclick="ouvrirPin()">⚙️</button>
+    </header>
+    <p style="color:#6b5f4d;">Qui joue aujourd'hui ?</p>
+    <div class="grille-enfants" id="grille-enfants"></div>
+  </section>
+
+  <!-- ===================== PIN PARENT ===================== -->
+  <section id="ecran-pin" class="ecran">
+    <header class="top">
+      <button class="rond-bouton" onclick="afficherEcran('ecran-accueil')">←</button>
+      <div class="titre">Espace maman</div>
+      <div style="width:38px;"></div>
+    </header>
+    <div class="carte">
+      <label>Code PIN</label>
+      <input type="text" id="champ-pin" inputmode="numeric" placeholder="••••">
+      <button class="bouton" onclick="verifierPin()">Entrer</button>
+    </div>
+  </section>
+
+  <!-- ===================== ESPACE PARENT ===================== -->
+  <section id="ecran-parent" class="ecran">
+    <header class="top">
+      <button class="rond-bouton" onclick="afficherEcran('ecran-accueil')">←</button>
+      <div class="titre">Espace maman</div>
+      <div style="width:38px;"></div>
+    </header>
+
+    <div class="tabs">
+      <div class="tab actif" id="tab-cours" onclick="changerOngletParent('cours')">Ajouter un cours</div>
+      <div class="tab" id="tab-enfants" onclick="changerOngletParent('enfants')">Enfants</div>
+      <div class="tab" id="tab-dashboard" onclick="changerOngletParent('dashboard')">Tableau de bord</div>
+    </div>
+
+    <!-- onglet: ajouter un cours -->
+    <div id="onglet-cours">
+      <div class="carte">
+        <h3>📸 Cours du samedi</h3>
+        <label>Photo du cours (optionnel)</label>
+        <input type="file" accept="image/*" capture="environment" id="champ-photo" onchange="previsualiserPhoto()">
+        <img id="apercu-photo" class="aperçu-photo" style="display:none;">
+
+        <label>Enfant</label>
+        <select id="champ-enfant-cours"></select>
+
+        <label>Catégorie</label>
+        <div class="cases">
+          <div class="case actif" data-cat="ecole" onclick="choisirCategorie(this)">📚 Mon école</div>
+          <div class="case" data-cat="avance" onclick="choisirCategorie(this)">🚀 Je m'avance</div>
+        </div>
+
+        <label>Aujourd'hui nous avons travaillé</label>
+        <div class="cases" id="cases-themes">
+          <div class="case" onclick="toggleCase(this)">Lettres</div>
+          <div class="case" onclick="toggleCase(this)">Harakāt</div>
+          <div class="case" onclick="toggleCase(this)">Lecture</div>
+          <div class="case" onclick="toggleCase(this)">Vocabulaire</div>
+          <div class="case" onclick="toggleCase(this)">Coran</div>
+        </div>
+
+        <label>Lettres travaillées (séparées par un espace, ex : ب ت ث)</label>
+        <input type="text" id="champ-lettres" placeholder="ب ت ث">
+
+        <label>Contenu / remarques</label>
+        <textarea id="champ-contenu" placeholder="ex : باب، بيت — bien lu, un peu d'hésitation sur la fatha"></textarea>
+
+        <label>Notions à revoir</label>
+        <textarea id="champ-a-revoir" placeholder="ex : différence entre ب / ت / ث"></textarea>
+
+        <button class="bouton" onclick="creerCoursEtDefis()">Créer les défis de la semaine</button>
+      </div>
+    </div>
+
+    <!-- onglet: enfants -->
+    <div id="onglet-enfants" style="display:none;">
+      <div class="carte">
+        <h3>Ajouter un enfant</h3>
+        <label>Prénom</label>
+        <input type="text" id="nouveau-nom">
+        <label>Couleur</label>
+        <div class="cases">
+          <div class="case" style="background:#2EC4B6;color:#fff;border-color:#2EC4B6;" onclick="choisirCouleur(this,'#2EC4B6')">turquoise</div>
+          <div class="case" style="background:#FFC145;color:#5a3d05;border-color:#FFC145;" onclick="choisirCouleur(this,'#FFC145')">jaune</div>
+          <div class="case" style="background:#FF6B6B;color:#fff;border-color:#FF6B6B;" onclick="choisirCouleur(this,'#FF6B6B')">corail</div>
+          <div class="case" style="background:#9B5DE5;color:#fff;border-color:#9B5DE5;" onclick="choisirCouleur(this,'#9B5DE5')">violet</div>
+        </div>
+        <button class="bouton" onclick="ajouterEnfant()">Ajouter</button>
+      </div>
+      <div class="carte" id="liste-enfants-parent"></div>
+    </div>
+
+    <!-- onglet: dashboard -->
+    <div id="onglet-dashboard" style="display:none;">
+      <div class="carte" id="zone-dashboard"><p>Chargement…</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== MISSION ENFANT ===================== -->
+  <section id="ecran-mission" class="ecran">
+    <header class="top">
+      <button class="rond-bouton" onclick="afficherEcran('ecran-accueil')">←</button>
+      <div class="titre" id="titre-mission">Mission</div>
+      <div style="width:38px;"></div>
+    </header>
+    <div class="categorie-toggle">
+      <div class="actif" id="toggle-ecole" onclick="choisirCategorieEnfant('ecole')">📚 Mon école</div>
+      <div id="toggle-avance" onclick="choisirCategorieEnfant('avance')">🚀 Je m'avance</div>
+    </div>
+    <div id="zone-mission-info" class="carte"><p>Chargement…</p></div>
+  </section>
+
+  <!-- ===================== JEU ===================== -->
+  <section id="ecran-jeu" class="ecran">
+    <div class="barre-jeu">
+      <button class="rond-bouton" onclick="afficherEcran('ecran-mission')">←</button>
+      <div class="progression-mini"><div id="barre-progression" style="width:0%"></div></div>
+    </div>
+    <div class="scene-lettre" id="scene-lettre"><div class="lettre-grande" id="lettre-affichee">ب</div></div>
+    <div class="grille-choix" id="zone-choix"></div>
+    <div class="grille-memoire" id="zone-memoire" style="display:none;"></div>
+  </section>
+
+  <!-- ===================== FIN ===================== -->
+  <section id="ecran-fin" class="ecran">
+    <div class="emoji">🎉</div>
+    <h2 style="font-family:'El Messiri';color:var(--vert);">Mission terminée !</h2>
+    <p id="resume-fin" style="color:#8a7d68;"></p>
+    <div class="xp-badge">+<span id="xp-valeur">0</span> XP</div>
+    <button class="bouton" onclick="afficherEcran('ecran-accueil')">Retour à l'accueil</button>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   MISSION ARABE — app connectée à Supabase
+   ============================================================ */
+const SUPABASE_URL = 'https://hvstqdqfdkfktcsjpuvv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_TX1VrIg2NwHdzU4NM74jSQ_pyxabigY';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// change ce code depuis ce fichier si besoin
+const PARENT_PIN = '1234';
+
+const SEUIL_VALIDATION = 0.9; // 90% pour valider une mission / débloquer un niveau
+
+// parcours "Je m'avance" — intégré à l'app, ne dépend pas des cours ajoutés par la maman
+const NIVEAUX_AVANCE = [
+  ["ب","ت","ث"], ["ج","ح","خ"], ["د","ذ"], ["ر","ز"], ["س","ش"]
+];
+
+let enfants = [];
+let enfantActifId = null;
+let categorieActive = 'ecole';
+let photoBase64 = null;
+
+let etatJeu = { defis: [], index: 0, bonnes: 0, enfantId: null, categorie: null };
+
+/* ---------- navigation ---------- */
+function afficherEcran(id){
+  document.querySelectorAll('.ecran').forEach(e => e.classList.remove('actif'));
+  document.getElementById(id).classList.add('actif');
+}
+
+/* ---------- chargement initial ---------- */
+async function chargerEnfants(){
+  const { data, error } = await db.from('enfants').select('*').order('cree_le');
+  if(error){ console.error(error); return; }
+  enfants = data || [];
+  dessinerGrilleEnfants();
+  remplirSelectEnfants();
+  dessinerListeEnfantsParent();
+}
+
+function dessinerGrilleEnfants(){
+  const zone = document.getElementById('grille-enfants');
+  zone.innerHTML = '';
+  enfants.forEach(e => {
+    const carte = document.createElement('div');
+    carte.className = 'carte-enfant';
+    carte.style.background = e.couleur || '#2EC4B6';
+    carte.onclick = () => ouvrirMission(e.id);
+    carte.innerHTML = `
+      <div class="rond">${e.avatar_url ? `<img src="${e.avatar_url}">` : '🌙'}</div>
+      <div class="nom">${e.nom}</div>
+      <div class="etoiles">⭐ ${e.etoiles || 0}</div>
+    `;
+    zone.appendChild(carte);
+  });
+  if(enfants.length === 0){
+    zone.innerHTML = '<p style="grid-column:span 2;color:#8a7d68;">Aucun enfant pour l\'instant — va dans l\'espace maman (⚙️) pour en ajouter.</p>';
+  }
+}
+
+/* ---------- PIN ---------- */
+function ouvrirPin(){ afficherEcran('ecran-pin'); document.getElementById('champ-pin').value=''; }
+function verifierPin(){
+  if(document.getElementById('champ-pin').value === PARENT_PIN){
+    afficherEcran('ecran-parent');
+    changerOngletParent('cours');
+  } else {
+    alert('Code incorrect');
+  }
+}
+
+/* ---------- onglets parent ---------- */
+function changerOngletParent(nom){
+  ['cours','enfants','dashboard'].forEach(o => {
+    document.getElementById('onglet-'+o).style.display = (o===nom) ? 'block' : 'none';
+    document.getElementById('tab-'+o).classList.toggle('actif', o===nom);
+  });
+  if(nom === 'dashboard') chargerDashboard();
+}
+
+/* ---------- gestion enfants ---------- */
+let couleurChoisie = '#2EC4B6';
+function choisirCouleur(el, couleur){
+  el.parentElement.querySelectorAll('.case').forEach(c => c.style.outline = 'none');
+  el.style.outline = '3px solid #3A3227';
+  couleurChoisie = couleur;
+}
+async function ajouterEnfant(){
+  const nom = document.getElementById('nouveau-nom').value.trim();
+  if(!nom){ alert('Entre un prénom'); return; }
+  const { error } = await db.from('enfants').insert({ nom, couleur: couleurChoisie });
+  if(error){ alert('Erreur : ' + error.message); return; }
+  document.getElementById('nouveau-nom').value = '';
+  chargerEnfants();
+}
+function dessinerListeEnfantsParent(){
+  const zone = document.getElementById('liste-enfants-parent');
+  if(enfants.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Pas encore d\'enfant ajouté.</p>'; return; }
+  zone.innerHTML = '<h3>Mes enfants</h3>' + enfants.map(e => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--vert-clair);">
+      <div style="width:28px;height:28px;border-radius:50%;background:${e.couleur};"></div>
+      <div style="flex:1;">${e.nom}</div>
+      <div style="color:#8a7d68;font-size:13px;">⭐ ${e.etoiles || 0}</div>
+    </div>
+  `).join('');
+}
+function remplirSelectEnfants(){
+  const sel = document.getElementById('champ-enfant-cours');
+  sel.innerHTML = enfants.map(e => `<option value="${e.id}">${e.nom}</option>`).join('');
+}
+
+/* ---------- formulaire ajout de cours ---------- */
+function toggleCase(el){ el.classList.toggle('actif'); }
+function choisirCategorie(el){
+  el.parentElement.querySelectorAll('.case').forEach(c => c.classList.remove('actif'));
+  el.classList.add('actif');
+}
+function previsualiserPhoto(){
+  const fichier = document.getElementById('champ-photo').files[0];
+  if(!fichier) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    // on redimensionne pour ne pas stocker des photos trop lourdes
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 800;
+      const ratio = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * ratio;
+      canvas.height = img.height * ratio;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      photoBase64 = canvas.toDataURL('image/jpeg', 0.6);
+      document.getElementById('apercu-photo').src = photoBase64;
+      document.getElementById('apercu-photo').style.display = 'block';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(fichier);
+}
+
+async function creerCoursEtDefis(){
+  const enfantId = document.getElementById('champ-enfant-cours').value;
+  if(!enfantId){ alert("Ajoute d'abord un enfant"); return; }
+  const categorie = document.querySelector('#onglet-cours .cases div.actif[data-cat]')?.dataset.cat || 'ecole';
+  const lettres = document.getElementById('champ-lettres').value.trim().split(/\s+/).filter(Boolean);
+  const contenu = document.getElementById('champ-contenu').value.trim();
+  const aRevoir = document.getElementById('champ-a-revoir').value.trim();
+
+  const { data: cours, error } = await db.from('cours').insert({
+    enfant_id: enfantId,
+    photo_url: photoBase64,
+    notions: contenu,
+    categorie
+  }).select().single();
+
+  if(error){ alert('Erreur : ' + error.message); return; }
+
+  if(lettres.length > 0){
+    await genererDefisDepuisLettres(cours.id, lettres);
+  }
+  if(aRevoir){
+    await db.from('progression').insert({ enfant_id: enfantId, notion: aRevoir, niveau_maitrise: 0, prochaine_revision: new Date().toISOString().slice(0,10) });
+  }
+
+  alert('Mission de la semaine créée ✅');
+  document.getElementById('champ-lettres').value = '';
+  document.getElementById('champ-contenu').value = '';
+  document.getElementById('champ-a-revoir').value = '';
+  photoBase64 = null;
+  document.getElementById('apercu-photo').style.display = 'none';
+}
+
+async function genererDefisDepuisLettres(coursId, lettres){
+  const lignes = [];
+  // reconnais la lettre : une question par lettre
+  lettres.forEach(cible => {
+    const distracteurs = melange(lettres.filter(l => l !== cible)).slice(0,2);
+    while(distracteurs.length < 2) distracteurs.push(lettres[Math.floor(Math.random()*lettres.length)]);
+    lignes.push({
+      cours_id: coursId, type: 'reconnais',
+      question: cible,
+      reponses: melange([cible, ...distracteurs]),
+      bonne_reponse: cible
+    });
+  });
+  // trouve la lettre : une question globale
+  lignes.push({
+    cours_id: coursId, type: 'trouve',
+    question: lettres[Math.floor(Math.random()*lettres.length)],
+    reponses: melange(lettres),
+    bonne_reponse: lettres[Math.floor(Math.random()*lettres.length)]
+  });
+  // mémoire : une seule entrée qui contient toutes les lettres à apparier
+  lignes.push({
+    cours_id: coursId, type: 'memoire',
+    question: 'memoire',
+    reponses: lettres,
+    bonne_reponse: null
+  });
+  const { error } = await db.from('defis').insert(lignes);
+  if(error) console.error(error);
+}
+
+function melange(t){
+  const a = [...t];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+/* ---------- dashboard maman ---------- */
+async function chargerDashboard(){
+  const zone = document.getElementById('zone-dashboard');
+  zone.innerHTML = '<p>Chargement…</p>';
+  let html = '<h3>Vue d\'ensemble</h3>';
+  for(const e of enfants){
+    const { data: progression } = await db.from('progression').select('*').eq('enfant_id', e.id);
+    const aRevoir = (progression || []).filter(p => (p.niveau_maitrise||0) < SEUIL_VALIDATION*100);
+    const pctEcole = Math.min(100, e.xp_ecole || 0);
+    const pctAvance = Math.min(100, e.xp_avance || 0);
+    html += `
+      <div class="ligne-enfant" style="flex-direction:column;align-items:stretch;">
+        <div style="display:flex;justify-content:space-between;"><strong>${e.nom}</strong><span>⭐ ${e.etoiles||0}</span></div>
+        <div style="font-size:11px;color:#8a7d68;">mon école</div>
+        <div class="mini-barre"><div style="width:${pctEcole}%;background:#2EC4B6;"></div></div>
+        <div style="font-size:11px;color:#8a7d68;">je m'avance</div>
+        <div class="mini-barre"><div style="width:${pctAvance}%;background:#9B5DE5;"></div></div>
+        ${aRevoir.length ? `<div style="font-size:12px;color:#E4776B;font-weight:600;margin-top:4px;">à revoir : ${aRevoir.map(p=>p.notion).join(', ')}</div>` : ''}
+      </div>
+    `;
+  }
+  zone.innerHTML = html || '<p>Aucun enfant.</p>';
+}
+
+/* ---------- espace enfant : ouverture mission ---------- */
+async function ouvrirMission(enfantId){
+  enfantActifId = enfantId;
+  categorieActive = 'ecole';
+  document.getElementById('toggle-ecole').classList.add('actif');
+  document.getElementById('toggle-avance').classList.remove('actif');
+  const e = enfants.find(x => x.id === enfantId);
+  document.getElementById('titre-mission').textContent = e ? e.nom : 'Mission';
+  afficherEcran('ecran-mission');
+  await afficherInfoMission();
+}
+
+function choisirCategorieEnfant(cat){
+  categorieActive = cat;
+  document.getElementById('toggle-ecole').classList.toggle('actif', cat==='ecole');
+  document.getElementById('toggle-avance').classList.toggle('actif', cat==='avance');
+  afficherInfoMission();
+}
+
+async function afficherInfoMission(){
+  const zone = document.getElementById('zone-mission-info');
+  zone.innerHTML = '<p>Chargement…</p>';
+
+  if(categorieActive === 'avance'){
+    const e = enfants.find(x => x.id === enfantActifId);
+    const niveau = Math.min(NIVEAUX_AVANCE.length - 1, e.niveau_avance - 1 || 0);
+    const lettres = NIVEAUX_AVANCE[niveau];
+    zone.innerHTML = `
+      <h3>🚀 Niveau ${niveau+1}</h3>
+      <p style="color:#8a7d68;font-size:13px;">${lettres.join('  ')}</p>
+      <button class="bouton" onclick="lancerMissionAvance()">Commencer (5 min)</button>
+    `;
+    return;
+  }
+
+  // catégorie "ecole" : dernier cours non terminé
+  const e = enfants.find(x => x.id === enfantActifId);
+  const { data: cours } = await db.from('cours')
+    .select('*').eq('enfant_id', enfantActifId).eq('categorie','ecole')
+    .order('cree_le', { ascending:false }).limit(1);
+
+  if(!cours || cours.length === 0){
+    zone.innerHTML = '<p style="color:#8a7d68;">Pas encore de cours ajouté cette semaine — demande à maman 🌙</p>';
+    return;
+  }
+
+  const { data: defis } = await db.from('defis').select('*').eq('cours_id', cours[0].id);
+  if(!defis || defis.length === 0){
+    zone.innerHTML = '<p style="color:#8a7d68;">Pas encore de défis prêts pour ce cours.</p>';
+    return;
+  }
+  zone.innerHTML = `
+    <h3>🎯 Mission du jour</h3>
+    <p style="color:#8a7d68;font-size:13px;">${defis.length} défis · environ 5 minutes</p>
+    <button class="bouton" onclick='lancerMissionEcole(${JSON.stringify(defis).replace(/'/g,"&apos;")})'>Commencer</button>
+  `;
+}
+
+/* ---------- moteur de jeu ---------- */
+function lancerMissionEcole(defis){
+  etatJeu = { defis, index:0, bonnes:0, enfantId: enfantActifId, categorie:'ecole' };
+  afficherEcran('ecran-jeu');
+  jouerDefiCourant();
+}
+
+function lancerMissionAvance(){
+  const e = enfants.find(x => x.id === enfantActifId);
+  const niveau = Math.min(NIVEAUX_AVANCE.length - 1, e.niveau_avance - 1 || 0);
+  const lettres = NIVEAUX_AVANCE[niveau];
+  // génère 5 questions "reconnais" à la volée, sans les stocker en base
+  const defis = [];
+  for(let i=0;i<5;i++){
+    const cible = lettres[Math.floor(Math.random()*lettres.length)];
+    const distracteurs = melange(lettres.filter(l=>l!==cible)).slice(0,2);
+    defis.push({ type:'reconnais', question:cible, reponses: melange([cible,...distracteurs]), bonne_reponse: cible });
+  }
+  etatJeu = { defis, index:0, bonnes:0, enfantId: enfantActifId, categorie:'avance' };
+  afficherEcran('ecran-jeu');
+  jouerDefiCourant();
+}
+
+function majBarreJeu(){
+  document.getElementById('barre-progression').style.width = (etatJeu.index/etatJeu.defis.length*100)+'%';
+}
+
+function jouerDefiCourant(){
+  majBarreJeu();
+  const defi = etatJeu.defis[etatJeu.index];
+  document.getElementById('zone-choix').style.display = defi.type === 'memoire' ? 'none' : 'grid';
+  document.getElementById('zone-memoire').style.display = defi.type === 'memoire' ? 'grid' : 'none';
+  document.getElementById('scene-lettre').style.display = defi.type === 'memoire' ? 'none' : 'flex';
+
+  if(defi.type === 'reconnais' || defi.type === 'trouve'){
+    document.getElementById('lettre-affichee').textContent = defi.question;
+    const zone = document.getElementById('zone-choix');
+    zone.innerHTML = '';
+    (defi.reponses || []).forEach(lettre => {
+      const b = document.createElement('div');
+      b.className = 'choix';
+      b.textContent = lettre;
+      b.onclick = () => validerReponse(b, lettre === defi.bonne_reponse);
+      zone.appendChild(b);
+    });
+  } else if(defi.type === 'memoire'){
+    jouerMemoire(defi.reponses);
+  }
+}
+
+function validerReponse(bouton, correct){
+  document.querySelectorAll('.choix').forEach(c => c.onclick = null);
+  bouton.classList.add(correct ? 'bonne' : 'mauvaise');
+  if(correct) etatJeu.bonnes++;
+  setTimeout(() => {
+    etatJeu.index++;
+    if(etatJeu.index >= etatJeu.defis.length) terminerMission();
+    else jouerDefiCourant();
+  }, 600);
+}
+
+function jouerMemoire(lettres){
+  const cartes = melange([...lettres, ...lettres]);
+  const zone = document.getElementById('zone-memoire');
+  zone.innerHTML = '';
+  let retournees = [], trouvees = 0, verrou = false;
+  cartes.forEach(lettre => {
+    const carte = document.createElement('div');
+    carte.className = 'carte-memoire';
+    carte.innerHTML = `<div class="face dos">🌙</div><div class="face recto">${lettre}</div>`;
+    carte.onclick = () => {
+      if(verrou || carte.classList.contains('retournee') || carte.classList.contains('trouvee')) return;
+      carte.classList.add('retournee');
+      retournees.push({carte, lettre});
+      if(retournees.length === 2){
+        verrou = true;
+        const [a,b] = retournees;
+        if(a.lettre === b.lettre){
+          setTimeout(() => {
+            a.carte.classList.add('trouvee'); b.carte.classList.add('trouvee');
+            trouvees++; retournees = []; verrou = false;
+            etatJeu.bonnes++;
+            if(trouvees === lettres.length){ setTimeout(terminerMission, 400); }
+          }, 350);
+        } else {
+          setTimeout(() => { a.carte.classList.remove('retournee'); b.carte.classList.remove('retournee'); retournees=[]; verrou=false; }, 650);
+        }
+      }
+    };
+    zone.appendChild(carte);
+  });
+}
+
+async function terminerMission(){
+  const total = etatJeu.defis.reduce((n,d) => n + (d.type==='memoire' ? d.reponses.length : 1), 0);
+  const score = etatJeu.bonnes / total;
+  const reussi = score >= SEUIL_VALIDATION;
+  const xp = Math.round(etatJeu.bonnes * 10);
+
+  const e = enfants.find(x => x.id === etatJeu.enfantId);
+  const champXp = etatJeu.categorie === 'avance' ? 'xp_avance' : 'xp_ecole';
+  const nouveauXp = (e[champXp] || 0) + xp;
+  const maj = { etoiles: (e.etoiles||0) + etatJeu.bonnes, [champXp]: nouveauXp };
+  if(etatJeu.categorie === 'avance' && reussi){
+    maj.niveau_avance = (e.niveau_avance || 1) + 1;
+  }
+  await db.from('enfants').update(maj).eq('id', e.id);
+
+  document.getElementById('resume-fin').textContent =
+    `${etatJeu.bonnes}/${total} bonnes réponses — ${Math.round(score*100)}%` +
+    (reussi ? ' ✅ mission validée !' : ' (moins de 90%, on retente demain 💪)');
+  document.getElementById('xp-valeur').textContent = xp;
+  afficherEcran('ecran-fin');
+  chargerEnfants();
+}
+
+/* ---------- démarrage ---------- */
+chargerEnfants();
+</script>
+</body>
+</html>
