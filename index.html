@@ -346,24 +346,32 @@ const PARCOURS_AVANCE = [
 
 // mots + image (emoji) associée — pour le jeu vocabulaire imagé
 const VOCABULAIRE = [
-  { mot:"بَاب", emoji:"🚪" }, { mot:"بَيْت", emoji:"🏠" }, { mot:"كِتَاب", emoji:"📕" },
-  { mot:"قَلَم", emoji:"✏️" }, { mot:"شَمْس", emoji:"☀️" }, { mot:"قَمَر", emoji:"🌙" },
-  { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"وَرْدَة", emoji:"🌸" }, { mot:"سَمَكَة", emoji:"🐟" },
-  { mot:"قِطَّة", emoji:"🐱" }, { mot:"كَلْب", emoji:"🐶" }, { mot:"طَائِرَة", emoji:"✈️" },
-  { mot:"سَيَّارَة", emoji:"🚗" }, { mot:"شَجَرَة", emoji:"🌳" }, { mot:"مَاء", emoji:"💧" },
-  { mot:"نَجْمَة", emoji:"⭐" }
+  { mot:"بَيْت", emoji:"🏠" }, { mot:"قِطَّة", emoji:"🐱" }, { mot:"كَلْب", emoji:"🐶" },
+  { mot:"شَمْس", emoji:"☀️" }, { mot:"قَمَر", emoji:"🌙" }, { mot:"مَاء", emoji:"💧" },
+  { mot:"بَاب", emoji:"🚪" }, { mot:"خُبْز", emoji:"🍞" }, { mot:"حَلِيب", emoji:"🥛" },
+  { mot:"كُرْسِي", emoji:"🪑" }, { mot:"عَيْن", emoji:"👁️" }, { mot:"يَد", emoji:"✋" },
+  { mot:"طَائِر", emoji:"🐦" }, { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"مَوْزَة", emoji:"🍌" },
+  { mot:"كِتَاب", emoji:"📕" }, { mot:"قَلَم", emoji:"✏️" }, { mot:"وَرْدَة", emoji:"🌸" },
+  { mot:"سَمَكَة", emoji:"🐟" }, { mot:"طَائِرَة", emoji:"✈️" }, { mot:"سَيَّارَة", emoji:"🚗" },
+  { mot:"شَجَرَة", emoji:"🌳" }, { mot:"نَجْمَة", emoji:"⭐" }, { mot:"حِصَان", emoji:"🐎" },
+  { mot:"أَسَد", emoji:"🦁" }, { mot:"فِيل", emoji:"🐘" }, { mot:"دَجَاجَة", emoji:"🐔" },
+  { mot:"سَحَابَة", emoji:"☁️" }, { mot:"جَبَل", emoji:"⛰️" }, { mot:"دَرَّاجَة", emoji:"🚲" }
 ];
 // palier simple : mots courts, très concrets — accessible même à ceux qui débutent l'alphabet
 const VOCAB_DEBUTANT = [
   { mot:"بَيْت", emoji:"🏠" }, { mot:"قِطَّة", emoji:"🐱" }, { mot:"كَلْب", emoji:"🐶" },
   { mot:"شَمْس", emoji:"☀️" }, { mot:"قَمَر", emoji:"🌙" }, { mot:"مَاء", emoji:"💧" },
-  { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"بَاب", emoji:"🚪" }
+  { mot:"بَاب", emoji:"🚪" }, { mot:"خُبْز", emoji:"🍞" }, { mot:"حَلِيب", emoji:"🥛" },
+  { mot:"كُرْسِي", emoji:"🪑" }, { mot:"عَيْن", emoji:"👁️" }, { mot:"يَد", emoji:"✋" },
+  { mot:"طَائِر", emoji:"🐦" }, { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"مَوْزَة", emoji:"🍌" }
 ];
 // palier avancé : mots un peu plus longs
 const VOCAB_AVANCE = [
   { mot:"كِتَاب", emoji:"📕" }, { mot:"قَلَم", emoji:"✏️" }, { mot:"وَرْدَة", emoji:"🌸" },
   { mot:"سَمَكَة", emoji:"🐟" }, { mot:"طَائِرَة", emoji:"✈️" }, { mot:"سَيَّارَة", emoji:"🚗" },
-  { mot:"شَجَرَة", emoji:"🌳" }, { mot:"نَجْمَة", emoji:"⭐" }
+  { mot:"شَجَرَة", emoji:"🌳" }, { mot:"نَجْمَة", emoji:"⭐" }, { mot:"حِصَان", emoji:"🐎" },
+  { mot:"أَسَد", emoji:"🦁" }, { mot:"فِيل", emoji:"🐘" }, { mot:"دَجَاجَة", emoji:"🐔" },
+  { mot:"سَحَابَة", emoji:"☁️" }, { mot:"جَبَل", emoji:"⛰️" }, { mot:"دَرَّاجَة", emoji:"🚲" }
 ];
 
 // phrases très simples associées à une image — pour tester la compréhension
@@ -383,7 +391,12 @@ const PHRASES_DEBUTANT = [
   { phrase:"هَذِهِ قِطَّةٌ", emoji:"🐱" },
   { phrase:"الشَّمْسُ كَبِيرَةٌ", emoji:"☀️" },
   { phrase:"الْقَمَرُ جَمِيلٌ", emoji:"🌙" },
-  { phrase:"هَذَا كَلْبٌ صَغِيرٌ", emoji:"🐶" }
+  { phrase:"هَذَا كَلْبٌ صَغِيرٌ", emoji:"🐶" },
+  { phrase:"هَذَا طَائِرٌ", emoji:"🐦" },
+  { phrase:"هَذِهِ تُفَّاحَةٌ حَمْرَاءُ", emoji:"🍎" },
+  { phrase:"هَذَا كُرْسِيٌّ", emoji:"🪑" },
+  { phrase:"هَذِهِ مَوْزَةٌ صَفْرَاءُ", emoji:"🍌" },
+  { phrase:"هَذَا بَابٌ كَبِيرٌ", emoji:"🚪" }
 ];
 // palier 2 : phrases avec un verbe et un complément — un peu plus longues
 const PHRASES_INTERMEDIAIRE = [
@@ -391,7 +404,12 @@ const PHRASES_INTERMEDIAIRE = [
   { phrase:"أَنَا أَشْرَبُ مَاءً", emoji:"💧" },
   { phrase:"السَّيَّارَةُ سَرِيعَةٌ", emoji:"🚗" },
   { phrase:"الْقِطَّةُ تَشْرَبُ الْمَاءَ", emoji:"🐱" },
-  { phrase:"الطَّائِرَةُ فِي السَّمَاءِ", emoji:"✈️" }
+  { phrase:"الطَّائِرَةُ فِي السَّمَاءِ", emoji:"✈️" },
+  { phrase:"الْأَسَدُ قَوِيٌّ", emoji:"🦁" },
+  { phrase:"الْفِيلُ كَبِيرٌ جِدًّا", emoji:"🐘" },
+  { phrase:"أَنَا أَشْرَبُ الْحَلِيبَ", emoji:"🥛" },
+  { phrase:"الدَّجَاجَةُ فِي الْحَدِيقَةِ", emoji:"🐔" },
+  { phrase:"أَنَا أَرْكَبُ الدَّرَّاجَةَ", emoji:"🚲" }
 ];
 
 // courts textes de lecture + un mot à retrouver dans le texte — teste le vocabulaire en contexte
@@ -400,7 +418,12 @@ const TEXTES = [
   { texte:"الشَّمْسُ فِي السَّمَاءِ. الشَّمْسُ كَبِيرَةٌ وَجَمِيلَةٌ.", mot:"الشَّمْسُ", emoji:"☀️" },
   { texte:"أَنَا أَقْرَأُ كِتَابِي كُلَّ يَوْمٍ. الْكِتَابُ مُمْتِعٌ.", mot:"كِتَابِي", emoji:"📖" },
   { texte:"عِنْدِي كَلْبٌ صَغِيرٌ. الْكَلْبُ يَلْعَبُ فِي الْحَدِيقَةِ.", mot:"كَلْبٌ", emoji:"🐶" },
-  { texte:"شَجَرَةٌ كَبِيرَةٌ أَمَامَ بَيْتِي. تَحْتَ الشَّجَرَةِ وَرْدَةٌ حَمْرَاءُ.", mot:"وَرْدَةٌ", emoji:"🌸" }
+  { texte:"شَجَرَةٌ كَبِيرَةٌ أَمَامَ بَيْتِي. تَحْتَ الشَّجَرَةِ وَرْدَةٌ حَمْرَاءُ.", mot:"وَرْدَةٌ", emoji:"🌸" },
+  { texte:"الْفِيلُ حَيَوَانٌ كَبِيرٌ. الْفِيلُ يُحِبُّ الْمَاءَ.", mot:"الْفِيلُ", emoji:"🐘" },
+  { texte:"أَنَا أَشْرَبُ الْحَلِيبَ كُلَّ صَبَاحٍ. الْحَلِيبُ لَذِيذٌ.", mot:"الْحَلِيبَ", emoji:"🥛" },
+  { texte:"فِي السَّمَاءِ سَحَابَةٌ بَيْضَاءُ. السَّحَابَةُ جَمِيلَةٌ.", mot:"سَحَابَةٌ", emoji:"☁️" },
+  { texte:"الدَّجَاجَةُ فِي الْحَدِيقَةِ. الدَّجَاجَةُ صَغِيرَةٌ.", mot:"الدَّجَاجَةُ", emoji:"🐔" },
+  { texte:"أَنَا أَرْكَبُ الدَّرَّاجَةَ يَوْمَ الْأَحَدِ. الدَّرَّاجَةُ حَمْرَاءُ.", mot:"الدَّرَّاجَةَ", emoji:"🚲" }
 ];
 
 
