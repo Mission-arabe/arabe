@@ -277,6 +277,7 @@
     </div>
     <div id="zone-mission-info" class="carte"><p>Chargement…</p></div>
     <div id="zone-vocab-bonus" class="carte" style="display:none;"></div>
+    <div id="zone-comprehension-bonus" class="carte" style="display:none;"></div>
   </section>
 
   <!-- ===================== JEU ===================== -->
@@ -375,6 +376,22 @@ const PHRASES = [
   { phrase:"هَذَا كَلْبٌ صَغِيرٌ", emoji:"🐶" },
   { phrase:"أَنَا أَشْرَبُ مَاءً", emoji:"💧" },
   { phrase:"السَّيَّارَةُ سَرِيعَةٌ", emoji:"🚗" }
+];
+// palier 1 : phrases très courtes (démonstratif + nom/adjectif)
+const PHRASES_DEBUTANT = [
+  { phrase:"هَذَا بَيْتٌ", emoji:"🏠" },
+  { phrase:"هَذِهِ قِطَّةٌ", emoji:"🐱" },
+  { phrase:"الشَّمْسُ كَبِيرَةٌ", emoji:"☀️" },
+  { phrase:"الْقَمَرُ جَمِيلٌ", emoji:"🌙" },
+  { phrase:"هَذَا كَلْبٌ صَغِيرٌ", emoji:"🐶" }
+];
+// palier 2 : phrases avec un verbe et un complément — un peu plus longues
+const PHRASES_INTERMEDIAIRE = [
+  { phrase:"أَنَا أَقْرَأُ كِتَابًا", emoji:"📖" },
+  { phrase:"أَنَا أَشْرَبُ مَاءً", emoji:"💧" },
+  { phrase:"السَّيَّارَةُ سَرِيعَةٌ", emoji:"🚗" },
+  { phrase:"الْقِطَّةُ تَشْرَبُ الْمَاءَ", emoji:"🐱" },
+  { phrase:"الطَّائِرَةُ فِي السَّمَاءِ", emoji:"✈️" }
 ];
 
 // courts textes de lecture + un mot à retrouver dans le texte — teste le vocabulaire en contexte
@@ -829,9 +846,18 @@ async function afficherInfoMission(){
       <button class="bouton secondaire" onclick="lancerSessionVocabulaireBonus('debutant')">Débutant</button>
       <button class="bouton secondaire" onclick="lancerSessionVocabulaireBonus('avance')" style="margin-top:8px;">Avancé</button>
     `;
+    document.getElementById('zone-comprehension-bonus').style.display = 'block';
+    document.getElementById('zone-comprehension-bonus').innerHTML = `
+      <h3 style="margin-top:0;">📖 Séance compréhension (bonus, à tout niveau)</h3>
+      <p style="color:#8a7d68;font-size:12px;">lire une phrase ou un texte et choisir l'image</p>
+      <button class="bouton secondaire" onclick="lancerSessionComprehensionBonus('debutant')">Débutant</button>
+      <button class="bouton secondaire" onclick="lancerSessionComprehensionBonus('intermediaire')" style="margin-top:8px;">Intermédiaire</button>
+      <button class="bouton secondaire" onclick="lancerSessionComprehensionBonus('texte')" style="margin-top:8px;">Texte</button>
+    `;
     return;
   }
   document.getElementById('zone-vocab-bonus').style.display = 'none';
+  document.getElementById('zone-comprehension-bonus').style.display = 'none';
 
   // catégorie "ecole" : dernier cours non terminé
   const e = enfants.find(x => x.id === enfantActifId);
@@ -907,6 +933,13 @@ function lancerSessionVocabulaireBonus(tier){
   jouerDefiCourant();
 }
 
+// séance bonus compréhension — idem, ne touche pas au niveau principal
+function lancerSessionComprehensionBonus(tier){
+  etatJeu = { defis: genererSessionComprehensionBonus(tier), index:0, bonnes:0, enfantId: enfantActifId, categorie:'vocab' };
+  afficherEcran('ecran-jeu');
+  jouerDefiCourant();
+}
+
 // vocabulaire imagé : associer un mot à son image, dans les deux sens
 function genererDefisVocabulaire(){
   const defis = [];
@@ -963,6 +996,16 @@ function genererDefisTexte(){
   return melange(TEXTES).map(t => {
     const distracteurs = melange(VOCABULAIRE.map(v=>v.emoji).filter(e => e !== t.emoji)).slice(0,2);
     return { type:'texte', texte:t.texte, question:t.mot, reponses: melange([t.emoji, ...distracteurs]), bonne_reponse:t.emoji };
+  });
+}
+
+// séance bonus "compréhension" — 3 paliers, accessible à tous quel que soit le niveau d'alphabet
+function genererSessionComprehensionBonus(tier){
+  if(tier === 'texte') return genererDefisTexte();
+  const liste = tier === 'debutant' ? PHRASES_DEBUTANT : PHRASES_INTERMEDIAIRE;
+  return melange(liste).map(p => {
+    const distracteurs = melange(VOCABULAIRE.map(v=>v.emoji).filter(e => e !== p.emoji)).slice(0,2);
+    return { type:'phrase-image', question:p.phrase, reponses: melange([p.emoji, ...distracteurs]), bonne_reponse:p.emoji };
   });
 }
 
