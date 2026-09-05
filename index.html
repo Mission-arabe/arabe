@@ -251,9 +251,8 @@ const PARENT_PIN = '1234';
 const SEUIL_VALIDATION = 0.9; // 90% pour valider une mission / débloquer un niveau
 
 // parcours "Je m'avance" — intégré à l'app, ne dépend pas des cours ajoutés par la maman
-// niveaux 1-12 : alphabet (pour ceux qui ne le connaissent pas encore)
-// niveaux 13-15 : harakāt (pour ceux qui connaissent déjà l'alphabet)
-// niveaux 16-18 : syllabes puis mots (pour ceux qui lisent déjà)
+// niveaux 1-12 : alphabet · 13-15 : harakāt · 16-18 : syllabes et mots voyellés
+// niveaux 19-21 : vocabulaire imagé → phrases simples → lecture de texte (compréhension)
 const PARCOURS_AVANCE = [
   { titre:"L'alphabet — ب ت ث", unites:["ب","ت","ث"] },
   { titre:"L'alphabet — ج ح خ", unites:["ج","ح","خ"] },
@@ -271,8 +270,35 @@ const PARCOURS_AVANCE = [
   { titre:"Harakāt — la kasra", unites:["بِ","تِ","ثِ","جِ","سِ"] },
   { titre:"Harakāt — la damma", unites:["بُ","تُ","ثُ","جُ","سُ"] },
   { titre:"Syllabes simples", unites:["بَا","بِي","بُو","مَا","مِي","مُو"] },
-  { titre:"Premiers mots", unites:["باب","بيت","كتاب","درس"] },
-  { titre:"Lecture de mots", unites:["كتاب","درس","قلم","باب","بيت","تاب"] }
+  { titre:"Premiers mots", unites:["بَاب","بَيْت","كِتَاب","قَلَم","دَرْس"] },
+  { titre:"Lecture de mots", unites:["شَمْس","قَمَر","وَرْدَة","تُفَّاحَة","كِتَاب","بَيْت"] },
+  { titre:"Vocabulaire imagé", mode:"vocabulaire" },
+  { titre:"Phrases simples", mode:"phrases" },
+  { titre:"Lecture de texte", mode:"texte" }
+];
+
+// mots + image (emoji) associée — pour le jeu vocabulaire imagé
+const VOCABULAIRE = [
+  { mot:"بَاب", emoji:"🚪" }, { mot:"بَيْت", emoji:"🏠" }, { mot:"كِتَاب", emoji:"📕" },
+  { mot:"قَلَم", emoji:"✏️" }, { mot:"شَمْس", emoji:"☀️" }, { mot:"قَمَر", emoji:"🌙" },
+  { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"وَرْدَة", emoji:"🌸" }, { mot:"سَمَكَة", emoji:"🐟" },
+  { mot:"قِطَّة", emoji:"🐱" }
+];
+
+// phrases très simples associées à une image — pour tester la compréhension
+const PHRASES = [
+  { phrase:"هَذَا بَيْتٌ", emoji:"🏠" },
+  { phrase:"هَذِهِ قِطَّةٌ", emoji:"🐱" },
+  { phrase:"الشَّمْسُ كَبِيرَةٌ", emoji:"☀️" },
+  { phrase:"أَنَا أَقْرَأُ كِتَابًا", emoji:"📖" },
+  { phrase:"الْقَمَرُ جَمِيلٌ", emoji:"🌙" }
+];
+
+// courts textes de lecture + un mot à retrouver dans le texte — teste le vocabulaire en contexte
+const TEXTES = [
+  { texte:"هَذَا بَيْتٌ كَبِيرٌ. فِي الْبَيْتِ قِطَّةٌ جَمِيلَةٌ.", mot:"قِطَّةٌ", emoji:"🐱" },
+  { texte:"الشَّمْسُ فِي السَّمَاءِ. الشَّمْسُ كَبِيرَةٌ وَجَمِيلَةٌ.", mot:"الشَّمْسُ", emoji:"☀️" },
+  { texte:"أَنَا أَقْرَأُ كِتَابِي كُلَّ يَوْمٍ. الْكِتَابُ مُمْتِعٌ.", mot:"كِتَابِي", emoji:"📖" }
 ];
 // alias conservé pour compatibilité avec l'ancien code
 const NIVEAUX_AVANCE = PARCOURS_AVANCE.map(n => n.unites);
@@ -540,9 +566,13 @@ async function afficherInfoMission(){
     const e = enfants.find(x => x.id === enfantActifId);
     const niveauIndex = Math.min(PARCOURS_AVANCE.length - 1, (e.niveau_avance || 1) - 1);
     const niveau = PARCOURS_AVANCE[niveauIndex];
+    const apercu = niveau.unites ? niveau.unites.join('  ')
+      : niveau.mode === 'vocabulaire' ? VOCABULAIRE.slice(0,5).map(v=>v.emoji).join(' ')
+      : niveau.mode === 'phrases' ? '🏠 🐱 ☀️ 📖'
+      : '📖 lecture + compréhension';
     zone.innerHTML = `
       <h3>🚀 ${niveau.titre}</h3>
-      <p style="color:#8a7d68;font-size:13px;">${niveau.unites.join('  ')}</p>
+      <p style="color:#8a7d68;font-size:13px;">${apercu}</p>
       <p style="color:#8a7d68;font-size:12px;">reconnaissance visuelle, écrite et orale — environ 5 min</p>
       <button class="bouton" onclick="lancerMissionAvance()">Commencer</button>
     `;
@@ -582,10 +612,46 @@ function lancerMissionEcole(defis){
 function lancerMissionAvance(){
   const e = enfants.find(x => x.id === enfantActifId);
   const niveauIndex = Math.min(PARCOURS_AVANCE.length - 1, (e.niveau_avance || 1) - 1);
-  const unites = PARCOURS_AVANCE[niveauIndex].unites;
-  etatJeu = { defis: genererMissionMixte(unites), index:0, bonnes:0, enfantId: enfantActifId, categorie:'avance' };
+  const niveau = PARCOURS_AVANCE[niveauIndex];
+  let defis;
+  if(niveau.mode === 'vocabulaire') defis = genererDefisVocabulaire();
+  else if(niveau.mode === 'phrases') defis = genererDefisPhrases();
+  else if(niveau.mode === 'texte') defis = genererDefisTexte();
+  else defis = genererMissionMixte(niveau.unites);
+  etatJeu = { defis, index:0, bonnes:0, enfantId: enfantActifId, categorie:'avance' };
   afficherEcran('ecran-jeu');
   jouerDefiCourant();
+}
+
+// vocabulaire imagé : associer un mot à son image, dans les deux sens
+function genererDefisVocabulaire(){
+  const defis = [];
+  for(let i=0;i<5;i++){
+    const cible = VOCABULAIRE[Math.floor(Math.random()*VOCABULAIRE.length)];
+    const distracteurs = melange(VOCABULAIRE.filter(v => v.mot !== cible.mot)).slice(0,2);
+    if(Math.random() < 0.5){
+      defis.push({ type:'vocab-image', question:cible.emoji, reponses: melange([cible.mot, ...distracteurs.map(d=>d.mot)]), bonne_reponse: cible.mot });
+    } else {
+      defis.push({ type:'vocab-mot', question:cible.mot, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse: cible.emoji });
+    }
+  }
+  return defis;
+}
+
+// phrases simples : comprendre une petite phrase et choisir l'image qui correspond
+function genererDefisPhrases(){
+  return melange(PHRASES).map(p => {
+    const distracteurs = melange(VOCABULAIRE.map(v=>v.emoji).filter(e => e !== p.emoji)).slice(0,2);
+    return { type:'phrase-image', question:p.phrase, reponses: melange([p.emoji, ...distracteurs]), bonne_reponse:p.emoji };
+  });
+}
+
+// lecture de texte : lire un court texte puis retrouver l'image qui correspond à un mot du texte
+function genererDefisTexte(){
+  return melange(TEXTES).map(t => {
+    const distracteurs = melange(VOCABULAIRE.map(v=>v.emoji).filter(e => e !== t.emoji)).slice(0,2);
+    return { type:'texte', texte:t.texte, question:t.mot, reponses: melange([t.emoji, ...distracteurs]), bonne_reponse:t.emoji };
+  });
 }
 
 // mélange reconnaissance visuelle (reconnais), écrite/ciblée (trouve) et orale (ecoute)
@@ -636,26 +702,37 @@ function jouerDefiCourant(){
   document.getElementById('zone-choix').style.display = defi.type === 'memoire' ? 'none' : 'grid';
   document.getElementById('zone-memoire').style.display = defi.type === 'memoire' ? 'grid' : 'none';
   scene.style.display = defi.type === 'memoire' ? 'none' : 'flex';
+  scene.style.height = (defi.type === 'texte') ? 'auto' : '170px';
+  scene.style.padding = (defi.type === 'texte') ? '16px 10px' : '0';
 
-  if(defi.type === 'reconnais' || defi.type === 'trouve'){
+  if(defi.type === 'reconnais' || defi.type === 'trouve' || defi.type === 'vocab-mot' || defi.type === 'phrase-image'){
     scene.innerHTML = `<div class="lettre-grande" style="font-size:${tailleArabe(defi.question)}">${defi.question}</div>`;
+  } else if(defi.type === 'vocab-image'){
+    scene.innerHTML = `<div style="font-size:90px;">${defi.question}</div>`;
   } else if(defi.type === 'ecoute'){
     scene.innerHTML = `<div onclick="jouerAudioLettre('${defi.question}')" style="cursor:pointer;font-size:64px;">🔊</div>`;
     setTimeout(() => jouerAudioLettre(defi.question), 300);
+  } else if(defi.type === 'texte'){
+    scene.innerHTML = `
+      <div style="font-family:'Noto Naskh Arabic',serif;font-size:24px;line-height:2.1;direction:rtl;text-align:center;">${defi.texte}</div>
+      <div style="margin-top:10px;font-family:'Baloo 2';font-size:13px;color:#8a7d68;text-align:center;">
+        quelle image correspond à <span style="font-family:'Noto Naskh Arabic',serif;font-size:19px;color:var(--vert);">${defi.question}</span> ?
+      </div>`;
   }
 
-  if(defi.type === 'reconnais' || defi.type === 'trouve' || defi.type === 'ecoute'){
+  if(defi.type !== 'memoire'){
+    const emojiChoix = (defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'texte');
     const zone = document.getElementById('zone-choix');
     zone.innerHTML = '';
-    (defi.reponses || []).forEach(lettre => {
+    (defi.reponses || []).forEach(item => {
       const b = document.createElement('div');
       b.className = 'choix';
-      b.style.fontSize = tailleArabe(lettre);
-      b.textContent = lettre;
-      b.onclick = () => validerReponse(b, lettre === defi.bonne_reponse);
+      b.style.fontSize = emojiChoix ? '40px' : tailleArabe(item);
+      b.textContent = item;
+      b.onclick = () => validerReponse(b, item === defi.bonne_reponse);
       zone.appendChild(b);
     });
-  } else if(defi.type === 'memoire'){
+  } else {
     jouerMemoire(defi.reponses);
   }
 }
