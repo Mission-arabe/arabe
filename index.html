@@ -52,7 +52,7 @@
   .bouton:active{transform:translateY(2px);box-shadow:0 2px 0 #143f37;}
   .bouton.secondaire{background:none;color:var(--vert);border:2px solid var(--vert-clair);box-shadow:none;}
   .bouton.petit{padding:9px 14px;font-size:13px;width:auto;margin:0;box-shadow:none;}
-  .tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
   .tab{flex:1;text-align:center;padding:10px;border-radius:100px;background:var(--vert-clair);color:var(--vert);
     font-weight:700;font-size:13px;cursor:pointer;}
   .tab.actif{background:var(--vert);color:#fff;}
@@ -62,7 +62,7 @@
   .carte-enfant{border-radius:20px;padding:16px 8px;text-align:center;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.12);}
   .carte-enfant .rond{width:56px;height:56px;border-radius:50%;background:#fff;margin:0 auto 8px;
     display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;}
-  .carte-enfant .rond img{width:100%;height:100%;object-fit:cover;object-position:top;}
+  .carte-enfant .rond img{width:100%;height:100%;object-fit:cover;}
   .carte-enfant .nom{font-weight:700;color:#fff;font-size:14px;}
   .carte-enfant .etoiles{font-size:11px;color:#fff;opacity:0.9;}
 
@@ -184,6 +184,7 @@
       <div class="tab" id="tab-enfants" onclick="changerOngletParent('enfants')">Enfants</div>
       <div class="tab" id="tab-historique" onclick="changerOngletParent('historique')">Historique</div>
       <div class="tab" id="tab-dashboard" onclick="changerOngletParent('dashboard')">Bilan</div>
+      <div class="tab" id="tab-histoires" onclick="changerOngletParent('histoires')">Histoires</div>
     </div>
 
     <!-- onglet: ajouter un cours -->
@@ -262,6 +263,38 @@
       <div class="carte" id="zone-dashboard"><p>Chargement…</p></div>
       <button class="bouton secondaire" onclick="exporterSauvegarde()">💾 Exporter une sauvegarde</button>
     </div>
+
+    <!-- onglet: histoires des prophètes -->
+    <div id="onglet-histoires" style="display:none;">
+      <div class="carte">
+        <h3>📖 Ajouter une histoire</h3>
+        <label>Titre</label>
+        <input type="text" id="histoire-titre" placeholder="ex : L'histoire du prophète Youssouf">
+        <label>Prophète concerné (optionnel)</label>
+        <input type="text" id="histoire-prophete" placeholder="ex : Youssouf">
+        <label>Texte (copié ou transcrit de ton livre)</label>
+        <textarea id="histoire-texte" style="min-height:140px;" placeholder="Colle ici le texte en arabe..."></textarea>
+        <label>Mots-clés de l'histoire (optionnel, jusqu'à 4 — pour le petit quiz)</label>
+        <div style="display:grid;grid-template-columns:1fr 70px;gap:8px;margin-bottom:6px;">
+          <input type="text" id="histoire-mot-1" placeholder="mot en arabe">
+          <input type="text" id="histoire-emoji-1" placeholder="emoji">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 70px;gap:8px;margin-bottom:6px;">
+          <input type="text" id="histoire-mot-2" placeholder="mot en arabe">
+          <input type="text" id="histoire-emoji-2" placeholder="emoji">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 70px;gap:8px;margin-bottom:6px;">
+          <input type="text" id="histoire-mot-3" placeholder="mot en arabe">
+          <input type="text" id="histoire-emoji-3" placeholder="emoji">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 70px;gap:8px;">
+          <input type="text" id="histoire-mot-4" placeholder="mot en arabe">
+          <input type="text" id="histoire-emoji-4" placeholder="emoji">
+        </div>
+        <button class="bouton" onclick="ajouterHistoire()">Ajouter l'histoire</button>
+      </div>
+      <div class="carte" id="liste-histoires-parent"><p>Chargement…</p></div>
+    </div>
   </section>
 
   <!-- ===================== MISSION ENFANT ===================== -->
@@ -274,10 +307,24 @@
     <div class="categorie-toggle">
       <div class="actif" id="toggle-ecole" onclick="choisirCategorieEnfant('ecole')">📚 Mon école</div>
       <div id="toggle-avance" onclick="choisirCategorieEnfant('avance')">🚀 Je m'avance</div>
+      <div id="toggle-histoires" onclick="choisirCategorieEnfant('histoires')">📖 Histoires</div>
     </div>
     <div id="zone-mission-info" class="carte"><p>Chargement…</p></div>
     <div id="zone-vocab-bonus" class="carte" style="display:none;"></div>
     <div id="zone-comprehension-bonus" class="carte" style="display:none;"></div>
+  </section>
+
+  <!-- ===================== LECTURE D'UNE HISTOIRE ===================== -->
+  <section id="ecran-histoire" class="ecran">
+    <header class="top">
+      <button class="rond-bouton" onclick="afficherEcran('ecran-mission')">←</button>
+      <div class="titre" id="titre-histoire" style="font-size:17px;">Histoire</div>
+      <button class="rond-bouton" onclick="jouerAudioLettre(document.getElementById('texte-histoire').textContent)">🔊</button>
+    </header>
+    <div class="carte">
+      <p id="texte-histoire" style="font-family:'Noto Naskh Arabic',serif;font-size:22px;line-height:2.2;direction:rtl;text-align:right;"></p>
+    </div>
+    <button class="bouton" id="bouton-quiz-histoire" onclick="lancerQuizHistoire()" style="display:none;">Faire le petit quiz</button>
   </section>
 
   <!-- ===================== JEU ===================== -->
@@ -502,12 +549,55 @@ function verifierPin(){
 
 /* ---------- onglets parent ---------- */
 function changerOngletParent(nom){
-  ['cours','enfants','historique','dashboard'].forEach(o => {
+  ['cours','enfants','historique','dashboard','histoires'].forEach(o => {
     document.getElementById('onglet-'+o).style.display = (o===nom) ? 'block' : 'none';
     document.getElementById('tab-'+o).classList.toggle('actif', o===nom);
   });
   if(nom === 'historique') chargerHistorique();
   if(nom === 'dashboard') chargerDashboard();
+  if(nom === 'histoires') chargerHistoiresParent();
+}
+
+/* ---------- histoires des prophètes ---------- */
+async function chargerHistoiresParent(){
+  const zone = document.getElementById('liste-histoires-parent');
+  zone.innerHTML = '<p>Chargement…</p>';
+  const { data, error } = await db.from('histoires').select('*').order('cree_le', { ascending:false });
+  if(error){ zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible.</p>'; return; }
+  if(!data || data.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Aucune histoire ajoutée pour l\'instant.</p>'; return; }
+  zone.innerHTML = '<h3>Histoires ajoutées</h3>' + data.map(h => `
+    <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong>${h.titre}</strong>
+        <button class="bouton petit secondaire" style="color:#E4776B;border-color:#FBE1DD;" onclick="supprimerHistoire('${h.id}')">supprimer</button>
+      </div>
+      ${h.prophete ? `<p style="font-size:12px;color:#8a7d68;margin:2px 0;">Prophète : ${h.prophete}</p>` : ''}
+    </div>
+  `).join('');
+}
+
+async function ajouterHistoire(){
+  const titre = document.getElementById('histoire-titre').value.trim();
+  const texte = document.getElementById('histoire-texte').value.trim();
+  if(!titre || !texte){ alert('Le titre et le texte sont obligatoires'); return; }
+  const prophete = document.getElementById('histoire-prophete').value.trim();
+  const vocabulaire = [];
+  for(let i=1;i<=4;i++){
+    const mot = document.getElementById(`histoire-mot-${i}`).value.trim();
+    const emoji = document.getElementById(`histoire-emoji-${i}`).value.trim();
+    if(mot && emoji) vocabulaire.push({ mot, emoji });
+  }
+  const { error } = await db.from('histoires').insert({ titre, prophete, texte, vocabulaire });
+  if(error){ alert('Erreur : ' + error.message); return; }
+  ['histoire-titre','histoire-prophete','histoire-texte'].forEach(id => document.getElementById(id).value = '');
+  for(let i=1;i<=4;i++){ document.getElementById(`histoire-mot-${i}`).value=''; document.getElementById(`histoire-emoji-${i}`).value=''; }
+  chargerHistoiresParent();
+}
+
+async function supprimerHistoire(id){
+  if(!confirm('Supprimer cette histoire ?')) return;
+  await db.from('histoires').delete().eq('id', id);
+  chargerHistoiresParent();
 }
 
 /* ---------- gestion enfants ---------- */
@@ -518,7 +608,7 @@ function initialiserCasesAvatars(){
   const zone = document.getElementById('cases-avatars');
   let html = `<div class="case" style="min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;" onclick="choisirAvatar(this, null)">aucun</div>`;
   for(let i=1;i<=6;i++){
-    html += `<div class="case" style="padding:5px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;" onclick="choisirAvatar(this, 'avatar-${i}.png')"><img src="avatar-${i}.png" style="width:40px;height:40px;object-fit:cover;object-position:top;border-radius:50%;display:block;" onerror="this.parentElement.style.display='none'"></div>`;
+    html += `<div class="case" style="padding:5px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;" onclick="choisirAvatar(this, 'avatar-${i}.png')"><img src="avatar-${i}.png" style="width:40px;height:40px;object-fit:cover;border-radius:50%;display:block;" onerror="this.parentElement.style.display='none'"></div>`;
   }
   zone.innerHTML = html;
 }
@@ -577,7 +667,7 @@ function dessinerListeEnfantsParent(){
     <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
         <label style="width:36px;height:36px;border-radius:50%;background:${e.couleur};flex-shrink:0;overflow:hidden;margin:0;cursor:pointer;position:relative;">
-          ${e.avatar_url ? `<img src="${e.avatar_url}" style="width:100%;height:100%;object-fit:cover;object-position:top;" onerror="this.style.display='none'">` : ''}
+          ${e.avatar_url ? `<img src="${e.avatar_url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
           <input type="file" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="changerAvatarEnfant('${e.id}', this)">
         </label>
         <div style="flex:1;font-weight:700;">${e.nom}</div>
@@ -840,12 +930,28 @@ function choisirCategorieEnfant(cat){
   categorieActive = cat;
   document.getElementById('toggle-ecole').classList.toggle('actif', cat==='ecole');
   document.getElementById('toggle-avance').classList.toggle('actif', cat==='avance');
+  document.getElementById('toggle-histoires').classList.toggle('actif', cat==='histoires');
   afficherInfoMission();
 }
 
 async function afficherInfoMission(){
   const zone = document.getElementById('zone-mission-info');
   zone.innerHTML = '<p>Chargement…</p>';
+  document.getElementById('zone-vocab-bonus').style.display = 'none';
+  document.getElementById('zone-comprehension-bonus').style.display = 'none';
+
+  if(categorieActive === 'histoires'){
+    const { data, error } = await db.from('histoires').select('*').order('cree_le', { ascending:false });
+    if(error){ zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible.</p>'; return; }
+    if(!data || data.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Pas encore d\'histoire ajoutée — demande à maman de commencer 📖</p>'; return; }
+    zone.innerHTML = '<h3>📖 Choisis une histoire</h3>' + data.map(h => `
+      <div class="carte-secondaire" style="cursor:pointer;margin-bottom:8px;" onclick='ouvrirHistoire(${JSON.stringify(h).replace(/'/g,"&apos;")})'>
+        <div class="puce">📖</div>
+        <div class="txt"><div>${h.titre}</div>${h.prophete ? `<div>Prophète ${h.prophete}</div>` : ''}</div>
+      </div>
+    `).join('');
+    return;
+  }
 
   if(categorieActive === 'avance'){
     const e = enfants.find(x => x.id === enfantActifId);
@@ -959,6 +1065,30 @@ function lancerSessionVocabulaireBonus(tier){
 // séance bonus compréhension — idem, ne touche pas au niveau principal
 function lancerSessionComprehensionBonus(tier){
   etatJeu = { defis: genererSessionComprehensionBonus(tier), index:0, bonnes:0, enfantId: enfantActifId, categorie:'vocab' };
+  afficherEcran('ecran-jeu');
+  jouerDefiCourant();
+}
+
+// lecture d'une histoire choisie par l'enfant
+let histoireActive = null;
+function ouvrirHistoire(h){
+  histoireActive = h;
+  document.getElementById('titre-histoire').textContent = h.titre;
+  document.getElementById('texte-histoire').textContent = h.texte;
+  document.getElementById('bouton-quiz-histoire').style.display = (h.vocabulaire && h.vocabulaire.length >= 2) ? 'block' : 'none';
+  afficherEcran('ecran-histoire');
+}
+
+function lancerQuizHistoire(){
+  if(!histoireActive || !histoireActive.vocabulaire || histoireActive.vocabulaire.length < 2) return;
+  const mots = histoireActive.vocabulaire;
+  const defis = mots.map(cible => {
+    const distracteurs = melange(mots.filter(m => m.mot !== cible.mot)).slice(0,2);
+    return Math.random() < 0.5
+      ? { type:'vocab-image', question:cible.emoji, reponses: melange([cible.mot, ...distracteurs.map(d=>d.mot)]), bonne_reponse:cible.mot }
+      : { type:'vocab-mot', question:cible.mot, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse:cible.emoji };
+  });
+  etatJeu = { defis, index:0, bonnes:0, enfantId: enfantActifId, categorie:'vocab' };
   afficherEcran('ecran-jeu');
   jouerDefiCourant();
 }
