@@ -62,7 +62,7 @@
   .carte-enfant{border-radius:20px;padding:16px 8px;text-align:center;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.12);}
   .carte-enfant .rond{width:56px;height:56px;border-radius:50%;background:#fff;margin:0 auto 8px;
     display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;}
-  .carte-enfant .rond img{width:100%;height:100%;object-fit:cover;}
+  .carte-enfant .rond img{width:100%;height:100%;object-fit:cover;object-position:top;}
   .carte-enfant .nom{font-weight:700;color:#fff;font-size:14px;}
   .carte-enfant .etoiles{font-size:11px;color:#fff;opacity:0.9;}
 
@@ -274,22 +274,42 @@
         <input type="text" id="histoire-prophete" placeholder="ex : Youssouf">
         <label>Texte (copié ou transcrit de ton livre)</label>
         <textarea id="histoire-texte" style="min-height:140px;" placeholder="Colle ici le texte en arabe..."></textarea>
-        <label>Mots-clés de l'histoire (optionnel, jusqu'à 4 — pour le petit quiz)</label>
-        <div style="display:grid;grid-template-columns:1fr 70px;gap:8px;margin-bottom:6px;">
-          <input type="text" id="histoire-mot-1" placeholder="mot en arabe">
-          <input type="text" id="histoire-emoji-1" placeholder="emoji">
+        <label>Mots-clés de l'histoire (optionnel, jusqu'à 4 — pour le petit quiz). Mets un emoji si ça existe, sinon ajoute une image (utile pour les mots sans emoji : chameau, désert, personnages...)</label>
+        <div style="border:2px solid var(--vert-clair);border-radius:14px;padding:10px;margin-bottom:8px;">
+          <input type="text" id="histoire-mot-1" placeholder="mot en arabe 1" style="margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="text" id="histoire-emoji-1" placeholder="emoji (ex: 🐫)" style="flex:1;">
+            <span style="font-size:12px;color:#8a7d68;">ou</span>
+            <input type="file" accept="image/*" id="histoire-fichier-1" onchange="previsualiserImageMot(1)" style="flex:1;font-size:11px;">
+          </div>
+          <img id="histoire-apercu-1" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;margin-top:6px;">
         </div>
-        <div style="display:grid;grid-template-columns:1fr 70px;gap:8px;margin-bottom:6px;">
-          <input type="text" id="histoire-mot-2" placeholder="mot en arabe">
-          <input type="text" id="histoire-emoji-2" placeholder="emoji">
+        <div style="border:2px solid var(--vert-clair);border-radius:14px;padding:10px;margin-bottom:8px;">
+          <input type="text" id="histoire-mot-2" placeholder="mot en arabe 2" style="margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="text" id="histoire-emoji-2" placeholder="emoji (ex: 🐫)" style="flex:1;">
+            <span style="font-size:12px;color:#8a7d68;">ou</span>
+            <input type="file" accept="image/*" id="histoire-fichier-2" onchange="previsualiserImageMot(2)" style="flex:1;font-size:11px;">
+          </div>
+          <img id="histoire-apercu-2" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;margin-top:6px;">
         </div>
-        <div style="display:grid;grid-template-columns:1fr 70px;gap:8px;margin-bottom:6px;">
-          <input type="text" id="histoire-mot-3" placeholder="mot en arabe">
-          <input type="text" id="histoire-emoji-3" placeholder="emoji">
+        <div style="border:2px solid var(--vert-clair);border-radius:14px;padding:10px;margin-bottom:8px;">
+          <input type="text" id="histoire-mot-3" placeholder="mot en arabe 3" style="margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="text" id="histoire-emoji-3" placeholder="emoji (ex: 🐫)" style="flex:1;">
+            <span style="font-size:12px;color:#8a7d68;">ou</span>
+            <input type="file" accept="image/*" id="histoire-fichier-3" onchange="previsualiserImageMot(3)" style="flex:1;font-size:11px;">
+          </div>
+          <img id="histoire-apercu-3" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;margin-top:6px;">
         </div>
-        <div style="display:grid;grid-template-columns:1fr 70px;gap:8px;">
-          <input type="text" id="histoire-mot-4" placeholder="mot en arabe">
-          <input type="text" id="histoire-emoji-4" placeholder="emoji">
+        <div style="border:2px solid var(--vert-clair);border-radius:14px;padding:10px;margin-bottom:8px;">
+          <input type="text" id="histoire-mot-4" placeholder="mot en arabe 4" style="margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="text" id="histoire-emoji-4" placeholder="emoji (ex: 🐫)" style="flex:1;">
+            <span style="font-size:12px;color:#8a7d68;">ou</span>
+            <input type="file" accept="image/*" id="histoire-fichier-4" onchange="previsualiserImageMot(4)" style="flex:1;font-size:11px;">
+          </div>
+          <img id="histoire-apercu-4" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;margin-top:6px;">
         </div>
         <button class="bouton" onclick="ajouterHistoire()">Ajouter l'histoire</button>
       </div>
@@ -576,6 +596,30 @@ async function chargerHistoiresParent(){
   `).join('');
 }
 
+let imagesHistoireMots = {1:null, 2:null, 3:null, 4:null};
+
+function previsualiserImageMot(i){
+  const fichier = document.getElementById(`histoire-fichier-${i}`).files[0];
+  if(!fichier) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const taille = 120;
+      const cote = Math.min(img.width, img.height);
+      const canvas = document.createElement('canvas');
+      canvas.width = taille; canvas.height = taille;
+      canvas.getContext('2d').drawImage(img, (img.width-cote)/2, (img.height-cote)/2, cote, cote, 0, 0, taille, taille);
+      imagesHistoireMots[i] = canvas.toDataURL('image/jpeg', 0.7);
+      const apercu = document.getElementById(`histoire-apercu-${i}`);
+      apercu.src = imagesHistoireMots[i];
+      apercu.style.display = 'block';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(fichier);
+}
+
 async function ajouterHistoire(){
   const titre = document.getElementById('histoire-titre').value.trim();
   const texte = document.getElementById('histoire-texte').value.trim();
@@ -584,13 +628,19 @@ async function ajouterHistoire(){
   const vocabulaire = [];
   for(let i=1;i<=4;i++){
     const mot = document.getElementById(`histoire-mot-${i}`).value.trim();
-    const emoji = document.getElementById(`histoire-emoji-${i}`).value.trim();
+    const emoji = imagesHistoireMots[i] || document.getElementById(`histoire-emoji-${i}`).value.trim();
     if(mot && emoji) vocabulaire.push({ mot, emoji });
   }
   const { error } = await db.from('histoires').insert({ titre, prophete, texte, vocabulaire });
   if(error){ alert('Erreur : ' + error.message); return; }
   ['histoire-titre','histoire-prophete','histoire-texte'].forEach(id => document.getElementById(id).value = '');
-  for(let i=1;i<=4;i++){ document.getElementById(`histoire-mot-${i}`).value=''; document.getElementById(`histoire-emoji-${i}`).value=''; }
+  for(let i=1;i<=4;i++){
+    document.getElementById(`histoire-mot-${i}`).value='';
+    document.getElementById(`histoire-emoji-${i}`).value='';
+    document.getElementById(`histoire-fichier-${i}`).value='';
+    document.getElementById(`histoire-apercu-${i}`).style.display='none';
+    imagesHistoireMots[i] = null;
+  }
   chargerHistoiresParent();
 }
 
@@ -608,7 +658,7 @@ function initialiserCasesAvatars(){
   const zone = document.getElementById('cases-avatars');
   let html = `<div class="case" style="min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;" onclick="choisirAvatar(this, null)">aucun</div>`;
   for(let i=1;i<=6;i++){
-    html += `<div class="case" style="padding:5px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;" onclick="choisirAvatar(this, 'avatar-${i}.png')"><img src="avatar-${i}.png" style="width:40px;height:40px;object-fit:cover;border-radius:50%;display:block;" onerror="this.parentElement.style.display='none'"></div>`;
+    html += `<div class="case" style="padding:5px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;" onclick="choisirAvatar(this, 'avatar-${i}.png')"><img src="avatar-${i}.png" style="width:40px;height:40px;object-fit:cover;object-position:top;border-radius:50%;display:block;" onerror="this.parentElement.style.display='none'"></div>`;
   }
   zone.innerHTML = html;
 }
@@ -667,7 +717,7 @@ function dessinerListeEnfantsParent(){
     <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
         <label style="width:36px;height:36px;border-radius:50%;background:${e.couleur};flex-shrink:0;overflow:hidden;margin:0;cursor:pointer;position:relative;">
-          ${e.avatar_url ? `<img src="${e.avatar_url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">` : ''}
+          ${e.avatar_url ? `<img src="${e.avatar_url}" style="width:100%;height:100%;object-fit:cover;object-position:top;" onerror="this.style.display='none'">` : ''}
           <input type="file" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="changerAvatarEnfant('${e.id}', this)">
         </label>
         <div style="flex:1;font-weight:700;">${e.nom}</div>
@@ -1285,6 +1335,8 @@ function lancerConfettis(){
   }
 }
 
+function estImage(v){ return typeof v === 'string' && v.startsWith('data:image'); }
+
 function jouerDefiCourant(){
   majBarreJeu();
   const defi = etatJeu.defis[etatJeu.index];
@@ -1298,7 +1350,9 @@ function jouerDefiCourant(){
   if(defi.type === 'reconnais' || defi.type === 'trouve' || defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'cherche' || defi.type === 'complete'){
     scene.innerHTML = `<div class="lettre-grande" style="font-size:${tailleArabe(defi.question)}">${defi.question}</div>`;
   } else if(defi.type === 'vocab-image'){
-    scene.innerHTML = `<div style="font-size:90px;">${defi.question}</div>`;
+    scene.innerHTML = estImage(defi.question)
+      ? `<img src="${defi.question}" style="width:110px;height:110px;object-fit:cover;border-radius:16px;">`
+      : `<div style="font-size:90px;">${defi.question}</div>`;
   } else if(defi.type === 'ecoute' || defi.type === 'vocab-ecoute-image' || defi.type === 'vocab-ecoute-mot' || defi.type === 'phonologie'){
     scene.innerHTML = `<div onclick="jouerAudioLettre('${defi.question}')" style="cursor:pointer;font-size:64px;">🔊</div>`;
     setTimeout(() => jouerAudioLettre(defi.question), 300);
@@ -1317,8 +1371,12 @@ function jouerDefiCourant(){
     (defi.reponses || []).forEach(item => {
       const b = document.createElement('div');
       b.className = 'choix';
-      b.style.fontSize = emojiChoix ? '40px' : tailleArabe(item);
-      b.textContent = item;
+      if(estImage(item)){
+        b.innerHTML = `<img src="${item}" style="width:80%;height:80%;object-fit:cover;border-radius:12px;">`;
+      } else {
+        b.style.fontSize = emojiChoix ? '40px' : tailleArabe(item);
+        b.textContent = item;
+      }
       b.onclick = () => validerReponse(b, item === defi.bonne_reponse, defi.bonne_reponse);
       zone.appendChild(b);
     });
