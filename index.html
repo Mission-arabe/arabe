@@ -175,9 +175,10 @@
     </header>
 
     <div class="tabs">
-      <div class="tab actif" id="tab-cours" onclick="changerOngletParent('cours')">Ajouter un cours</div>
+      <div class="tab actif" id="tab-cours" onclick="changerOngletParent('cours')">Cours</div>
       <div class="tab" id="tab-enfants" onclick="changerOngletParent('enfants')">Enfants</div>
-      <div class="tab" id="tab-dashboard" onclick="changerOngletParent('dashboard')">Tableau de bord</div>
+      <div class="tab" id="tab-historique" onclick="changerOngletParent('historique')">Historique</div>
+      <div class="tab" id="tab-dashboard" onclick="changerOngletParent('dashboard')">Bilan</div>
     </div>
 
     <!-- onglet: ajouter un cours -->
@@ -239,9 +240,19 @@
       <div class="carte" id="liste-enfants-parent"></div>
     </div>
 
+    <!-- onglet: historique -->
+    <div id="onglet-historique" style="display:none;">
+      <div class="carte">
+        <label>Enfant</label>
+        <select id="champ-enfant-historique" onchange="chargerHistorique()"></select>
+      </div>
+      <div class="carte" id="zone-historique"><p>Chargement…</p></div>
+    </div>
+
     <!-- onglet: dashboard -->
     <div id="onglet-dashboard" style="display:none;">
       <div class="carte" id="zone-dashboard"><p>Chargement…</p></div>
+      <button class="bouton secondaire" onclick="exporterSauvegarde()">💾 Exporter une sauvegarde</button>
     </div>
   </section>
 
@@ -385,7 +396,11 @@ function afficherEcran(id){
 /* ---------- chargement initial ---------- */
 async function chargerEnfants(){
   const { data, error } = await db.from('enfants').select('*').order('cree_le');
-  if(error){ console.error(error); return; }
+  if(error){
+    document.getElementById('grille-enfants').innerHTML =
+      '<p style="grid-column:span 2;color:#F6A9A0;">Connexion impossible — vérifie ta connexion internet et réessaie.</p>';
+    return;
+  }
   enfants = data || [];
   dessinerGrilleEnfants();
   remplirSelectEnfants();
@@ -417,7 +432,8 @@ function ouvrirPin(){ afficherEcran('ecran-pin'); document.getElementById('champ
 function verifierPin(){
   if(document.getElementById('champ-pin').value === PARENT_PIN){
     afficherEcran('ecran-parent');
-    changerOngletParent('cours');
+    // le dimanche, on ouvre directement sur le bilan pour préparer la semaine
+    changerOngletParent(new Date().getDay() === 0 ? 'dashboard' : 'cours');
   } else {
     alert('Code incorrect');
   }
@@ -425,10 +441,11 @@ function verifierPin(){
 
 /* ---------- onglets parent ---------- */
 function changerOngletParent(nom){
-  ['cours','enfants','dashboard'].forEach(o => {
+  ['cours','enfants','historique','dashboard'].forEach(o => {
     document.getElementById('onglet-'+o).style.display = (o===nom) ? 'block' : 'none';
     document.getElementById('tab-'+o).classList.toggle('actif', o===nom);
   });
+  if(nom === 'historique') chargerHistorique();
   if(nom === 'dashboard') chargerDashboard();
 }
 
@@ -496,8 +513,62 @@ async function definirNiveauAvance(enfantId, niveau){
   chargerEnfants();
 }
 function remplirSelectEnfants(){
-  const sel = document.getElementById('champ-enfant-cours');
-  sel.innerHTML = enfants.map(e => `<option value="${e.id}">${e.nom}</option>`).join('');
+  const options = enfants.map(e => `<option value="${e.id}">${e.nom}</option>`).join('');
+  document.getElementById('champ-enfant-cours').innerHTML = options;
+  const selHist = document.getElementById('champ-enfant-historique');
+  const valeurActuelle = selHist.value;
+  selHist.innerHTML = options;
+  if(valeurActuelle) selHist.value = valeurActuelle;
+}
+
+/* ---------- historique des cours ---------- */
+async function chargerHistorique(){
+  const zone = document.getElementById('zone-historique');
+  const enfantId = document.getElementById('champ-enfant-historique').value;
+  if(!enfantId){ zone.innerHTML = '<p style="color:#8a7d68;">Ajoute d\'abord un enfant.</p>'; return; }
+  zone.innerHTML = '<p>Chargement…</p>';
+  const { data: cours, error } = await db.from('cours')
+    .select('*').eq('enfant_id', enfantId).order('cree_le', { ascending:false });
+  if(error){ zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible — vérifie ta connexion internet et réessaie.</p>'; return; }
+  if(!cours || cours.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Aucun cours enregistré pour cet enfant.</p>'; return; }
+  zone.innerHTML = cours.map(c => `
+    <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong>${new Date(c.cree_le).toLocaleDateString('fr-FR')}</strong>
+        <span style="font-size:12px;color:#8a7d68;">${c.categorie === 'avance' ? '🚀 avance' : '📚 école'}</span>
+      </div>
+      <p style="font-size:13px;color:#6b5f4d;margin:4px 0;">${c.notions || '(pas de note)'}</p>
+      <button class="bouton petit secondaire" style="color:#E4776B;border-color:#FBE1DD;" onclick="supprimerCours('${c.id}')">supprimer ce cours</button>
+    </div>
+  `).join('');
+}
+
+async function supprimerCours(id){
+  if(!confirm('Supprimer ce cours et ses défis associés ?')) return;
+  await db.from('defis').delete().eq('cours_id', id);
+  await db.from('cours').delete().eq('id', id);
+  chargerHistorique();
+}
+
+/* ---------- export de sauvegarde ---------- */
+async function exporterSauvegarde(){
+  try{
+    const [e,c,d,r,p] = await Promise.all([
+      db.from('enfants').select('*'),
+      db.from('cours').select('*'),
+      db.from('defis').select('*'),
+      db.from('resultats').select('*'),
+      db.from('progression').select('*')
+    ]);
+    const sauvegarde = { date_export: new Date().toISOString(), enfants:e.data, cours:c.data, defis:d.data, resultats:r.data, progression:p.data };
+    const blob = new Blob([JSON.stringify(sauvegarde, null, 2)], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `mission-arabe-sauvegarde-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  }catch(e){
+    alert('Impossible d\'exporter — vérifie ta connexion internet.');
+  }
 }
 
 /* ---------- formulaire ajout de cours ---------- */
@@ -613,25 +684,32 @@ function melange(t){
 async function chargerDashboard(){
   const zone = document.getElementById('zone-dashboard');
   zone.innerHTML = '<p>Chargement…</p>';
-  let html = '<h3>Vue d\'ensemble</h3>';
-  for(const e of enfants){
-    const { data: progression } = await db.from('progression').select('*').eq('enfant_id', e.id);
-    const aRevoir = (progression || []).filter(p => (p.niveau_maitrise||0) < SEUIL_VALIDATION*100);
-    const pctEcole = Math.min(100, e.xp_ecole || 0);
-    const pctAvance = Math.min(100, e.xp_avance || 0);
-    html += `
-      <div class="ligne-enfant" style="flex-direction:column;align-items:stretch;">
-        <div style="display:flex;justify-content:space-between;"><strong>${e.nom}</strong><span>⭐ ${e.etoiles||0} ${(e.streak||0)>0?`· 🔥${e.streak}`:''}</span></div>
-        <div style="font-size:11px;color:#8a7d68;">${(e.missions_reussies||0)} missions réussies · ${(e.badges||[]).length} badge${(e.badges||[]).length>1?'s':''}</div>
-        <div style="font-size:11px;color:#8a7d68;margin-top:4px;">mon école</div>
-        <div class="mini-barre"><div style="width:${pctEcole}%;background:#2EC4B6;"></div></div>
-        <div style="font-size:11px;color:#8a7d68;">je m'avance</div>
-        <div class="mini-barre"><div style="width:${pctAvance}%;background:#9B5DE5;"></div></div>
-        ${aRevoir.length ? `<div style="font-size:12px;color:#E4776B;font-weight:600;margin-top:4px;">à revoir : ${aRevoir.map(p=>p.notion).join(', ')}</div>` : ''}
-      </div>
-    `;
+  try{
+    let html = new Date().getDay() === 0
+      ? '<div style="background:#F6E4BC;color:#8a6112;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:12px;">🌙 C\'est dimanche — pense à prendre en photo le cours de la semaine pour préparer les missions !</div>'
+      : '';
+    html += '<h3>Vue d\'ensemble</h3>';
+    for(const e of enfants){
+      const { data: progression } = await db.from('progression').select('*').eq('enfant_id', e.id);
+      const aRevoir = (progression || []).filter(p => (p.niveau_maitrise||0) < SEUIL_VALIDATION*100);
+      const pctEcole = Math.min(100, e.xp_ecole || 0);
+      const pctAvance = Math.min(100, e.xp_avance || 0);
+      html += `
+        <div class="ligne-enfant" style="flex-direction:column;align-items:stretch;">
+          <div style="display:flex;justify-content:space-between;"><strong>${e.nom}</strong><span>⭐ ${e.etoiles||0} ${(e.streak||0)>0?`· 🔥${e.streak}`:''}</span></div>
+          <div style="font-size:11px;color:#8a7d68;">${(e.missions_reussies||0)} missions réussies · ${(e.badges||[]).length} badge${(e.badges||[]).length>1?'s':''}</div>
+          <div style="font-size:11px;color:#8a7d68;margin-top:4px;">mon école</div>
+          <div class="mini-barre"><div style="width:${pctEcole}%;background:#2EC4B6;"></div></div>
+          <div style="font-size:11px;color:#8a7d68;">je m'avance</div>
+          <div class="mini-barre"><div style="width:${pctAvance}%;background:#9B5DE5;"></div></div>
+          ${aRevoir.length ? `<div style="font-size:12px;color:#E4776B;font-weight:600;margin-top:4px;">à revoir : ${aRevoir.map(p=>p.notion).join(', ')}</div>` : ''}
+        </div>
+      `;
+    }
+    zone.innerHTML = html || '<p>Aucun enfant.</p>';
+  }catch(e){
+    zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible — vérifie ta connexion internet et réessaie.</p>';
   }
-  zone.innerHTML = html || '<p>Aucun enfant.</p>';
 }
 
 /* ---------- espace enfant : ouverture mission ---------- */
