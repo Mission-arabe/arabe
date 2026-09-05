@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mission Arabe 🌙</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#1F5C4F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;700&family=Noto+Naskh+Arabic:wght@500;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -224,6 +228,8 @@
           <div class="case" style="background:#FF6B6B;color:#fff;border-color:#FF6B6B;" onclick="choisirCouleur(this,'#FF6B6B')">corail</div>
           <div class="case" style="background:#9B5DE5;color:#fff;border-color:#9B5DE5;" onclick="choisirCouleur(this,'#9B5DE5')">violet</div>
         </div>
+        <label>Avatar (optionnel — dépose d'abord les fichiers avatar-1.png à avatar-6.png à la racine de ton dépôt GitHub)</label>
+        <div class="cases" id="cases-avatars"></div>
         <button class="bouton" onclick="ajouterEnfant()">Ajouter</button>
       </div>
       <div class="carte" id="liste-enfants-parent"></div>
@@ -318,7 +324,9 @@ const VOCABULAIRE = [
   { mot:"بَاب", emoji:"🚪" }, { mot:"بَيْت", emoji:"🏠" }, { mot:"كِتَاب", emoji:"📕" },
   { mot:"قَلَم", emoji:"✏️" }, { mot:"شَمْس", emoji:"☀️" }, { mot:"قَمَر", emoji:"🌙" },
   { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"وَرْدَة", emoji:"🌸" }, { mot:"سَمَكَة", emoji:"🐟" },
-  { mot:"قِطَّة", emoji:"🐱" }
+  { mot:"قِطَّة", emoji:"🐱" }, { mot:"كَلْب", emoji:"🐶" }, { mot:"طَائِرَة", emoji:"✈️" },
+  { mot:"سَيَّارَة", emoji:"🚗" }, { mot:"شَجَرَة", emoji:"🌳" }, { mot:"مَاء", emoji:"💧" },
+  { mot:"نَجْمَة", emoji:"⭐" }
 ];
 
 // phrases très simples associées à une image — pour tester la compréhension
@@ -327,15 +335,21 @@ const PHRASES = [
   { phrase:"هَذِهِ قِطَّةٌ", emoji:"🐱" },
   { phrase:"الشَّمْسُ كَبِيرَةٌ", emoji:"☀️" },
   { phrase:"أَنَا أَقْرَأُ كِتَابًا", emoji:"📖" },
-  { phrase:"الْقَمَرُ جَمِيلٌ", emoji:"🌙" }
+  { phrase:"الْقَمَرُ جَمِيلٌ", emoji:"🌙" },
+  { phrase:"هَذَا كَلْبٌ صَغِيرٌ", emoji:"🐶" },
+  { phrase:"أَنَا أَشْرَبُ مَاءً", emoji:"💧" },
+  { phrase:"السَّيَّارَةُ سَرِيعَةٌ", emoji:"🚗" }
 ];
 
 // courts textes de lecture + un mot à retrouver dans le texte — teste le vocabulaire en contexte
 const TEXTES = [
   { texte:"هَذَا بَيْتٌ كَبِيرٌ. فِي الْبَيْتِ قِطَّةٌ جَمِيلَةٌ.", mot:"قِطَّةٌ", emoji:"🐱" },
   { texte:"الشَّمْسُ فِي السَّمَاءِ. الشَّمْسُ كَبِيرَةٌ وَجَمِيلَةٌ.", mot:"الشَّمْسُ", emoji:"☀️" },
-  { texte:"أَنَا أَقْرَأُ كِتَابِي كُلَّ يَوْمٍ. الْكِتَابُ مُمْتِعٌ.", mot:"كِتَابِي", emoji:"📖" }
+  { texte:"أَنَا أَقْرَأُ كِتَابِي كُلَّ يَوْمٍ. الْكِتَابُ مُمْتِعٌ.", mot:"كِتَابِي", emoji:"📖" },
+  { texte:"عِنْدِي كَلْبٌ صَغِيرٌ. الْكَلْبُ يَلْعَبُ فِي الْحَدِيقَةِ.", mot:"كَلْبٌ", emoji:"🐶" },
+  { texte:"شَجَرَةٌ كَبِيرَةٌ أَمَامَ بَيْتِي. تَحْتَ الشَّجَرَةِ وَرْدَةٌ حَمْرَاءُ.", mot:"وَرْدَةٌ", emoji:"🌸" }
 ];
+
 
 // badges à débloquer — condition évaluée sur l'enfant après mise à jour + score de la mission en cours
 const BADGES = [
@@ -348,6 +362,8 @@ const BADGES = [
 ];
 // alias conservé pour compatibilité avec l'ancien code
 const NIVEAUX_AVANCE = PARCOURS_AVANCE.map(n => n.unites);
+// toutes les lettres de l'alphabet (sans harakāt) — pool de distracteurs pour "cherche" et "mot à compléter"
+const LETTRES_TOUTES = [...new Set(PARCOURS_AVANCE.slice(0,12).flatMap(n => n.unites))];
 
 let enfants = [];
 let enfantActifId = null;
@@ -385,7 +401,7 @@ function dessinerGrilleEnfants(){
     carte.innerHTML = `
       <div class="rond">${e.avatar_url ? `<img src="${e.avatar_url}">` : '🌙'}</div>
       <div class="nom">${e.nom}</div>
-      <div class="etoiles">⭐ ${e.etoiles || 0}</div>
+      <div class="etoiles">⭐ ${e.etoiles || 0} ${(e.streak||0) > 0 ? `· 🔥 ${e.streak}` : ''}</div>
     `;
     zone.appendChild(carte);
   });
@@ -416,6 +432,22 @@ function changerOngletParent(nom){
 
 /* ---------- gestion enfants ---------- */
 let couleurChoisie = '#2EC4B6';
+let avatarChoisi = null;
+
+function initialiserCasesAvatars(){
+  const zone = document.getElementById('cases-avatars');
+  let html = `<div class="case" onclick="choisirAvatar(this, null)">aucun</div>`;
+  for(let i=1;i<=6;i++){
+    html += `<div class="case" style="padding:4px;" onclick="choisirAvatar(this, 'avatar-${i}.png')"><img src="avatar-${i}.png" style="width:34px;height:34px;object-fit:cover;border-radius:50%;display:block;" onerror="this.parentElement.style.display='none'"></div>`;
+  }
+  zone.innerHTML = html;
+}
+function choisirAvatar(el, fichier){
+  el.parentElement.querySelectorAll('.case').forEach(c => c.style.outline = 'none');
+  el.style.outline = '3px solid #3A3227';
+  avatarChoisi = fichier;
+}
+
 function choisirCouleur(el, couleur){
   el.parentElement.querySelectorAll('.case').forEach(c => c.style.outline = 'none');
   el.style.outline = '3px solid #3A3227';
@@ -424,9 +456,10 @@ function choisirCouleur(el, couleur){
 async function ajouterEnfant(){
   const nom = document.getElementById('nouveau-nom').value.trim();
   if(!nom){ alert('Entre un prénom'); return; }
-  const { error } = await db.from('enfants').insert({ nom, couleur: couleurChoisie });
+  const { error } = await db.from('enfants').insert({ nom, couleur: couleurChoisie, avatar_url: avatarChoisi });
   if(error){ alert('Erreur : ' + error.message); return; }
   document.getElementById('nouveau-nom').value = '';
+  avatarChoisi = null;
   chargerEnfants();
 }
 function dessinerListeEnfantsParent(){
@@ -435,9 +468,12 @@ function dessinerListeEnfantsParent(){
   zone.innerHTML = '<h3>Mes enfants</h3>' + enfants.map(e => `
     <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-        <div style="width:28px;height:28px;border-radius:50%;background:${e.couleur};flex-shrink:0;"></div>
+        <div style="width:32px;height:32px;border-radius:50%;background:${e.couleur};flex-shrink:0;overflow:hidden;">
+          ${e.avatar_url ? `<img src="${e.avatar_url}" style="width:100%;height:100%;object-fit:cover;">` : ''}
+        </div>
         <div style="flex:1;font-weight:700;">${e.nom}</div>
         <div style="color:#8a7d68;font-size:13px;">⭐ ${e.etoiles || 0}</div>
+        <button class="bouton petit secondaire" style="color:#E4776B;border-color:#FBE1DD;" onclick="supprimerEnfant('${e.id}','${e.nom}')">supprimer</button>
       </div>
       <label style="margin:0 0 2px;">Niveau de départ — Je m'avance</label>
       <select onchange="definirNiveauAvance('${e.id}', this.value)">
@@ -445,6 +481,12 @@ function dessinerListeEnfantsParent(){
       </select>
     </div>
   `).join('');
+}
+
+async function supprimerEnfant(id, nom){
+  if(!confirm(`Supprimer ${nom} et toutes ses données (cours, scores, progression) ? Cette action est irréversible.`)) return;
+  await db.from('enfants').delete().eq('id', id);
+  chargerEnfants();
 }
 
 async function definirNiveauAvance(enfantId, niveau){
@@ -546,6 +588,8 @@ async function genererDefisDepuisLettres(coursId, lettres){
     reponses: melange([cibleAudio, ...distracteursAudio]),
     bonne_reponse: cibleAudio
   });
+  // cherche et trouve : grille plus grande, plus de distracteurs
+  lignes.push({ cours_id: coursId, ...genererDefiCherche(lettres) });
   // mémoire : une seule entrée qui contient toutes les lettres à apparier
   lignes.push({
     cours_id: coursId, type: 'memoire',
@@ -575,8 +619,9 @@ async function chargerDashboard(){
     const pctAvance = Math.min(100, e.xp_avance || 0);
     html += `
       <div class="ligne-enfant" style="flex-direction:column;align-items:stretch;">
-        <div style="display:flex;justify-content:space-between;"><strong>${e.nom}</strong><span>⭐ ${e.etoiles||0}</span></div>
-        <div style="font-size:11px;color:#8a7d68;">mon école</div>
+        <div style="display:flex;justify-content:space-between;"><strong>${e.nom}</strong><span>⭐ ${e.etoiles||0} ${(e.streak||0)>0?`· 🔥${e.streak}`:''}</span></div>
+        <div style="font-size:11px;color:#8a7d68;">${(e.missions_reussies||0)} missions réussies · ${(e.badges||[]).length} badge${(e.badges||[]).length>1?'s':''}</div>
+        <div style="font-size:11px;color:#8a7d68;margin-top:4px;">mon école</div>
         <div class="mini-barre"><div style="width:${pctEcole}%;background:#2EC4B6;"></div></div>
         <div style="font-size:11px;color:#8a7d68;">je m'avance</div>
         <div class="mini-barre"><div style="width:${pctAvance}%;background:#9B5DE5;"></div></div>
@@ -635,13 +680,13 @@ async function afficherInfoMission(){
     .order('cree_le', { ascending:false }).limit(1);
 
   if(!cours || cours.length === 0){
-    zone.innerHTML = '<p style="color:#8a7d68;">Pas encore de cours ajouté cette semaine — demande à maman 🌙</p>';
+    await proposerRevisionOuVide(zone);
     return;
   }
 
   const { data: defis } = await db.from('defis').select('*').eq('cours_id', cours[0].id);
   if(!defis || defis.length === 0){
-    zone.innerHTML = '<p style="color:#8a7d68;">Pas encore de défis prêts pour ce cours.</p>';
+    await proposerRevisionOuVide(zone);
     return;
   }
   zone.innerHTML = `
@@ -649,6 +694,29 @@ async function afficherInfoMission(){
     <p style="color:#8a7d68;font-size:13px;">${defis.length} défis · environ 5 minutes</p>
     <button class="bouton" onclick='lancerMissionEcole(${JSON.stringify(defis).replace(/'/g,"&apos;")})'>Commencer</button>
   `;
+}
+
+// quand il n'y a pas de nouveau cours : propose une révision des notions dues, sinon un message d'attente
+async function proposerRevisionOuVide(zone){
+  const aujourdHui = new Date().toISOString().slice(0,10);
+  const { data: dues } = await db.from('progression')
+    .select('*').eq('enfant_id', enfantActifId).lte('prochaine_revision', aujourdHui);
+  if(dues && dues.length > 0){
+    const notions = dues.map(d => d.notion);
+    zone.innerHTML = `
+      <h3>🔁 Révision du jour</h3>
+      <p style="color:#8a7d68;font-size:13px;">${notions.join(', ')}</p>
+      <button class="bouton" onclick='lancerRevision(${JSON.stringify(notions).replace(/'/g,"&apos;")})'>Commencer</button>
+    `;
+  } else {
+    zone.innerHTML = '<p style="color:#8a7d68;">Pas encore de cours ajouté cette semaine — demande à maman 🌙</p>';
+  }
+}
+
+function lancerRevision(notions){
+  etatJeu = { defis: genererMissionMixte(notions), index:0, bonnes:0, enfantId: enfantActifId, categorie:'ecole' };
+  afficherEcran('ecran-jeu');
+  jouerDefiCourant();
 }
 
 /* ---------- moteur de jeu ---------- */
@@ -706,8 +774,9 @@ function genererDefisTexte(){
 // mélange reconnaissance visuelle (reconnais), écrite/ciblée (trouve) et orale (ecoute)
 function genererMissionMixte(unites){
   const defis = [];
-  const types = ['reconnais','ecoute','trouve','reconnais','ecoute'];
+  const types = ['reconnais','ecoute','trouve','cherche','ecoute'];
   types.forEach(type => {
+    if(type === 'cherche'){ defis.push(genererDefiCherche(unites)); return; }
     const cible = unites[Math.floor(Math.random()*unites.length)];
     const distracteurs = melange(unites.filter(u=>u!==cible)).slice(0,2);
     while(distracteurs.length < 2 && unites.length > 1) distracteurs.push(unites[Math.floor(Math.random()*unites.length)]);
@@ -716,7 +785,28 @@ function genererMissionMixte(unites){
   if(unites.length >= 3){
     defis.push({ type:'memoire', question:'memoire', reponses: melange(unites).slice(0,4), bonne_reponse:null });
   }
+  defis.push(genererDefiComplete());
   return defis;
+}
+
+// cherche et trouve : la bonne lettre se cache dans une grille plus grande (plus de distracteurs)
+function genererDefiCherche(unites){
+  const pool = LETTRES_TOUTES.length ? LETTRES_TOUTES : unites;
+  const cible = unites[Math.floor(Math.random()*unites.length)];
+  const autresDistracteurs = melange(pool.filter(l => l !== cible)).slice(0,7);
+  return { type:'cherche', question:cible, reponses: melange([cible, ...autresDistracteurs]), bonne_reponse: cible };
+}
+
+// mot à compléter : une lettre manque dans un mot simple, l'enfant retrouve laquelle
+const MOTS_A_COMPLETER = ["باب","بيت","كتاب","قلم","درس"];
+function genererDefiComplete(){
+  const mot = MOTS_A_COMPLETER[Math.floor(Math.random()*MOTS_A_COMPLETER.length)];
+  const lettres = [...mot];
+  const idx = 1 + Math.floor(Math.random()*(lettres.length-1));
+  const bonne = lettres[idx];
+  const affichage = lettres.map((l,i) => i===idx ? '▢' : l).join('');
+  const distracteurs = melange(LETTRES_TOUTES.filter(l => l !== bonne)).slice(0,2);
+  return { type:'complete', question: affichage, reponses: melange([bonne, ...distracteurs]), bonne_reponse: bonne };
 }
 
 function majBarreJeu(){
@@ -796,7 +886,7 @@ function jouerDefiCourant(){
   scene.style.height = (defi.type === 'texte') ? 'auto' : '170px';
   scene.style.padding = (defi.type === 'texte') ? '16px 10px' : '0';
 
-  if(defi.type === 'reconnais' || defi.type === 'trouve' || defi.type === 'vocab-mot' || defi.type === 'phrase-image'){
+  if(defi.type === 'reconnais' || defi.type === 'trouve' || defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'cherche' || defi.type === 'complete'){
     scene.innerHTML = `<div class="lettre-grande" style="font-size:${tailleArabe(defi.question)}">${defi.question}</div>`;
   } else if(defi.type === 'vocab-image'){
     scene.innerHTML = `<div style="font-size:90px;">${defi.question}</div>`;
@@ -820,7 +910,7 @@ function jouerDefiCourant(){
       b.className = 'choix';
       b.style.fontSize = emojiChoix ? '40px' : tailleArabe(item);
       b.textContent = item;
-      b.onclick = () => validerReponse(b, item === defi.bonne_reponse);
+      b.onclick = () => validerReponse(b, item === defi.bonne_reponse, defi.bonne_reponse);
       zone.appendChild(b);
     });
   } else {
@@ -828,12 +918,45 @@ function jouerDefiCourant(){
   }
 }
 
-function validerReponse(bouton, correct){
+// répétition espacée simple : échec → revoir demain, réussite → +3j, bonne maîtrise (2 réussites) → +7j
+async function enregistrerProgression(enfantId, notion, reussite){
+  if(!notion) return;
+  const { data: existant } = await db.from('progression').select('*').eq('enfant_id', enfantId).eq('notion', notion).limit(1);
+  const ligne = existant && existant[0];
+  const aujourdHui = new Date();
+  let niveauMaitrise = ligne ? (ligne.niveau_maitrise || 0) : 0;
+  let joursAvant;
+  if(reussite){
+    niveauMaitrise = Math.min(100, niveauMaitrise + 34);
+    joursAvant = niveauMaitrise >= 68 ? 7 : 3;
+  } else {
+    niveauMaitrise = Math.max(0, niveauMaitrise - 20);
+    joursAvant = 1;
+  }
+  const prochaine = new Date(aujourdHui.getTime() + joursAvant*24*3600*1000).toISOString().slice(0,10);
+  if(ligne){
+    await db.from('progression').update({ niveau_maitrise: niveauMaitrise, prochaine_revision: prochaine, maj_le: new Date().toISOString() }).eq('id', ligne.id);
+  } else {
+    await db.from('progression').insert({ enfant_id: enfantId, notion, niveau_maitrise: niveauMaitrise, prochaine_revision: prochaine });
+  }
+}
+
+// met à jour le streak de jours consécutifs — appelé une fois par mission jouée
+function calculerNouveauStreak(e){
+  const aujourdHui = new Date().toISOString().slice(0,10);
+  if(e.dernier_jour_joue === aujourdHui) return { streak: e.streak || 1, dernier_jour_joue: aujourdHui };
+  const hier = new Date(Date.now() - 24*3600*1000).toISOString().slice(0,10);
+  const nouveauStreak = (e.dernier_jour_joue === hier) ? (e.streak || 0) + 1 : 1;
+  return { streak: nouveauStreak, dernier_jour_joue: aujourdHui };
+}
+
+function validerReponse(bouton, correct, notion){
   document.querySelectorAll('.choix').forEach(c => c.onclick = null);
   bouton.classList.add(correct ? 'bonne' : 'mauvaise');
   jouerSonReponse(correct);
   reagirMascotte(correct);
   if(correct) etatJeu.bonnes++;
+  if(notion) enregistrerProgression(etatJeu.enfantId, notion, correct);
   setTimeout(() => {
     etatJeu.index++;
     if(etatJeu.index >= etatJeu.defis.length) terminerMission();
@@ -891,6 +1014,7 @@ async function terminerMission(){
   if(reussi){
     maj.missions_reussies = (e.missions_reussies || 0) + 1;
   }
+  Object.assign(maj, calculerNouveauStreak(e));
 
   // badges : on vérifie les conditions sur l'état de l'enfant après mise à jour
   const enfantApresMaj = { ...e, ...maj };
@@ -922,6 +1046,7 @@ async function terminerMission(){
 }
 
 /* ---------- démarrage ---------- */
+initialiserCasesAvatars();
 chargerEnfants();
 </script>
 </body>
