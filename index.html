@@ -2,1668 +2,882 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b071c">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mission Arabe 🌙</title>
+<meta name="mobile-web-app-capable" content="yes">
+<title>Arabiya Famille — Mon aventure arabe</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#1F5C4F">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;700&family=Noto+Naskh+Arabic:wght@500;700&family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root{
-    --sable:#F7F1E3; --carte:#FFFDF7; --encre:#3A3227;
-    --vert:#1F5C4F; --vert-clair:#DCEBE6;
-    --or:#D9A441; --or-clair:#F6E4BC;
-    --corail:#E4776B; --corail-clair:#FBE1DD;
-    --bleu:#3E8BE0;
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--sable);color:var(--encre);font-family:'Baloo 2',sans-serif;
-    min-height:100vh;min-height:100dvh;display:flex;justify-content:center;user-select:none;
-    -webkit-tap-highlight-color:transparent;overflow-x:hidden;}
-  .app{width:100%;max-width:480px;min-height:100vh;min-height:100dvh;
-    padding:18px 16px calc(44px + env(safe-area-inset-bottom));
-    padding-top:calc(18px + env(safe-area-inset-top));}
-  .ecran{display:none;flex-direction:column;}
-  .ecran.actif{display:flex;}
+@import url('https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap');
+:root{
+ --bg:#0b071c;--bg2:#120b29;--panel:#171039;--panel2:#21164a;
+ --gold:#f3cc55;--gold2:#e7ad38;--cream:#fff8ea;--muted:#b9b0cb;
+ --teal:#2c8981;--plum:#754078;--coral:#b75d4b;--blue:#36588f;
+ --green:#55b68d;--red:#cf6673;--line:rgba(255,255,255,.10);
+ --r:25px;--shadow:0 18px 45px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--cream)}
+body{font-family:Nunito,system-ui,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:
+ radial-gradient(circle at 12% 9%,transparent 0 22px,rgba(243,204,85,.28) 23px,transparent 25px),
+ radial-gradient(circle at 88% 19%,transparent 0 18px,rgba(243,204,85,.22) 19px,transparent 21px);
+ background-size:125px 125px,170px 170px}
+.app{max-width:560px;margin:auto;min-height:100vh;padding:14px 15px 105px;position:relative}
+.top{height:48px;display:flex;align-items:center;justify-content:space-between}
+.iconbtn{width:42px;height:42px;border:0;border-radius:50%;background:transparent;color:#d8d0df;font-size:22px}
+.stepdots{display:flex;gap:7px}.stepdots i{width:8px;height:8px;border-radius:50%;background:#5a5068}.stepdots i.on{background:var(--gold);transform:scale(1.3)}
+.hero{text-align:center;padding:8px 0 8px}
+.logo{font-family:"El Messiri",serif;font-size:23px;color:var(--gold);letter-spacing:.08em}
+.hero h1{font-family:"El Messiri",serif;font-size:25px;line-height:1.2;margin:5px 0}
+.hero p{margin:0;color:var(--muted);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.letters{display:flex;justify-content:center;gap:10px;margin:20px 0 15px}
+.letter{height:106px;flex:1;max-width:116px;border-radius:29px;display:grid;place-items:center;font-family:"El Messiri",serif;font-size:58px;font-weight:700;color:#e9e7e6;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.07)}
+.c1{background:linear-gradient(145deg,#8a3c57,#633046)}.c2{background:linear-gradient(145deg,#633593,#4a276f)}
+.c3{background:linear-gradient(145deg,#207b76,#185d59)}.c4{background:linear-gradient(145deg,#9b423c,#71302e)}
+.streak{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(243,204,85,.35);background:rgba(25,10,37,.85);padding:9px 18px;border-radius:999px;color:var(--gold);font-weight:900}
+.profile{margin:9px 0 15px;display:flex;gap:9px}
+.profile-main{flex:1;text-align:left;background:#160c33;border:2px solid var(--gold);color:var(--cream);border-radius:999px;padding:11px 16px;font-weight:900}
+.add{width:45px;height:45px;border-radius:50%;border:1px solid #493761;background:#160c33;color:white;font-size:24px}
+.banner{position:relative;min-height:112px;border-radius:27px;margin:11px 0;padding:17px 17px;display:flex;align-items:center;gap:13px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.08);text-align:left;color:white}
+.banner:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-70px;top:-80px;background:rgba(255,255,255,.07)}
+.banner .art{font-size:52px;width:72px;text-align:center;z-index:1}
+.banner .copy{flex:1;z-index:1}.banner h2{margin:0 0 4px;font-family:"El Messiri";font-size:22px}.banner p{margin:0;color:#eadfec;font-size:12px}.banner .arrow{font-size:30px;color:#eee;z-index:1}
+.bmission{background:linear-gradient(105deg,#4c7770,#a44d27)}.bmap{background:linear-gradient(105deg,#62442d,#3c2d70)}.bbonus{background:linear-gradient(105deg,#63324d,#7d3d62)}
+.kicker{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#9e92b3;margin:20px 5px 9px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:11px}.tile{min-height:112px;background:#160c34;border:1px solid #3b2a5d;border-radius:22px;padding:15px;text-align:left;color:var(--cream);box-shadow:var(--shadow)}.tile .ico{font-size:29px}.tile strong{display:block;margin-top:7px}.tile small{display:block;color:var(--muted);margin-top:2px}
+.card{background:rgba(23,16,57,.96);border:1px solid #3a2a5c;border-radius:25px;padding:18px;margin:11px 0;box-shadow:var(--shadow)}
+.screen{display:none}.screen.active{display:block}
+.bottom{position:fixed;z-index:20;bottom:0;left:50%;transform:translateX(-50%);width:min(560px,100%);padding:9px 13px calc(9px + env(safe-area-inset-bottom));background:rgba(10,6,27,.93);backdrop-filter:blur(16px);border-top:1px solid #2d2148;display:grid;grid-template-columns:repeat(4,1fr)}
+.nav{border:0;background:none;color:#8f849e;font-size:10px}.nav b{display:block;font-size:20px;margin-bottom:2px}.nav.on{color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#100829;border-radius:17px;padding:10px;text-align:center}.stat b{display:block;font-size:21px;color:var(--gold)}.stat span{font-size:10px;color:var(--muted)}
+.progress{height:7px;background:#33264c;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#e9904a);border-radius:99px}
+.challenge{min-height:66vh;display:flex;flex-direction:column;justify-content:center;text-align:center}.challenge h2{font-family:"El Messiri";font-size:22px}.arabic{font-family:"El Messiri",serif;font-size:90px;font-weight:700;direction:rtl;margin:18px 0;color:#fff7df;text-shadow:0 7px 25px rgba(243,204,85,.12)}
+.audio{width:55px;height:55px;border-radius:50%;border:1px solid rgba(243,204,85,.45);background:#211447;color:var(--gold);font-size:24px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}.answer{min-height:74px;border-radius:20px;background:#1a1041;border:1px solid #493763;color:var(--cream);font-family:"El Messiri";font-size:31px;font-weight:700}.answer.ok{background:#205d4b;border-color:#65c79b}.answer.no{background:#6c3044;border-color:#db7583}
+.feedback{height:31px;margin:11px;color:var(--gold);font-weight:900}
+.missionbar{height:7px;background:#32254b;border-radius:99px;overflow:hidden}.missionbar i{display:block;height:100%;background:var(--gold);transition:.3s}
+.field{margin:12px 0}.field label{display:block;font-size:11px;color:#bdb2ca;margin:0 0 6px}.field input,.field textarea,.field select{width:100%;background:#0f0727;color:var(--cream);border:1px solid #4a3866;border-radius:15px;padding:12px;outline:none}.field textarea{min-height:100px}
+.primary,.secondary{width:100%;padding:13px 17px;border-radius:17px;font-weight:900;margin-top:8px}.primary{background:var(--gold);color:#25160b;border:0}.secondary{background:#170c34;color:var(--cream);border:1px solid #4b3968}
+.lesson{display:flex;gap:11px;padding:11px;background:#10082a;border-radius:16px;margin:8px 0}.lesson .mini{font-size:25px}.lesson small{color:var(--muted)}
+.tag{display:inline-block;padding:6px 9px;border-radius:999px;background:#2a1b48;color:#ded3e9;margin:3px;font-size:11px}
+.map{position:relative;padding:18px 8px}.path{position:absolute;left:50%;top:35px;bottom:35px;width:4px;background:linear-gradient(#5c466e,#2b1c45);transform:translateX(-50%);border-radius:99px}
+.node{position:relative;display:flex;align-items:center;margin:17px 0}.node:nth-child(even){justify-content:flex-end}.nodebox{width:44%;background:#160c34;border:1px solid #493563;border-radius:21px;padding:13px;text-align:center;position:relative}.nodebox.locked{opacity:.42}.nodebox.done{border-color:var(--gold);box-shadow:0 0 0 2px rgba(243,204,85,.08)}.nodebox .circle{width:48px;height:48px;margin:-32px auto 6px;border-radius:50%;display:grid;place-items:center;background:#2a1b4a;border:2px solid #6a547e;font-size:21px}.nodebox.done .circle{background:#8a6c1f;border-color:var(--gold)}
+.sectionhead{display:flex;justify-content:space-between;align-items:center}.sectionhead h2,.sectionhead h3{margin:0;font-family:"El Messiri"}
+.avatargrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.avatarcard{padding:15px;border-radius:20px;background:#130a30;border:1px solid #44335f;color:white;text-align:left}.avatarcard b{display:block;margin-top:5px}.avatarcard small{color:var(--muted)}
+.modal{display:none;position:fixed;inset:0;background:rgba(2,1,10,.78);z-index:40;align-items:flex-end}.modal.open{display:flex}.sheet{width:min(560px,100%);margin:auto;background:#140b30;border:1px solid #3f2d61;border-radius:28px 28px 0 0;padding:20px;max-height:90vh;overflow:auto}
+.empty{text-align:center;color:var(--muted);padding:22px}.toast{position:fixed;top:18px;left:50%;transform:translate(-50%,-20px);opacity:0;z-index:60;background:var(--gold);color:#21140b;font-weight:900;padding:11px 18px;border-radius:999px;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:430px){.letter{height:92px;font-size:48px}.letters{gap:7px}.banner h2{font-size:19px}}
 
-  header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
-  header.top .titre{font-family:'El Messiri';font-size:23px;font-weight:700;color:var(--vert);}
-  .rond-bouton{width:44px;height:44px;border-radius:12px;background:var(--vert-clair);border:none;
-    display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--vert);flex-shrink:0;}
+/* ===== ARABIYA V3 ===== */
+.world-card{position:relative;min-height:150px;border-radius:28px;padding:20px;overflow:hidden;border:1px solid rgba(255,255,255,.09);box-shadow:var(--shadow);margin:11px 0;background:linear-gradient(135deg,#24174e,#123d4a)}
+.world-card .moon{position:absolute;right:20px;top:12px;font-size:48px;opacity:.9}.world-card .spark{position:absolute;right:70px;top:55px;font-size:18px}
+.world-card h2{font-family:"El Messiri";margin:0 0 6px;font-size:22px}.world-card p{color:#ddd2e5;font-size:12px;max-width:70%;margin:0}
+.zone-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.zone{min-height:145px;border:1px solid rgba(255,255,255,.10);border-radius:25px;padding:15px;color:white;text-align:left;position:relative;overflow:hidden;box-shadow:var(--shadow)}.zone b{display:block;font-family:"El Messiri";font-size:18px;margin-top:8px}.zone small{color:#ddd4e6}.zone .zart{font-size:39px}.zone.locked{filter:saturate(.45);opacity:.58}.zone.done{outline:2px solid rgba(243,204,85,.45)}.zone:nth-child(1){background:linear-gradient(145deg,#62427b,#362251)}.zone:nth-child(2){background:linear-gradient(145deg,#226f70,#183e4c)}.zone:nth-child(3){background:linear-gradient(145deg,#9b6734,#5c3527)}.zone:nth-child(4){background:linear-gradient(145deg,#456d4c,#243f37)}.zone:nth-child(5){background:linear-gradient(145deg,#7a4568,#3d274e)}.zone:nth-child(6){background:linear-gradient(145deg,#4a5f8c,#2b345c)}
+.child-level{display:flex;gap:8px;flex-wrap:wrap}.level-pill{border:1px solid #4d3a67;background:#160c34;color:#ddd2e6;border-radius:999px;padding:8px 11px;font-size:11px}.level-pill.active{border-color:var(--gold);color:var(--gold);background:#2b1e42}
+.word-card{background:#10082a;border:1px solid #3b2b58;border-radius:21px;padding:14px;display:flex;align-items:center;gap:13px;margin:8px 0}.word-art{font-size:38px;width:54px;text-align:center}.word-ar{font-family:"El Messiri";font-size:30px;direction:rtl}.word-card small{display:block;color:var(--muted)}
+.story{background:linear-gradient(145deg,#251849,#17102f);border:1px solid #4b3767;border-radius:23px;padding:16px;margin:9px 0}.story .storyart{font-size:42px}.story h3{font-family:"El Messiri";margin:5px 0}.story p{color:#d2c8dc;font-size:12px;line-height:1.65}.choice-list{display:grid;gap:9px;margin-top:15px}.choice-list button{text-align:left;background:#130a30;color:white;border:1px solid #47335f;border-radius:17px;padding:13px}.choice-list button:hover{border-color:var(--gold)}
 
-  .carte{background:var(--carte);border-radius:20px;padding:16px;box-shadow:0 4px 0 rgba(58,50,39,0.06);margin-bottom:14px;}
-  h3{margin:0 0 10px;font-size:16px;}
-  label{display:block;font-size:13px;font-weight:600;color:#6b5f4d;margin:10px 0 4px;}
-  input[type=text], input[type=date], textarea, select{
-    width:100%;padding:12px;border-radius:12px;border:2px solid var(--vert-clair);
-    font-family:'Baloo 2';font-size:16px;background:#fff;color:var(--encre);
-  }
-  textarea{min-height:60px;resize:vertical;}
-  .cases{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
-  .case{padding:8px 12px;border-radius:100px;border:2px solid var(--vert-clair);font-size:13px;font-weight:600;cursor:pointer;color:#6b5f4d;}
-  .case.actif{background:var(--vert);border-color:var(--vert);color:#fff;}
-  .bouton{display:block;width:100%;background:var(--vert);color:#fff;border:none;border-radius:100px;
-    padding:14px;font-family:'Baloo 2';font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 4px 0 #143f37;margin-top:14px;}
-  .bouton:active{transform:translateY(2px);box-shadow:0 2px 0 #143f37;}
-  .bouton.secondaire{background:none;color:var(--vert);border:2px solid var(--vert-clair);box-shadow:none;}
-  .bouton.petit{padding:9px 14px;font-size:13px;width:auto;margin:0;box-shadow:none;}
-  .tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
-  .tab{flex:1;text-align:center;padding:10px;border-radius:100px;background:var(--vert-clair);color:var(--vert);
-    font-weight:700;font-size:13px;cursor:pointer;}
-  .tab.actif{background:var(--vert);color:#fff;}
 
-  /* accueil enfants */
-  .grille-enfants{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px;}
-  .carte-enfant{border-radius:20px;padding:16px 8px;text-align:center;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.12);}
-  .carte-enfant .rond{width:56px;height:56px;border-radius:50%;background:#fff;margin:0 auto 8px;
-    display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;}
-  .carte-enfant .rond img{width:100%;height:100%;object-fit:cover;object-position:top;}
-  .carte-enfant .nom{font-weight:700;color:#fff;font-size:14px;}
-  .carte-enfant .etoiles{font-size:11px;color:#fff;opacity:0.9;}
+.adventure-world{position:relative;overflow:hidden;border-radius:30px;border:1px solid #4a3568;background:linear-gradient(160deg,#11082d,#24114a 55%,#102f46);padding:18px;box-shadow:0 20px 50px #080316aa}
+.map-sky{height:190px;position:relative;border-radius:24px;background:radial-gradient(circle at 78% 20%,#fff5b844 0 4px,transparent 5px),radial-gradient(circle at 20% 28%,#fff 0 2px,transparent 3px),linear-gradient(#171044,#39205e 58%,#173c48);overflow:hidden}
+.map-sky:before{content:'✦  ·  ✧     ·   ✦     ·  ✧';position:absolute;top:18px;left:18px;color:#f8e9a7aa;font-size:18px;letter-spacing:15px}
+.moon-art{position:absolute;right:42px;top:28px;width:62px;height:62px;border-radius:50%;background:#fff3ae;box-shadow:0 0 35px #f8e9a755}.moon-art:after{content:'';position:absolute;right:-9px;top:-4px;width:58px;height:58px;border-radius:50%;background:#171044}
+.hill{position:absolute;bottom:-38px;width:75%;height:100px;border-radius:50% 50% 0 0;background:#123d3f;transform:rotate(-3deg)}.hill.two{right:-20%;bottom:-55px;background:#1a2d52;transform:rotate(5deg)}
+.lantern{position:absolute;bottom:38px;left:11%;font-size:28px;filter:drop-shadow(0 0 9px #f5d76e)}
+.map-road{margin:-20px 18px 0;height:28px;border-top:6px dashed #d9b95caa;transform:rotate(2deg);position:relative;z-index:2}
+.zone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px}.zone{position:relative;min-height:145px;padding:14px;border-radius:24px;border:1px solid #4d3b69;overflow:hidden;text-align:left;background:#140b2e;color:white}.zone:after{content:'';position:absolute;inset:auto -25px -45px;width:150px;height:100px;border-radius:50%;background:#ffffff10}.zone-art{font-size:43px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 5px 8px #0005)}.zone b{display:block;font-size:16px}.zone small{display:block;color:#d9cfee;margin-top:4px}.zone.locked{filter:saturate(.45);opacity:.65}.zone.done{border-color:#e4cf76;box-shadow:0 0 0 1px #e4cf7622 inset}.zone .lock{position:absolute;right:12px;top:12px;font-size:18px}.zone:nth-child(1){background:linear-gradient(145deg,#183c3c,#142546)}.zone:nth-child(2){background:linear-gradient(145deg,#254438,#182b4a)}.zone:nth-child(3){background:linear-gradient(145deg,#5b3a28,#241b3d)}.zone:nth-child(4){background:linear-gradient(145deg,#3f2b55,#192e49)}.zone:nth-child(5){background:linear-gradient(145deg,#3a2853,#171d3c)}.zone:nth-child(6){background:linear-gradient(145deg,#172b50,#3c244f)}
+.avatar-builder{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.avatar-option{padding:10px 8px;border-radius:20px;background:#130a30;border:1px solid #44335f;color:white;cursor:pointer;transition:.18s}.avatar-option:hover{border-color:#e4cf76;transform:translateY(-2px)}.avatar-option.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(243,204,85,.16),0 10px 28px rgba(0,0,0,.25)}.avatar-big{font-size:58px;line-height:1.05}.avatar-img{height:122px;width:100%;object-fit:contain;display:block;filter:drop-shadow(0 10px 12px rgba(0,0,0,.24))}.avatar-mini{height:58px;width:54px;object-fit:contain;vertical-align:middle;filter:drop-shadow(0 5px 7px rgba(0,0,0,.22))}.avatar-preview-img{height:190px;width:180px;object-fit:contain;filter:drop-shadow(0 16px 18px rgba(0,0,0,.3))}.avatar-section{margin-top:16px}.avatar-section h3{font-size:14px;color:#d9cfee;margin:0 0 8px}.avatar-note{background:#201245;border-radius:16px;padding:10px 12px;color:#cfc4e5;font-size:12px;margin-top:12px}
+@media(max-width:520px){.zone-grid{grid-template-columns:1fr}.avatar-builder{grid-template-columns:repeat(2,1fr)}}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:14px}.profile-card{border:1px solid #493563;background:linear-gradient(145deg,#17103c,#11092b);border-radius:24px;padding:13px 10px;color:#fff;text-align:center;box-shadow:var(--shadow);transition:.18s}.profile-card:hover{transform:translateY(-2px);border-color:#b99a4d}.profile-card.active{border:2px solid var(--gold);background:linear-gradient(145deg,#25154d,#160d34)}.profile-card .pc-name{font-weight:900;margin-top:3px}.profile-card .pc-meta{font-size:10px;color:var(--muted)}.profile-card .pc-streak{color:var(--gold);font-size:10px;margin-top:4px}.profile-card .pc-avatar{height:115px;width:100%;object-fit:contain;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))}
+/* ===== V6 — MOODBOARD IMMERSIF + MOBILE ===== */
+:root{--night:#09061b;--night2:#17102f;--gold:#f4c95d;--goldsoft:#ffe9a8;--lav:#d7c5e8;--teal2:#55b9ae}
+body{background:radial-gradient(circle at 50% -10%,#3b225e 0,#160d31 34%,#09061b 72%);overflow-x:hidden}
+body:after{content:"";position:fixed;inset:auto 0 0;height:26vh;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(4,3,15,.72));z-index:-1}
+.app{width:100%;max-width:620px;padding:12px 16px 112px}
+.top{height:46px;position:sticky;top:0;z-index:15;background:linear-gradient(180deg,rgba(9,6,27,.94),rgba(9,6,27,.18));backdrop-filter:blur(7px)}
+.iconbtn{background:rgba(20,11,46,.7);border:1px solid #4a3568;box-shadow:0 8px 20px #0003}
+.hero{padding:12px 0 14px;position:relative}
+.hero:before{content:"✦   ·   ✧      ·      ✦      ·   ✧";display:block;color:#f9e9a988;font-size:12px;letter-spacing:8px;margin-bottom:4px}
+.logo{font-size:30px;text-shadow:0 4px 20px rgba(244,201,93,.2)}
+.hero h1{font-size:28px;margin:8px auto 5px;max-width:390px}.hero p{font-size:10px;color:#c8b8d7}
+.letters{gap:9px;margin:18px auto 16px;max-width:500px}.letter{height:98px;border-radius:27px;max-width:none;box-shadow:0 18px 35px #0004, inset 0 1px #fff2}.c1{background:linear-gradient(145deg,#a44a62,#5b2949)}.c2{background:linear-gradient(145deg,#7043a1,#432267)}.c3{background:linear-gradient(145deg,#298e88,#185b59)}.c4{background:linear-gradient(145deg,#a94c43,#6d2d2e)}
+.world-card{min-height:158px;padding:22px;background:radial-gradient(circle at 78% 18%,#f8dc7730 0 3px,transparent 4px),linear-gradient(135deg,#24164c,#38205d 55%,#123d48);box-shadow:0 22px 55px #0006}.world-card:before{content:"";position:absolute;left:-20px;bottom:-60px;width:180px;height:110px;border-radius:50%;background:#0b2c36;box-shadow:150px 25px 0 #10253e,290px 4px 0 #0b2836}.world-card:after{content:"🏮";position:absolute;left:22px;bottom:18px;font-size:28px;filter:drop-shadow(0 0 10px #f4d36b)}
+.profile-main{background:linear-gradient(90deg,#241446,#160b32);border-color:#e0bd58}.profile-main img{margin-right:5px}
+.banner{min-height:116px;border-radius:29px;padding:18px 18px}.banner:before{content:"";position:absolute;inset:auto -30px -55px;width:190px;height:120px;border-radius:50%;background:#ffffff0a}.bmission{background:linear-gradient(110deg,#416f68,#9d4d2f)}.bmap{background:linear-gradient(110deg,#62442e,#3d2b70)}.bbonus{background:linear-gradient(110deg,#63314d,#7a3c65)}
+.banner .art{font-size:48px}.banner h2{font-size:21px}.banner p{font-size:12px}
+.tile,.card{background:linear-gradient(145deg,rgba(29,18,63,.98),rgba(16,9,38,.98));border-color:#493563;box-shadow:0 16px 38px #0005}.tile{min-height:108px;border-radius:23px}.tile .ico{font-size:31px}
+.bottom{width:min(620px,100%);grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:rgba(10,6,27,.95);border-radius:22px 22px 0 0;box-shadow:0 -12px 35px #0005}.nav{min-width:0;padding:4px 1px}.nav b{font-size:19px}.nav{font-size:9px}
+.adventure-world{padding:10px;background:linear-gradient(160deg,#10082a,#28144d 52%,#0d3340);border-radius:30px}.map-sky{height:210px;border-radius:25px}.zone-grid{gap:10px}.zone{min-height:150px;border-radius:25px}
+.profile-grid{grid-template-columns:repeat(2,1fr);gap:10px}.profile-card{min-height:190px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;position:relative;background:radial-gradient(circle at 50% 28%,#4a2b68,#171039 65%)}.profile-card .pc-avatar{height:145px;margin:auto;object-position:center bottom}.profile-card.active{box-shadow:0 0 0 2px #f4c95d44,0 16px 34px #0005}
+.avatar-builder{grid-template-columns:repeat(3,1fr)}.avatar-option{min-height:160px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;overflow:hidden;background:radial-gradient(circle at 50% 20%,#33205a,#120a2d 70%)}.avatar-img{height:135px;width:100%;object-fit:contain;object-position:center bottom}.avatar-preview-img{height:220px;width:180px;object-fit:contain;object-position:center bottom}
+.avatar-stage{position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:270px;border-radius:30px;overflow:hidden;background:radial-gradient(circle at 50% 24%,#594079 0,#29164c 38%,#11082a 78%);border:1px solid #58406f;box-shadow:inset 0 1px #fff1,0 18px 40px #0005}.avatar-stage:before{content:"✦   ✧   ·   ✦   ·   ✧";position:absolute;top:17px;left:18px;color:#f8e9a777;letter-spacing:12px;font-size:12px}.avatar-stage:after{content:"";position:absolute;bottom:-65px;width:340px;height:130px;border-radius:50%;background:#0b2232;box-shadow:170px 18px 0 #10253b}.avatar-stage .avatar-preview-img{z-index:2}.companion-float{position:absolute;z-index:3;right:24px;bottom:34px;font-size:46px;filter:drop-shadow(0 7px 7px #0007)}.evo-aura{position:absolute;z-index:1;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,#f4c95d33,transparent 65%);filter:blur(1px)}.evo-accessory{position:absolute;z-index:4;right:18px;top:18px;font-size:31px}.evo-stars{position:absolute;z-index:4;left:20px;top:22px;color:#ffe9a8;font-size:15px;letter-spacing:5px}.evolution-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.evo-card{border:1px solid #44325f;background:#120a2c;border-radius:20px;padding:13px;text-align:left}.evo-card.unlocked{border-color:#cfae50;background:linear-gradient(145deg,#28184d,#140b30)}.evo-card.locked{opacity:.45}.evo-card strong{display:block}.evo-card small{color:var(--muted);display:block;margin-top:4px}.evo-card button{margin-top:9px;width:100%;padding:8px;border-radius:12px;border:1px solid #5b456f;background:#211344;color:#fff}.evo-card.unlocked button{border-color:#d9b64e;color:#f6d97c}
+.challenge{min-height:65vh}.answer{background:linear-gradient(145deg,#211448,#160c34);box-shadow:0 10px 25px #0004}.arabic{text-shadow:0 5px 30px #f4c95d22}
+.field input,.field textarea,.field select{background:#0f0727;border-color:#513c6e}.primary{background:linear-gradient(180deg,#f8d66d,#eab33d);box-shadow:0 9px 22px #0004}.secondary{background:#170c34}
+@media(max-width:520px){
+ .app{padding-left:11px;padding-right:11px}.hero h1{font-size:24px}.logo{font-size:27px}.letters{gap:6px}.letter{height:82px;font-size:43px;border-radius:22px}.world-card{min-height:145px;padding:18px}.world-card p{max-width:78%}.banner{min-height:103px;padding:14px}.banner .art{width:52px;font-size:40px}.banner h2{font-size:18px}.banner p{font-size:11px}.tiles{gap:8px}.tile{min-height:100px;padding:12px}.profile-card{min-height:170px}.profile-card .pc-avatar{height:128px}.avatar-builder{grid-template-columns:repeat(2,1fr)}.avatar-option{min-height:145px}.avatar-img{height:120px}.avatar-preview-img{height:205px}.avatar-stage{min-height:245px}.evolution-grid{grid-template-columns:1fr 1fr}.bottom{padding-left:4px;padding-right:4px}.nav b{font-size:17px}.nav{font-size:8px}
+}
+@media(max-width:360px){.letters .letter:nth-child(4){display:none}.answers{grid-template-columns:1fr 1fr}.profile-grid{gap:7px}.profile-card{padding:9px 6px}.profile-card .pc-avatar{height:115px}.avatar-option{min-height:132px}.avatar-img{height:108px}.bottom{grid-template-columns:repeat(5,1fr)}}
 
-  /* mission enfant */
-  .categorie-toggle{display:flex;gap:8px;margin-bottom:16px;}
-  .categorie-toggle div{flex:1;text-align:center;padding:12px;border-radius:16px;background:var(--carte);
-    font-weight:700;font-size:14px;cursor:pointer;border:2px solid var(--vert-clair);color:#6b5f4d;}
-  .categorie-toggle div.actif{background:var(--vert);color:#fff;border-color:var(--vert);}
-  .barre-jeu{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
-  .progression-mini{flex:1;height:10px;background:var(--vert-clair);border-radius:100px;overflow:hidden;}
-  .progression-mini>div{height:100%;background:var(--vert);border-radius:100px;}
-  .scene-lettre{background:var(--carte);border-radius:26px;box-shadow:0 4px 0 rgba(58,50,39,0.06);
-    display:flex;align-items:center;justify-content:center;height:170px;margin-bottom:26px;}
-  .lettre-grande{font-family:'Noto Naskh Arabic',serif;font-weight:700;color:var(--vert);direction:rtl;line-height:1.5;padding:0 10px;}
-  .grille-choix{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  .choix{aspect-ratio:1/1;background:var(--carte);border:3px solid var(--vert-clair);border-radius:18px;
-    font-family:'Noto Naskh Arabic',serif;font-weight:700;color:var(--vert);direction:rtl;
-    display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1.4;padding:6px;text-align:center;}
-  .choix.bonne{background:var(--vert-clair);border-color:var(--vert);}
-  .choix.mauvaise{background:var(--corail-clair);border-color:var(--corail);}
-  .grille-memoire{display:grid;grid-template-columns:repeat(auto-fit,minmax(64px,1fr));gap:8px;}
-  .carte-memoire{aspect-ratio:3/4;border-radius:12px;cursor:pointer;position:relative;perspective:600px;}
-  .carte-memoire .face{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    backface-visibility:hidden;transition:transform .3s ease;font-family:'Noto Naskh Arabic',serif;font-weight:700;font-size:26px;}
-  .carte-memoire .dos{background:var(--vert);color:var(--or-clair);}
-  .carte-memoire .recto{background:var(--carte);border:2px solid var(--vert-clair);color:var(--vert);transform:rotateY(180deg);}
-  .carte-memoire.retournee .dos{transform:rotateY(180deg);}
-  .carte-memoire.retournee .recto{transform:rotateY(0deg);}
-  .carte-memoire.trouvee .recto{background:var(--or-clair);border-color:var(--or);}
+/* ===== V7 ART DIRECTION — exact moodboard spirit + mobile first ===== */
+:root{
+  --ink:#080516; --ink2:#100823; --violet:#2a1850; --violet2:#452b70;
+  --moon:#ffe7a0; --mint:#6fd0c1; --pink:#c66c88; --orange:#e39355;
+  --gold:#f7cf64; --gold-hi:#fff1bb; --white:#fffaf0; --copy:#d9cde5;
+  --glass:rgba(17,9,39,.78); --glass2:rgba(32,18,66,.90); --stroke:rgba(249,231,168,.18);
+  --shadow-deep:0 24px 70px rgba(0,0,0,.46);
+}
+html{background:var(--ink);scroll-behavior:smooth}
+body{min-width:0;overflow-x:hidden;background:
+ radial-gradient(900px 500px at 50% -5%,rgba(105,66,155,.55),transparent 65%),
+ radial-gradient(650px 450px at -10% 35%,rgba(37,126,132,.16),transparent 60%),
+ linear-gradient(180deg,#120927 0%,#0a061b 48%,#080516 100%);}
+body:before{opacity:.4;background-image:
+ radial-gradient(circle at 5% 12%,#fff2b41d 0 1px,transparent 2px),
+ radial-gradient(circle at 21% 28%,#fff2b426 0 1px,transparent 2px),
+ radial-gradient(circle at 70% 10%,#fff2b430 0 1.5px,transparent 2.5px),
+ radial-gradient(circle at 86% 31%,#fff2b41a 0 1px,transparent 2px),
+ radial-gradient(circle at 42% 48%,#fff2b41c 0 1px,transparent 2px),
+ radial-gradient(circle at 92% 70%,#fff2b42c 0 1px,transparent 2px);
+ background-size:160px 150px,210px 180px,240px 180px,190px 220px,230px 200px,260px 240px}
+body:after{height:38vh;background:
+ radial-gradient(ellipse at 50% 100%,rgba(20,77,80,.25),transparent 55%),
+ linear-gradient(180deg,transparent 0%,rgba(3,2,12,.78) 100%)}
+.app{max-width:720px;padding:10px 16px calc(118px + env(safe-area-inset-bottom));}
+.top{height:52px;padding:0 2px;position:sticky;top:0}
+.top:after{content:"";position:absolute;left:50%;bottom:-12px;width:54px;height:2px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.65}
+.iconbtn{width:44px;height:44px;background:rgba(15,8,35,.55);border:1px solid rgba(249,231,168,.18);color:#fff0c4;box-shadow:0 8px 24px #0004}
+.hero{padding:15px 0 18px;}
+.hero:before{content:"✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦";letter-spacing:10px;color:#fbe9a28d;font-size:10px}
+.logo{font-size:34px;letter-spacing:.18em;text-shadow:0 5px 25px #f7cf6430}
+.hero h1{font-size:30px;line-height:1.1;max-width:430px}
+.hero p{font-size:11px;letter-spacing:.14em;color:#c9bcda}
+.letters{margin:22px auto 18px;max-width:560px;gap:10px}
+.letter{height:112px;border-radius:31px;font-size:62px;border:1px solid #fff1;box-shadow:0 20px 48px #0006,inset 0 1px 0 #ffffff25}
+.c1{background:radial-gradient(circle at 30% 20%,#b65d7d,#5e2b48)}
+.c2{background:radial-gradient(circle at 30% 20%,#8352b7,#3e215f)}
+.c3{background:radial-gradient(circle at 30% 20%,#3cab9e,#145e5c)}
+.c4{background:radial-gradient(circle at 30% 20%,#bd6050,#6c2d31)}
+.streak{background:rgba(20,10,43,.78);backdrop-filter:blur(10px);padding:10px 18px;border-color:#f6d47555;box-shadow:0 8px 30px #0004}
+.world-card{min-height:176px;padding:23px;border-radius:32px;box-shadow:var(--shadow-deep);background:
+ radial-gradient(circle at 78% 16%,#fff0a52a 0 2px,transparent 3px),
+ radial-gradient(circle at 66% 34%,#fff0a51b 0 1px,transparent 2px),
+ linear-gradient(135deg,#241449 0%,#3b235e 45%,#173d46 100%)}
+.world-card:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 45% 120%,#173b3f 0 25%,transparent 55%);opacity:.75}
+.world-card:after{content:"🏮";left:auto;right:24px;bottom:18px;font-size:30px}
+.world-card .moon{font-size:52px;right:20px;top:11px;filter:drop-shadow(0 0 16px #ffe49a55)}
+.world-card h2{font-size:23px;max-width:380px}
+.world-card p{max-width:390px;line-height:1.55;color:#e6dcee}
+.profile{margin:12px 0 17px;gap:8px}
+.profile-main{min-height:50px;padding:8px 14px;border-width:1px;display:flex;align-items:center;gap:8px;box-shadow:0 9px 26px #0004}
+.profile-main .avatar-mini{flex:0 0 34px;width:34px;height:34px}
+.add{width:50px;height:50px;background:rgba(22,11,48,.72);box-shadow:0 9px 26px #0004}
+.banner{min-height:130px;border-radius:30px;padding:19px 20px;margin:12px 0;box-shadow:var(--shadow-deep)}
+.banner h2{font-size:22px}.banner p{font-size:12px;line-height:1.45}
+.banner .art{font-size:50px;width:64px;filter:drop-shadow(0 8px 14px #0004)}
+.bmission{background:linear-gradient(110deg,#3d6c64 0%,#82543c 52%,#9a4b30 100%)}
+.bmap{background:linear-gradient(110deg,#5d412f 0%,#46316e 52%,#302050 100%)}
+.bbonus{background:linear-gradient(110deg,#64344f 0%,#593363 55%,#3c2758 100%)}
+.kicker{letter-spacing:.2em;color:#ab9fbc;margin:22px 5px 10px}
+.tiles{gap:12px}.tile{min-height:124px;padding:17px;border-radius:25px;border-color:#4b3867;background:linear-gradient(145deg,#211444,#120a2e);box-shadow:0 16px 38px #0005;transition:transform .18s, border-color .18s, box-shadow .18s}
+.tile:active,.banner:active,.answer:active,.profile-card:active{transform:scale(.985)}
+.tile .ico{font-size:32px}.tile strong{font-size:14px}.tile small{font-size:11px}
+.card{padding:19px;border-radius:28px;background:linear-gradient(145deg,rgba(31,19,67,.96),rgba(15,8,35,.96));border-color:#4b3966;box-shadow:0 18px 45px #0005}
+.bottom{width:min(720px,100%);border-top:1px solid #4a3961;background:linear-gradient(180deg,rgba(11,6,25,.72),rgba(8,4,18,.98));backdrop-filter:blur(18px);box-shadow:0 -15px 44px #0007;padding:9px 10px calc(10px + env(safe-area-inset-bottom));}
+.nav{min-width:44px;min-height:44px;border-radius:15px;transition:.15s}.nav b{font-size:21px}.nav.on{background:rgba(247,207,100,.1);color:var(--gold);box-shadow:inset 0 0 0 1px rgba(247,207,100,.08)}
+.adventure-world{padding:12px;border-radius:33px;border:1px solid #58416c;box-shadow:0 22px 60px #0006}
+.map-sky{height:245px;border-radius:29px;overflow:hidden;background:
+ radial-gradient(circle at 70% 20%,#fff3aa18 0 2px,transparent 3px),
+ radial-gradient(circle at 28% 33%,#fff3aa18 0 1px,transparent 2px),
+ linear-gradient(180deg,#20124a 0%,#2b205b 45%,#12313d 100%)}
+.moon-art{right:54px;top:36px;width:68px;height:68px;background:var(--moon);box-shadow:0 0 45px #ffe49755}.lantern{bottom:53px;left:9%}
+.zone-grid{gap:13px}.zone{min-height:160px;padding:16px;border-radius:27px;box-shadow:0 12px 30px #0004}.zone-art{font-size:46px}.zone b{font-size:17px}.zone small{line-height:1.4}
+.profile-grid{gap:12px}.profile-card{min-height:225px;padding:13px;border-radius:28px;background:radial-gradient(circle at 50% 20%,#50306e,#160c35 65%);box-shadow:0 16px 38px #0005}.profile-card .pc-avatar{height:170px}.profile-card .pc-name{font-size:15px}
+.avatar-builder{gap:12px}.avatar-option{min-height:190px;border-radius:25px;padding:10px;background:radial-gradient(circle at 50% 18%,#3c255f,#12082c 70%);box-shadow:0 12px 28px #0004}.avatar-img{height:155px}.avatar-option small{font-weight:800;color:#d9cde5}
+.avatar-stage{min-height:320px;border-radius:34px;background:radial-gradient(circle at 50% 23%,#654486 0,#2c1950 40%,#10072b 78%);box-shadow:inset 0 1px #fff2,0 24px 55px #0006}.avatar-stage:before{content:"✦     ✧      ·      ✦      ·      ✧";top:21px;left:22px;color:#f8e9a29e;letter-spacing:9px}.avatar-stage:after{bottom:-80px;width:420px;height:155px;box-shadow:210px 17px 0 #10253b}.avatar-preview-img{height:255px;width:205px}.companion-float{right:24px;bottom:38px;font-size:52px}.evo-aura{width:250px;height:250px;background:radial-gradient(circle,#f6d36b3d,transparent 68%)}.evo-accessory{font-size:34px}.evo-stars{font-size:16px}
+.evolution-grid{gap:12px}.evo-card{padding:15px;border-radius:22px;background:#120a2b;box-shadow:0 10px 24px #0003}.evo-card.unlocked{box-shadow:0 12px 28px #0004,inset 0 1px #fff2}
+.answer{min-height:86px;border-radius:23px;border-color:#523d72;font-size:33px}.arabic{font-size:100px}.audio{width:60px;height:60px;box-shadow:0 9px 24px #0004}.challenge{min-height:61vh}
+.field input,.field textarea,.field select{min-height:48px}.primary,.secondary{min-height:48px;border-radius:18px;touch-action:manipulation}
+.modal{align-items:center;padding:16px;background:rgba(3,2,12,.78);backdrop-filter:blur(9px)}.sheet{border-radius:30px;max-height:min(88vh,760px);box-shadow:0 25px 80px #0009}
+.story,.word-card{border-radius:23px!important;box-shadow:0 12px 30px #0004!important}
+/* Real-device responsive tuning */
+@media(max-width:600px){
+ .app{max-width:100%;padding-left:12px;padding-right:12px}
+ .hero h1{font-size:25px}.logo{font-size:29px}.letters{gap:7px}.letter{height:90px;font-size:49px;border-radius:24px}
+ .world-card{min-height:152px;padding:18px}.world-card h2{font-size:20px}.world-card p{font-size:11px;max-width:82%}
+ .banner{min-height:112px;padding:15px;border-radius:27px}.banner .art{width:50px;font-size:39px}.banner h2{font-size:19px}.banner p{font-size:11px}
+ .tiles{gap:9px}.tile{min-height:107px;padding:13px;border-radius:21px}.tile .ico{font-size:29px}
+ .card{padding:15px;border-radius:24px}.stats{gap:6px}.stat{padding:9px}.stat b{font-size:19px}
+ .adventure-world{padding:9px;border-radius:28px}.map-sky{height:205px;border-radius:24px}.zone-grid{gap:9px}.zone{min-height:146px;padding:14px;border-radius:23px}.zone b{font-size:15px}.zone small{font-size:10px}
+ .profile-grid{gap:9px}.profile-card{min-height:185px;border-radius:23px}.profile-card .pc-avatar{height:135px}.profile-card .pc-meta,.profile-card .pc-streak{font-size:9px}
+ .avatar-builder{grid-template-columns:repeat(2,1fr);gap:9px}.avatar-option{min-height:160px;border-radius:21px}.avatar-img{height:128px}.avatar-stage{min-height:255px;border-radius:28px}.avatar-preview-img{height:210px;width:175px}.companion-float{font-size:43px;right:16px;bottom:31px}
+ .evolution-grid{grid-template-columns:1fr 1fr;gap:9px}.evo-card{padding:12px;border-radius:19px}.evo-card strong{font-size:13px}.evo-card small{font-size:10px}
+ .answers{gap:8px}.answer{min-height:76px;font-size:29px;border-radius:20px}.arabic{font-size:78px}.challenge{min-height:60vh}
+ .bottom{padding-left:5px;padding-right:5px}.nav{padding:4px 1px}.nav b{font-size:18px}.nav{font-size:8px}
+}
+@media(max-width:380px){
+ .app{padding-left:9px;padding-right:9px}.hero h1{font-size:22px}.logo{font-size:26px}.letter{height:78px;font-size:42px}.letters .letter:nth-child(4){display:none}
+ .profile-card{min-height:168px}.profile-card .pc-avatar{height:119px}.banner .copy{min-width:0}.banner h2{font-size:17px}.banner p{font-size:10px}.zone-grid{grid-template-columns:1fr}.avatar-option{min-height:145px}.avatar-img{height:114px}.avatar-stage{min-height:235px}.avatar-preview-img{height:192px}.arabic{font-size:69px}
+ .bottom{border-radius:18px 18px 0 0}.nav b{font-size:17px}.nav{font-size:7px}
+}
+/* guard against accidental horizontal overflow from long Arabic/text content */
+button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.sectionhead{min-width:0} .copy{overflow-wrap:anywhere}
 
-  #ecran-fin{text-align:center;padding-top:30px;}
-  #ecran-fin .emoji{font-size:70px;}
-  .xp-badge{display:inline-block;background:var(--or-clair);color:#8a6112;font-weight:800;font-size:19px;
-    padding:9px 22px;border-radius:100px;margin:14px 0 26px;}
 
-  /* dashboard */
-  .ligne-enfant{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--vert-clair);}
-  .mini-barre{height:6px;background:var(--vert-clair);border-radius:100px;margin:4px 0;overflow:hidden;}
-  .mini-barre>div{height:100%;border-radius:100px;}
-
-  .aperçu-photo{width:100%;border-radius:14px;margin-top:8px;max-height:160px;object-fit:cover;}
-
-  /* thème nuit étoilée — écrans enfant uniquement (accueil, mission, jeu, fin) */
-  body{
-    background:#171A33;
-    background-image:
-      radial-gradient(2px 2px at 15% 20%, #ffffffb0, transparent),
-      radial-gradient(2.2px 2.2px at 80% 15%, #ffffff90, transparent),
-      radial-gradient(1.6px 1.6px at 45% 70%, #ffffffa0, transparent),
-      radial-gradient(2.2px 2.2px at 65% 85%, #ffffff85, transparent),
-      radial-gradient(1.6px 1.6px at 25% 55%, #ffffff90, transparent),
-      radial-gradient(1.8px 1.8px at 90% 60%, #ffffff80, transparent),
-      radial-gradient(1.4px 1.4px at 8% 85%, #ffffff85, transparent),
-      radial-gradient(2px 2px at 55% 30%, #F6D98Bcc, transparent),
-      radial-gradient(1.6px 1.6px at 35% 12%, #F6D98Ba0, transparent);
-    background-size:360px 320px;
-  }
-  header.top .titre{color:#F6D98B;}
-  .rond-bouton{background:#2A2456;color:#F6D98B;}
-  .categorie-toggle div{background:#242850;color:#B9BEE8;border-color:#3A3766;}
-  .categorie-toggle div.actif{background:var(--vert);color:#fff;border-color:var(--vert);}
-
-  /* mascotte */
-  #mascotte-fin{font-size:70px;}
-  @keyframes rebond{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-14px) rotate(-6deg);}}
-  @keyframes secoue-doux{0%,100%{transform:rotate(0);}25%{transform:rotate(-10deg);}75%{transform:rotate(10deg);}}
-  .mascotte-content{animation:rebond .6s ease;}
-  .mascotte-encourage{animation:secoue-doux .5s ease;}
-
-  /* confettis de célébration */
-  .confetti-piece{position:fixed;top:-24px;font-size:22px;pointer-events:none;z-index:80;
-    animation:tombe-confetti 1.6s ease-in forwards;}
-  @keyframes tombe-confetti{to{transform:translateY(110vh) rotate(360deg);opacity:0.15;}}
-
-  /* badges */
-  .badge-carte{display:flex;align-items:center;gap:10px;background:#242850;border-radius:14px;
-    padding:10px 14px;margin-top:10px;color:#F6D98B;font-weight:700;font-size:14px;}
-  .badge-carte .emoji-badge{font-size:26px;}
+.avatar-stage.evo-stage-1 .evo-aura{background:radial-gradient(circle,#f5cc6c55,transparent 65%)}
+.avatar-stage.evo-stage-2 .evo-aura{width:270px;height:270px;background:radial-gradient(circle,#6ec9c055,#f4cd6b22 42%,transparent 68%)}
+.avatar-stage.evo-stage-3 .evo-aura{width:285px;height:285px;background:radial-gradient(circle,#c978a844,#6ec9c022 45%,transparent 69%)}
+.avatar-stage.evo-stage-4 .evo-aura{width:300px;height:300px;background:radial-gradient(circle,#ffd96b66,#a66be32a 40%,transparent 70%)}
+.avatar-stage.evo-stage-4 .evo-accessory{filter:drop-shadow(0 0 10px #f5cf6a99)}
 </style>
 </head>
 <body>
-<div class="app">
+<div id="toast" class="toast"></div>
+<main class="app">
+<header class="top"><button class="iconbtn" onclick="parentLogin()">⚙️</button><div class="stepdots" id="dots"></div><button class="iconbtn" onclick="showScreen('progress')">⭐</button></header>
 
-  <!-- ===================== ACCUEIL ENFANTS ===================== -->
-  <section id="ecran-accueil" class="ecran actif">
-    <header class="top">
-      <div class="titre">🌙 Mission Arabe</div>
-      <button class="rond-bouton" onclick="ouvrirPin()">⚙️</button>
-    </header>
-    <div style="text-align:center;font-size:52px;margin-bottom:4px;">🦊</div>
-    <p style="color:#B9BEE8;text-align:center;">Qui joue aujourd'hui ?</p>
-    <div class="grille-enfants" id="grille-enfants"></div>
-  </section>
-
-  <!-- ===================== PIN PARENT ===================== -->
-  <section id="ecran-pin" class="ecran">
-    <header class="top">
-      <button class="rond-bouton" onclick="afficherEcran('ecran-accueil')">←</button>
-      <div class="titre">Espace maman</div>
-      <div style="width:44px;"></div>
-    </header>
-    <div class="carte">
-      <label>Code PIN</label>
-      <input type="text" id="champ-pin" inputmode="numeric" placeholder="••••">
-      <button class="bouton" onclick="verifierPin()">Entrer</button>
-    </div>
-  </section>
-
-  <!-- ===================== ESPACE PARENT ===================== -->
-  <section id="ecran-parent" class="ecran">
-    <header class="top">
-      <button class="rond-bouton" onclick="afficherEcran('ecran-accueil')">←</button>
-      <div class="titre">Espace maman</div>
-      <div style="width:44px;"></div>
-    </header>
-
-    <div class="tabs">
-      <div class="tab actif" id="tab-cours" onclick="changerOngletParent('cours')">Cours</div>
-      <div class="tab" id="tab-enfants" onclick="changerOngletParent('enfants')">Enfants</div>
-      <div class="tab" id="tab-historique" onclick="changerOngletParent('historique')">Historique</div>
-      <div class="tab" id="tab-dashboard" onclick="changerOngletParent('dashboard')">Bilan</div>
-      <div class="tab" id="tab-histoires" onclick="changerOngletParent('histoires')">Histoires</div>
-    </div>
-
-    <!-- onglet: ajouter un cours -->
-    <div id="onglet-cours">
-      <div class="carte">
-        <h3>📸 Cours du samedi</h3>
-        <label>Photo du cours (optionnel)</label>
-        <input type="file" accept="image/*" id="champ-photo" multiple onchange="previsualiserPhoto()">
-        <div id="apercu-photo" style="display:none;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
-
-        <label>Enfant</label>
-        <select id="champ-enfant-cours"></select>
-
-        <label>Catégorie</label>
-        <div class="cases">
-          <div class="case actif" data-cat="ecole" onclick="choisirCategorie(this)">📚 Mon école</div>
-          <div class="case" data-cat="avance" onclick="choisirCategorie(this)">🚀 Je m'avance</div>
-        </div>
-
-        <label>Aujourd'hui nous avons travaillé</label>
-        <div class="cases" id="cases-themes">
-          <div class="case" onclick="toggleCase(this)">Lettres</div>
-          <div class="case" onclick="toggleCase(this)">Harakāt</div>
-          <div class="case" onclick="toggleCase(this)">Lecture</div>
-          <div class="case" onclick="toggleCase(this)">Vocabulaire</div>
-          <div class="case" onclick="toggleCase(this)">Coran</div>
-        </div>
-
-        <label>Lettres travaillées (séparées par un espace, ex : ب ت ث)</label>
-        <input type="text" id="champ-lettres" placeholder="ب ت ث">
-
-        <label>Contenu / remarques</label>
-        <textarea id="champ-contenu" placeholder="ex : باب، بيت — bien lu, un peu d'hésitation sur la fatha"></textarea>
-
-        <label>Notions à revoir</label>
-        <textarea id="champ-a-revoir" placeholder="ex : différence entre ب / ت / ث"></textarea>
-
-        <button class="bouton" onclick="creerCoursEtDefis()">Créer les défis de la semaine</button>
-      </div>
-    </div>
-
-    <!-- onglet: enfants -->
-    <div id="onglet-enfants" style="display:none;">
-      <div class="carte">
-        <h3>Ajouter un enfant</h3>
-        <label>Prénom</label>
-        <input type="text" id="nouveau-nom">
-        <label>Couleur</label>
-        <div class="cases">
-          <div class="case" style="background:#2EC4B6;color:#fff;border-color:#2EC4B6;" onclick="choisirCouleur(this,'#2EC4B6')">turquoise</div>
-          <div class="case" style="background:#FFC145;color:#5a3d05;border-color:#FFC145;" onclick="choisirCouleur(this,'#FFC145')">jaune</div>
-          <div class="case" style="background:#FF6B6B;color:#fff;border-color:#FF6B6B;" onclick="choisirCouleur(this,'#FF6B6B')">corail</div>
-          <div class="case" style="background:#3E8BE0;color:#fff;border-color:#3E8BE0;" onclick="choisirCouleur(this,'#3E8BE0')">bleu</div>
-        </div>
-        <label>Avatar</label>
-        <div class="cases" id="cases-avatars"></div>
-        <label>Ou choisis une photo déjà existante</label>
-        <input type="file" accept="image/*" id="champ-photo-avatar" onchange="previsualiserPhotoAvatar()">
-        <img id="apercu-photo-avatar" style="display:none;width:70px;height:70px;border-radius:50%;object-fit:cover;margin-top:8px;">
-        <button class="bouton" onclick="ajouterEnfant()">Ajouter</button>
-      </div>
-      <div class="carte" id="liste-enfants-parent"></div>
-    </div>
-
-    <!-- onglet: historique -->
-    <div id="onglet-historique" style="display:none;">
-      <div class="carte">
-        <label>Enfant</label>
-        <select id="champ-enfant-historique" onchange="chargerHistorique()"></select>
-      </div>
-      <div class="carte" id="zone-historique"><p>Chargement…</p></div>
-    </div>
-
-    <!-- onglet: dashboard -->
-    <div id="onglet-dashboard" style="display:none;">
-      <div class="carte" id="zone-dashboard"><p>Chargement…</p></div>
-      <button class="bouton secondaire" onclick="exporterSauvegarde()">💾 Exporter une sauvegarde</button>
-    </div>
-
-    <!-- onglet: histoires des prophètes -->
-    <div id="onglet-histoires" style="display:none;">
-      <div class="carte">
-        <h3>📖 Ajouter une histoire</h3>
-        <label>Titre</label>
-        <input type="text" id="histoire-titre" placeholder="ex : L'histoire du prophète Youssouf">
-        <label>Prophète concerné (optionnel)</label>
-        <input type="text" id="histoire-prophete" placeholder="ex : Youssouf">
-        <label>Texte (copié ou transcrit de ton livre)</label>
-        <textarea id="histoire-texte" style="min-height:140px;" placeholder="Colle ici le texte en arabe..."></textarea>
-        <label>Mots-clés de l'histoire (optionnel, jusqu'à 4 — pour le petit quiz). Mets un emoji si ça existe, sinon ajoute une image (utile pour les mots sans emoji : chameau, désert, personnages...)</label>
-        <div style="border:2px solid var(--vert-clair);border-radius:14px;padding:10px;margin-bottom:8px;">
-          <input type="text" id="histoire-mot-1" placeholder="mot en arabe 1" style="margin-bottom:6px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <input type="text" id="histoire-emoji-1" placeholder="emoji (ex: 🐫)" style="flex:1;">
-            <span style="font-size:12px;color:#8a7d68;">ou</span>
-            <input type="file" accept="image/*" id="histoire-fichier-1" onchange="previsualiserImageMot(1)" style="flex:1;font-size:11px;">
-          </div>
-          <img id="histoire-apercu-1" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;margin-top:6px;">
-        </div>
-        <div style="border:2px solid var(--vert-clair);border-radius:14px;padding:10px;margin-bottom:8px;">
-          <input type="text" id="histoire-mot-2" placeholder="mot en arabe 2" style="margin-bottom:6px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <input type="text" id="histoire-emoji-2" placeholder="emoji (ex: 🐫)" style="flex:1;">
-            <span style="font-size:12px;color:#8a7d68;">ou</span>
-            <input type="file" accept="image/*" id="histoire-fichier-2" onchange="previsualiserImageMot(2)" style="flex:1;font-size:11px;">
-          </div>
-          <img id="histoire-apercu-2" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;margin-top:6px;">
-        </div>
-        <div style="border:2px solid var(--vert-clair);border-radius:14px;padding:10px;margin-bottom:8px;">
-          <input type="text" id="histoire-mot-3" placeholder="mot en arabe 3" style="margin-bottom:6px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <input type="text" id="histoire-emoji-3" placeholder="emoji (ex: 🐫)" style="flex:1;">
-            <span style="font-size:12px;color:#8a7d68;">ou</span>
-            <input type="file" accept="image/*" id="histoire-fichier-3" onchange="previsualiserImageMot(3)" style="flex:1;font-size:11px;">
-          </div>
-          <img id="histoire-apercu-3" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;margin-top:6px;">
-        </div>
-        <div style="border:2px solid var(--vert-clair);border-radius:14px;padding:10px;margin-bottom:8px;">
-          <input type="text" id="histoire-mot-4" placeholder="mot en arabe 4" style="margin-bottom:6px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <input type="text" id="histoire-emoji-4" placeholder="emoji (ex: 🐫)" style="flex:1;">
-            <span style="font-size:12px;color:#8a7d68;">ou</span>
-            <input type="file" accept="image/*" id="histoire-fichier-4" onchange="previsualiserImageMot(4)" style="flex:1;font-size:11px;">
-          </div>
-          <img id="histoire-apercu-4" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;margin-top:6px;">
-        </div>
-        <button class="bouton" onclick="ajouterHistoire()">Ajouter l'histoire</button>
-      </div>
-      <div class="carte" id="liste-histoires-parent"><p>Chargement…</p></div>
-    </div>
-  </section>
-
-  <!-- ===================== MISSION ENFANT ===================== -->
-  <section id="ecran-mission" class="ecran">
-    <header class="top">
-      <button class="rond-bouton" onclick="afficherEcran('ecran-accueil')">←</button>
-      <div class="titre" id="titre-mission">Mission</div>
-      <div style="width:44px;"></div>
-    </header>
-    <div class="categorie-toggle">
-      <div class="actif" id="toggle-ecole" onclick="choisirCategorieEnfant('ecole')">📚 Mon école</div>
-      <div id="toggle-avance" onclick="choisirCategorieEnfant('avance')">🚀 Je m'avance</div>
-      <div id="toggle-histoires" onclick="choisirCategorieEnfant('histoires')">📖 Histoires</div>
-    </div>
-    <div id="zone-mission-info" class="carte"><p>Chargement…</p></div>
-    <div id="zone-vocab-bonus" class="carte" style="display:none;"></div>
-    <div id="zone-comprehension-bonus" class="carte" style="display:none;"></div>
-  </section>
-
-  <!-- ===================== LECTURE D'UNE HISTOIRE ===================== -->
-  <section id="ecran-histoire" class="ecran">
-    <header class="top">
-      <button class="rond-bouton" onclick="afficherEcran('ecran-mission')">←</button>
-      <div class="titre" id="titre-histoire" style="font-size:17px;">Histoire</div>
-      <button class="rond-bouton" onclick="jouerAudioLettre(document.getElementById('texte-histoire').textContent)">🔊</button>
-    </header>
-    <div class="carte">
-      <p id="texte-histoire" style="font-family:'Noto Naskh Arabic',serif;font-size:22px;line-height:2.2;direction:rtl;text-align:right;"></p>
-    </div>
-    <button class="bouton" id="bouton-quiz-histoire" onclick="lancerQuizHistoire()" style="display:none;">Faire le petit quiz</button>
-  </section>
-
-  <!-- ===================== JEU ===================== -->
-  <section id="ecran-jeu" class="ecran">
-    <div class="barre-jeu">
-      <button class="rond-bouton" onclick="afficherEcran('ecran-mission')">←</button>
-      <div class="progression-mini"><div id="barre-progression" style="width:0%"></div></div>
-      <div id="mascotte-jeu" style="font-size:30px;">🦊</div>
-    </div>
-    <div class="scene-lettre" id="scene-lettre"><div class="lettre-grande" id="lettre-affichee">ب</div></div>
-    <div class="grille-choix" id="zone-choix"></div>
-    <div class="grille-memoire" id="zone-memoire" style="display:none;"></div>
-    <div id="zone-trace" style="display:none;">
-      <p style="text-align:center;color:#B9BEE8;font-size:13px;margin-bottom:10px;">Trace la lettre avec ton doigt, en suivant le pointillé</p>
-      <div style="position:relative;width:260px;height:260px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;">
-        <div id="lettre-guide-trace" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-          font-family:'Noto Naskh Arabic',serif;font-size:200px;color:transparent;-webkit-text-stroke:2px #DCEBE6;text-stroke:2px #DCEBE6;pointer-events:none;"></div>
-        <canvas id="canvas-trace" width="260" height="260" style="position:absolute;inset:0;touch-action:none;"></canvas>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:16px;">
-        <button class="bouton secondaire" style="flex:1;" onclick="effacerTrace()">Effacer</button>
-        <button class="bouton" style="flex:1;" onclick="validerTrace()">C'est tracé !</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== FIN ===================== -->
-  <section id="ecran-fin" class="ecran">
-    <div class="emoji" id="mascotte-fin">🦊</div>
-    <h2 style="font-family:'El Messiri';color:#F6D98B;">Mission terminée !</h2>
-    <p id="resume-fin" style="color:#C7CCF0;"></p>
-    <div class="xp-badge">+<span id="xp-valeur">0</span> XP</div>
-    <div id="badges-nouveaux"></div>
-    <button class="bouton" onclick="afficherEcran('ecran-accueil')">Retour à l'accueil</button>
-  </section>
-
+<section id="home" class="screen active">
+  <div class="hero">
+    <div class="logo">ARABIYA</div>
+    <div class="letters"><div class="letter c1">ا</div><div class="letter c2">ب</div><div class="letter c3">ت</div><div class="letter c4">ث</div></div>
+    <h1>Découvre la magie des lettres</h1><p>Ton aventure arabe commence ici</p>
+    <div style="margin-top:16px"><span class="streak">🔥 <span id="streak">1</span> jour</span></div>
+  </div>
+  <div class="world-card">
+  <div class="moon">🌙</div><div class="spark">✦</div>
+  <div class="kicker" style="margin:0 0 5px;color:#e4cf76">MON PETIT MONDE</div>
+  <h2>Ton aventure grandit avec toi ✨</h2>
+  <p>Révise ta leçon, découvre une nouvelle étape et collectionne tes étoiles.</p>
 </div>
+<div class="profile"><button class="profile-main" onclick="profiles()"><span id="profileAvatarInline"></span><span id="childName">Enfant 1</span> ✏️</button><button class="add" onclick="profiles()">+</button></div>
+  <button class="banner bmission" onclick="startDaily()"><div class="art">🎒</div><div class="copy"><h2>Défi du jour !</h2><p id="missionCopy">5 petits jeux pour réviser la leçon.</p></div><div class="arrow">›</div></button>
+  <button class="banner bmap" onclick="showScreen('map')"><div class="art">🗺️</div><div class="copy"><h2>Carte d’aventure</h2><p>Avance à ton rythme, étape après étape.</p></div><div class="arrow">›</div></button>
+  <button class="banner bbonus" onclick="showScreen('bonus')"><div class="art">✨</div><div class="copy"><h2>Mon petit monde</h2><p>Histoires, mots, jeux et mémos.</p></div><div class="arrow">›</div></button>
+  <div class="kicker">Mon univers</div>
+  <div class="tiles">
+    <button class="tile" onclick="showScreen('badges')"><div class="ico">⭐</div><strong>Mes autocollants</strong><small id="badgeCount">0 gagnés</small></button>
+    <button class="tile" onclick="showScreen('trace')"><div class="ico">✍️</div><strong>J’écris en arabe</strong><small>Atelier de traçage</small></button>
+    <button class="tile" onclick="showScreen('avatar')"><div class="ico">🧸</div><strong>Mon personnage</strong><small>Choisis ton avatar</small></button>
+    <button class="tile" onclick="showScreen('progress')"><div class="ico">📈</div><strong>Ma progression</strong><small id="levelText">Niveau 1</small></button>
+  </div>
+</section>
+
+<section id="mission" class="screen">
+  <div class="card"><div class="sectionhead"><div><div class="kicker" style="margin:0 0 4px">Mission</div><h2 id="missionTitle">À toi de jouer !</h2></div><span id="missionCount">1/5</span></div><div class="missionbar" style="margin-top:13px"><i id="missionProgress" style="width:0%"></i></div></div>
+  <div id="challenge" class="challenge"></div>
+</section>
+
+<section id="map" class="screen">
+  <div class="card">
+    <div class="sectionhead"><div><div class="kicker" style="margin:0 0 4px">Mon monde</div><h2>Carte d’aventure</h2></div><span id="mapLevel">1/6</span></div>
+    <p style="color:var(--muted);font-size:12px">Chaque zone correspond à une grande étape de ton apprentissage. Ton chemin s’adapte à ton niveau.</p>
+  </div>
+  <div class="zone-grid" id="worldZones"></div>
+  <div class="card" style="margin-top:14px">
+    <div class="sectionhead"><h3>🚀 Je prends de l’avance</h3><span>✨</span></div>
+    <p style="color:var(--muted);font-size:12px">Une petite découverte adaptée à ton niveau, sans remplacer les révisions de l’école.</p>
+    <button class="primary" onclick="startAhead()">Découvrir mon prochain défi</button>
+  </div>
+</section>
+
+<section id="progress" class="screen">
+  <div class="card"><div class="kicker" style="margin:0 0 5px">Mon profil</div><h2 id="progressName">—</h2><div class="stats"><div class="stat"><b id="xp">0</b><span>XP</span></div><div class="stat"><b id="mastery">0%</b><span>Maîtrise</span></div><div class="stat"><b id="stars">0</b><span>Étoiles</span></div></div></div>
+  <div class="card"><div class="sectionhead"><h3>Mes compétences</h3><span>🌱</span></div><div id="skills"></div></div>
+  <div class="card"><h3>À revoir</h3><div id="review"></div></div>
+</section>
+
+<section id="badges" class="screen"><div class="card"><div class="kicker">Collection</div><h2>Mes autocollants ⭐</h2><div class="tiles" id="badges"></div></div></section>
+<section id="avatar" class="screen"><div class="card"><div class="kicker">Mon personnage</div><h2>Mon avatar évolue avec moi ✨</h2><p style="color:var(--muted);margin-top:-5px">Choisis ton personnage, ton compagnon et débloque de nouvelles apparences grâce à tes aventures.</p><div id="avatarPreview" style="padding:5px 0 16px"></div><div class="avatar-section"><h3>Ton personnage</h3><div class="avatar-builder" id="avatars"></div></div><div class="avatar-section"><h3>Ton compagnon</h3><div class="avatar-builder" id="companions"></div></div><div class="avatar-section"><h3>Ton badge</h3><div class="avatar-builder" id="avatarBadges"></div></div><div class="avatar-section"><div class="sectionhead"><h3>🌟 Mon évolution</h3><span id="evoProgressText"></span></div><div id="evolutionGrid" class="evolution-grid"></div></div><div class="avatar-note">💡 Chaque enfant a sa propre collection. Les récompenses débloquent progressivement des effets, accessoires et nouveaux titres.</div></div></section>
+
+<section id="trace" class="screen">
+  <div class="card"><div class="kicker">Atelier d’écriture</div><h2>Je trace la lettre</h2><p style="color:var(--muted);font-size:12px">Suis le point de départ et reproduis la forme avec ton doigt.</p>
+  <div style="position:relative;margin:15px auto;max-width:300px;height:300px;background:#fff;border-radius:22px;overflow:hidden">
+    <div id="guide" style="position:absolute;inset:0;display:grid;place-items:center;font-family:'El Messiri';font-size:210px;color:transparent;-webkit-text-stroke:2px #d9e5df">ب</div>
+    <canvas id="draw" style="position:absolute;inset:0;width:100%;height:100%;touch-action:none"></canvas>
+  </div>
+  <button class="secondary" onclick="clearDraw()">Effacer</button><button class="primary" onclick="traceDone()">J’ai terminé ✨</button></div>
+</section>
+
+<section id="bonus" class="screen">
+  <div class="card">
+    <div class="kicker">Mon petit monde</div><h2>Apprendre autrement ✨</h2>
+    <div class="tiles">
+      <button class="tile" onclick="showStories()"><div class="ico">📖</div><strong>Histoires</strong><small>Découvrir & répondre</small></button>
+      <button class="tile" onclick="showVocab()"><div class="ico">🧩</div><strong>Vocabulaire</strong><small>Mots + images</small></button>
+      <button class="tile" onclick="showScreen('trace')"><div class="ico">✍️</div><strong>J’écris</strong><small>Tracer les lettres</small></button>
+      <button class="tile" onclick="startAhead()"><div class="ico">🚀</div><strong>Je m’avance</strong><small>Découvrir la suite</small></button>
+    </div>
+  </div>
+  <div id="bonusContent"></div>
+</section>
+
+<section id="parent" class="screen">
+  <div class="card"><div class="kicker">Espace parent</div><h2>🌙 Leçon du jour</h2><p style="color:var(--muted);font-size:12px">Entre simplement ce qui a été vu à l’école. Arabiya s’en sert pour construire les micro-défis.</p>
+    <div class="field"><label>Enfant</label><select id="lessonChild"></select></div>
+    <div class="field"><label>Date</label><input id="lessonDate" type="date"></div>
+    <div class="field"><label>Type de leçon</label><select id="lessonType"><option value="letters">Lettres</option><option value="harakat">Harakāt</option><option value="reading">Lecture</option><option value="vocab">Vocabulaire</option><option value="quran">Coran</option><option value="tajwid">Tajwid</option></select></div>
+    <div class="field"><label>Niveau de l’enfant</label><select id="lessonLevel"><option value="1">1 · Alphabet</option><option value="2">2 · Harakāt</option><option value="3">3 · Syllabes</option><option value="4">4 · Mots</option><option value="5">5 · Lecture</option><option value="6">6 · Lecture avancée</option></select></div>
+    <div class="field"><label>Ce qui a été travaillé</label><textarea id="lessonContent" placeholder="Ex : ب ت ث — fatha — بَ تَ ثَ"></textarea></div>
+    <div class="field"><label>À revoir en priorité</label><input id="lessonReview" placeholder="Ex : ث ، تَ"></div>
+    <button class="secondary" onclick="quickLesson('letters')">⚡ Saisie rapide : lettres</button>
+    <button class="secondary" onclick="quickLesson('harakat')">⚡ Saisie rapide : harakāt</button>
+    <button class="primary" onclick="addLesson()">✨ Créer la mission</button>
+  </div>
+  <div class="card"><h3>Mes enfants</h3><div id="parentChildren"></div></div>
+  <div class="card"><h3>Leçons récentes</h3><div id="lessonList"></div></div>
+  <div class="card"><h3>📖 Ajouter une histoire</h3>
+  <p style="color:var(--muted);font-size:12px">Crée une petite histoire familiale et son mini-quiz. Aucun texte religieux n’est généré automatiquement.</p>
+  <div class="field"><label>Titre</label><input id="storyTitle" placeholder="Ex : Le voyage de Bilal"></div>
+  <div class="field"><label>Texte</label><textarea id="storyText" placeholder="Ton histoire…"></textarea></div>
+  <button class="primary" onclick="addStory()">Enregistrer l’histoire</button>
+</div>
+<div class="card"><h3>Réglages</h3><div class="field"><label>Changer le PIN parent</label><input id="pin" type="password" inputmode="numeric" placeholder="4 à 6 chiffres"></div><button class="secondary" onclick="setPin()">Modifier le PIN</button></div>
+</section>
+
+<nav class="bottom">
+ <button class="nav on" onclick="showScreen('home')"><b>⌂</b>Accueil</button>
+ <button class="nav" onclick="startDaily()"><b>🎯</b>Défi</button>
+ <button class="nav" onclick="showScreen('map')"><b>🗺️</b>Aventure</button>
+ <button class="nav" onclick="showScreen('bonus')"><b>📖</b>Histoires</button>
+ <button class="nav" onclick="parentLogin()"><b>⚙</b>Parent</button>
+</nav>
+</main>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet" id="sheet"></div></div>
 
 <script>
-/* ============================================================
-   MISSION ARABE — app connectée à Supabase
-   ============================================================ */
-const SUPABASE_URL = 'https://hvstqdqfdkfktcsjpuvv.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_TX1VrIg2NwHdzU4NM74jSQ_pyxabigY';
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// change ce code depuis ce fichier si besoin
-const PARENT_PIN = '1234';
-
-const SEUIL_VALIDATION = 0.9; // 90% pour valider une mission / débloquer un niveau
-
-// parcours "Je m'avance" — intégré à l'app, ne dépend pas des cours ajoutés par la maman
-// niveaux 1-12 : alphabet · 13-15 : harakāt · 16-18 : syllabes et mots voyellés
-// niveaux 19-21 : vocabulaire imagé → phrases simples → lecture de texte (compréhension)
-const PARCOURS_AVANCE = [
-  { titre:"L'alphabet — ب ت ث", unites:["ب","ت","ث"] },
-  { titre:"L'alphabet — ج ح خ", unites:["ج","ح","خ"] },
-  { titre:"L'alphabet — د ذ", unites:["د","ذ"] },
-  { titre:"L'alphabet — ر ز", unites:["ر","ز"] },
-  { titre:"L'alphabet — س ش", unites:["س","ش"] },
-  { titre:"L'alphabet — ص ض", unites:["ص","ض"] },
-  { titre:"L'alphabet — ط ظ", unites:["ط","ظ"] },
-  { titre:"L'alphabet — ع غ", unites:["ع","غ"] },
-  { titre:"L'alphabet — ف ق", unites:["ف","ق"] },
-  { titre:"L'alphabet — ك ل", unites:["ك","ل"] },
-  { titre:"L'alphabet — م ن", unites:["م","ن"] },
-  { titre:"L'alphabet — ه و ي ا", unites:["ه","و","ي","ا"] },
-  { titre:"Harakāt — la fatha", unites:["بَ","تَ","ثَ","جَ","سَ"] },
-  { titre:"Harakāt — la kasra", unites:["بِ","تِ","ثِ","جِ","سِ"] },
-  { titre:"Harakāt — la damma", unites:["بُ","تُ","ثُ","جُ","سُ"] },
-  { titre:"Syllabes simples", unites:["بَا","بِي","بُو","مَا","مِي","مُو"] },
-  { titre:"Premiers mots", unites:["بَاب","بَيْت","كِتَاب","قَلَم","دَرْس"] },
-  { titre:"Lecture de mots", unites:["شَمْس","قَمَر","وَرْدَة","تُفَّاحَة","كِتَاب","بَيْت"] },
-  { titre:"Vocabulaire imagé", mode:"vocabulaire" },
-  { titre:"Phrases simples", mode:"phrases" },
-  { titre:"Lecture de texte", mode:"texte" }
-];
-
-// mots + image (emoji) associée — pour le jeu vocabulaire imagé
-const VOCABULAIRE = [
-  { mot:"بَيْت", emoji:"🏠" }, { mot:"قِطَّة", emoji:"🐱" }, { mot:"كَلْب", emoji:"🐶" },
-  { mot:"شَمْس", emoji:"☀️" }, { mot:"قَمَر", emoji:"🌙" }, { mot:"مَاء", emoji:"💧" },
-  { mot:"بَاب", emoji:"🚪" }, { mot:"خُبْز", emoji:"🍞" }, { mot:"حَلِيب", emoji:"🥛" },
-  { mot:"كُرْسِي", emoji:"🪑" }, { mot:"عَيْن", emoji:"👁️" }, { mot:"يَد", emoji:"✋" },
-  { mot:"طَائِر", emoji:"🐦" }, { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"مَوْزَة", emoji:"🍌" },
-  { mot:"كِتَاب", emoji:"📕" }, { mot:"قَلَم", emoji:"✏️" }, { mot:"وَرْدَة", emoji:"🌸" },
-  { mot:"سَمَكَة", emoji:"🐟" }, { mot:"طَائِرَة", emoji:"✈️" }, { mot:"سَيَّارَة", emoji:"🚗" },
-  { mot:"شَجَرَة", emoji:"🌳" }, { mot:"نَجْمَة", emoji:"⭐" }, { mot:"حِصَان", emoji:"🐎" },
-  { mot:"أَسَد", emoji:"🦁" }, { mot:"فِيل", emoji:"🐘" }, { mot:"دَجَاجَة", emoji:"🐔" },
-  { mot:"سَحَابَة", emoji:"☁️" }, { mot:"جَبَل", emoji:"⛰️" }, { mot:"دَرَّاجَة", emoji:"🚲" }
-];
-// palier simple : mots courts, très concrets — accessible même à ceux qui débutent l'alphabet
-const VOCAB_DEBUTANT = [
-  { mot:"بَيْت", emoji:"🏠" }, { mot:"قِطَّة", emoji:"🐱" }, { mot:"كَلْب", emoji:"🐶" },
-  { mot:"شَمْس", emoji:"☀️" }, { mot:"قَمَر", emoji:"🌙" }, { mot:"مَاء", emoji:"💧" },
-  { mot:"بَاب", emoji:"🚪" }, { mot:"خُبْز", emoji:"🍞" }, { mot:"حَلِيب", emoji:"🥛" },
-  { mot:"كُرْسِي", emoji:"🪑" }, { mot:"عَيْن", emoji:"👁️" }, { mot:"يَد", emoji:"✋" },
-  { mot:"طَائِر", emoji:"🐦" }, { mot:"تُفَّاحَة", emoji:"🍎" }, { mot:"مَوْزَة", emoji:"🍌" }
-];
-// palier avancé : mots un peu plus longs
-const VOCAB_AVANCE = [
-  { mot:"كِتَاب", emoji:"📕" }, { mot:"قَلَم", emoji:"✏️" }, { mot:"وَرْدَة", emoji:"🌸" },
-  { mot:"سَمَكَة", emoji:"🐟" }, { mot:"طَائِرَة", emoji:"✈️" }, { mot:"سَيَّارَة", emoji:"🚗" },
-  { mot:"شَجَرَة", emoji:"🌳" }, { mot:"نَجْمَة", emoji:"⭐" }, { mot:"حِصَان", emoji:"🐎" },
-  { mot:"أَسَد", emoji:"🦁" }, { mot:"فِيل", emoji:"🐘" }, { mot:"دَجَاجَة", emoji:"🐔" },
-  { mot:"سَحَابَة", emoji:"☁️" }, { mot:"جَبَل", emoji:"⛰️" }, { mot:"دَرَّاجَة", emoji:"🚲" }
-];
-
-// phrases très simples associées à une image — pour tester la compréhension
-const PHRASES = [
-  { phrase:"هَذَا بَيْتٌ", emoji:"🏠" },
-  { phrase:"هَذِهِ قِطَّةٌ", emoji:"🐱" },
-  { phrase:"الشَّمْسُ كَبِيرَةٌ", emoji:"☀️" },
-  { phrase:"أَنَا أَقْرَأُ كِتَابًا", emoji:"📖" },
-  { phrase:"الْقَمَرُ جَمِيلٌ", emoji:"🌙" },
-  { phrase:"هَذَا كَلْبٌ صَغِيرٌ", emoji:"🐶" },
-  { phrase:"أَنَا أَشْرَبُ مَاءً", emoji:"💧" },
-  { phrase:"السَّيَّارَةُ سَرِيعَةٌ", emoji:"🚗" }
-];
-// palier 1 : phrases très courtes (démonstratif + nom/adjectif)
-const PHRASES_DEBUTANT = [
-  { phrase:"هَذَا بَيْتٌ", emoji:"🏠" },
-  { phrase:"هَذِهِ قِطَّةٌ", emoji:"🐱" },
-  { phrase:"الشَّمْسُ كَبِيرَةٌ", emoji:"☀️" },
-  { phrase:"الْقَمَرُ جَمِيلٌ", emoji:"🌙" },
-  { phrase:"هَذَا كَلْبٌ صَغِيرٌ", emoji:"🐶" },
-  { phrase:"هَذَا طَائِرٌ", emoji:"🐦" },
-  { phrase:"هَذِهِ تُفَّاحَةٌ حَمْرَاءُ", emoji:"🍎" },
-  { phrase:"هَذَا كُرْسِيٌّ", emoji:"🪑" },
-  { phrase:"هَذِهِ مَوْزَةٌ صَفْرَاءُ", emoji:"🍌" },
-  { phrase:"هَذَا بَابٌ كَبِيرٌ", emoji:"🚪" }
-];
-// palier 2 : phrases avec un verbe et un complément — un peu plus longues
-const PHRASES_INTERMEDIAIRE = [
-  { phrase:"أَنَا أَقْرَأُ كِتَابًا", emoji:"📖" },
-  { phrase:"أَنَا أَشْرَبُ مَاءً", emoji:"💧" },
-  { phrase:"السَّيَّارَةُ سَرِيعَةٌ", emoji:"🚗" },
-  { phrase:"الْقِطَّةُ تَشْرَبُ الْمَاءَ", emoji:"🐱" },
-  { phrase:"الطَّائِرَةُ فِي السَّمَاءِ", emoji:"✈️" },
-  { phrase:"الْأَسَدُ قَوِيٌّ", emoji:"🦁" },
-  { phrase:"الْفِيلُ كَبِيرٌ جِدًّا", emoji:"🐘" },
-  { phrase:"أَنَا أَشْرَبُ الْحَلِيبَ", emoji:"🥛" },
-  { phrase:"الدَّجَاجَةُ فِي الْحَدِيقَةِ", emoji:"🐔" },
-  { phrase:"أَنَا أَرْكَبُ الدَّرَّاجَةَ", emoji:"🚲" }
-];
-
-// courts textes de lecture + un mot à retrouver dans le texte — teste le vocabulaire en contexte
-const TEXTES = [
-  { texte:"هَذَا بَيْتٌ كَبِيرٌ. فِي الْبَيْتِ قِطَّةٌ جَمِيلَةٌ.", mot:"قِطَّةٌ", emoji:"🐱" },
-  { texte:"الشَّمْسُ فِي السَّمَاءِ. الشَّمْسُ كَبِيرَةٌ وَجَمِيلَةٌ.", mot:"الشَّمْسُ", emoji:"☀️" },
-  { texte:"أَنَا أَقْرَأُ كِتَابِي كُلَّ يَوْمٍ. الْكِتَابُ مُمْتِعٌ.", mot:"كِتَابِي", emoji:"📖" },
-  { texte:"عِنْدِي كَلْبٌ صَغِيرٌ. الْكَلْبُ يَلْعَبُ فِي الْحَدِيقَةِ.", mot:"كَلْبٌ", emoji:"🐶" },
-  { texte:"شَجَرَةٌ كَبِيرَةٌ أَمَامَ بَيْتِي. تَحْتَ الشَّجَرَةِ وَرْدَةٌ حَمْرَاءُ.", mot:"وَرْدَةٌ", emoji:"🌸" },
-  { texte:"الْفِيلُ حَيَوَانٌ كَبِيرٌ. الْفِيلُ يُحِبُّ الْمَاءَ.", mot:"الْفِيلُ", emoji:"🐘" },
-  { texte:"أَنَا أَشْرَبُ الْحَلِيبَ كُلَّ صَبَاحٍ. الْحَلِيبُ لَذِيذٌ.", mot:"الْحَلِيبَ", emoji:"🥛" },
-  { texte:"فِي السَّمَاءِ سَحَابَةٌ بَيْضَاءُ. السَّحَابَةُ جَمِيلَةٌ.", mot:"سَحَابَةٌ", emoji:"☁️" },
-  { texte:"الدَّجَاجَةُ فِي الْحَدِيقَةِ. الدَّجَاجَةُ صَغِيرَةٌ.", mot:"الدَّجَاجَةُ", emoji:"🐔" },
-  { texte:"أَنَا أَرْكَبُ الدَّرَّاجَةَ يَوْمَ الْأَحَدِ. الدَّرَّاجَةُ حَمْرَاءُ.", mot:"الدَّرَّاجَةَ", emoji:"🚲" }
-];
-
-
-// badges à débloquer — condition évaluée sur l'enfant après mise à jour + score de la mission en cours
-const BADGES = [
-  { id:'premiere_mission', titre:'Première mission réussie', emoji:'🔤', condition:(e) => (e.missions_reussies||0) >= 1 },
-  { id:'cinq_missions', titre:'5 missions réussies', emoji:'🌟', condition:(e) => (e.missions_reussies||0) >= 5 },
-  { id:'vingt_missions', titre:'20 missions réussies', emoji:'🏆', condition:(e) => (e.missions_reussies||0) >= 20 },
-  { id:'score_parfait', titre:'Score parfait (100%)', emoji:'💯', condition:(e, score) => score >= 1 },
-  { id:'alphabet_termine', titre:'Alphabet terminé', emoji:'🔡', condition:(e) => (e.niveau_avance||1) >= 13 },
-  { id:'premier_mot', titre:'Premier mot lu', emoji:'📖', condition:(e) => (e.niveau_avance||1) >= 17 }
-];
-// alias conservé pour compatibilité avec l'ancien code
-const NIVEAUX_AVANCE = PARCOURS_AVANCE.map(n => n.unites);
-
-// formes contextuelles des lettres (isolée / début / milieu / fin) — codes Unicode Arabic Presentation Forms-B
-// certaines lettres ne se lient jamais à la lettre suivante (ا د ذ ر ز و) donc pas de forme début/milieu
-const FORMES_LETTRES = {
-  "ا": { finale:"\uFE8E" },
-  "ب": { debut:"\uFE91", milieu:"\uFE92", finale:"\uFE90" },
-  "ت": { debut:"\uFE97", milieu:"\uFE98", finale:"\uFE96" },
-  "ث": { debut:"\uFE9B", milieu:"\uFE9C", finale:"\uFE9A" },
-  "ج": { debut:"\uFE9F", milieu:"\uFEA0", finale:"\uFE9E" },
-  "ح": { debut:"\uFEA3", milieu:"\uFEA4", finale:"\uFEA2" },
-  "خ": { debut:"\uFEA7", milieu:"\uFEA8", finale:"\uFEA6" },
-  "د": { finale:"\uFEAA" },
-  "ذ": { finale:"\uFEAC" },
-  "ر": { finale:"\uFEAE" },
-  "ز": { finale:"\uFEB0" },
-  "س": { debut:"\uFEB3", milieu:"\uFEB4", finale:"\uFEB2" },
-  "ش": { debut:"\uFEB7", milieu:"\uFEB8", finale:"\uFEB6" },
-  "ص": { debut:"\uFEBB", milieu:"\uFEBC", finale:"\uFEBA" },
-  "ض": { debut:"\uFEBF", milieu:"\uFEC0", finale:"\uFEBE" },
-  "ط": { debut:"\uFEC3", milieu:"\uFEC4", finale:"\uFEC2" },
-  "ظ": { debut:"\uFEC7", milieu:"\uFEC8", finale:"\uFEC6" },
-  "ع": { debut:"\uFECB", milieu:"\uFECC", finale:"\uFECA" },
-  "غ": { debut:"\uFECF", milieu:"\uFED0", finale:"\uFECE" },
-  "ف": { debut:"\uFED3", milieu:"\uFED4", finale:"\uFED2" },
-  "ق": { debut:"\uFED7", milieu:"\uFED8", finale:"\uFED6" },
-  "ك": { debut:"\uFEDB", milieu:"\uFEDC", finale:"\uFEDA" },
-  "ل": { debut:"\uFEDF", milieu:"\uFEE0", finale:"\uFEDE" },
-  "م": { debut:"\uFEE3", milieu:"\uFEE4", finale:"\uFEE2" },
-  "ن": { debut:"\uFEE7", milieu:"\uFEE8", finale:"\uFEE6" },
-  "ه": { debut:"\uFEEB", milieu:"\uFEEC", finale:"\uFEEA" },
-  "و": { finale:"\uFEEE" },
-  "ي": { debut:"\uFEF3", milieu:"\uFEF4", finale:"\uFEF2" }
+const STORE='arabiya_v2';
+const defaultState={
+ pin:'1234', selected:0, children:[
+  {name:'Enfant 1',avatar:'1',avatarId:'1',avatarConfig:{hero:'1',companion:'🦊',badge:'⭐'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[]},
+  {name:'Enfant 2',avatar:'2',avatarId:'2',avatarConfig:{hero:'2',companion:'🐼',badge:'🌟'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[]},
+  {name:'Enfant 3',avatar:'3',avatarId:'3',avatarConfig:{hero:'3',companion:'🐰',badge:'💫'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[]},
+  {name:'Enfant 4',avatar:'4',avatarId:'4',avatarConfig:{hero:'4',companion:'🦉',badge:'🌙'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[]}
+ ], lessons:[]
 };
-
-// toutes les lettres de l'alphabet (sans harakāt) — pool de distracteurs pour "cherche" et "mot à compléter"
-const LETTRES_TOUTES = [...new Set(PARCOURS_AVANCE.slice(0,12).flatMap(n => n.unites))];
-
-let enfants = [];
-let enfantActifId = null;
-let categorieActive = 'ecole';
-let photosBase64 = [];
-
-let etatJeu = { defis: [], index: 0, bonnes: 0, enfantId: null, categorie: null };
-
-/* ---------- navigation ---------- */
-function afficherEcran(id){
-  document.querySelectorAll('.ecran').forEach(e => e.classList.remove('actif'));
-  document.getElementById(id).classList.add('actif');
-}
-
-/* ---------- chargement initial ---------- */
-async function chargerEnfants(){
-  const { data, error } = await db.from('enfants').select('*').order('cree_le');
-  if(error){
-    document.getElementById('grille-enfants').innerHTML =
-      '<p style="grid-column:span 2;color:#F6A9A0;">Connexion impossible — vérifie ta connexion internet et réessaie.</p>';
-    return;
-  }
-  enfants = data || [];
-  dessinerGrilleEnfants();
-  remplirSelectEnfants();
-  dessinerListeEnfantsParent();
-}
-
-function dessinerGrilleEnfants(){
-  const zone = document.getElementById('grille-enfants');
-  zone.innerHTML = '';
-  enfants.forEach(e => {
-    const carte = document.createElement('div');
-    carte.className = 'carte-enfant';
-    carte.style.background = e.couleur || '#2EC4B6';
-    carte.onclick = () => ouvrirMission(e.id);
-    carte.innerHTML = `
-      <div class="rond">${e.avatar_url ? `<img src="${e.avatar_url}" onerror="this.parentElement.innerHTML='🌙'">` : '🌙'}</div>
-      <div class="nom">${e.nom}</div>
-      <div class="etoiles">⭐ ${e.etoiles || 0} ${(e.streak||0) > 0 ? `· 🔥 ${e.streak}` : ''}</div>
-    `;
-    zone.appendChild(carte);
-  });
-  if(enfants.length === 0){
-    zone.innerHTML = '<p style="grid-column:span 2;color:#8a7d68;">Aucun enfant pour l\'instant — va dans l\'espace maman (⚙️) pour en ajouter.</p>';
-  }
-}
-
-/* ---------- PIN ---------- */
-function ouvrirPin(){ afficherEcran('ecran-pin'); document.getElementById('champ-pin').value=''; }
-function verifierPin(){
-  if(document.getElementById('champ-pin').value === PARENT_PIN){
-    afficherEcran('ecran-parent');
-    // le dimanche, on ouvre directement sur le bilan pour préparer la semaine
-    changerOngletParent(new Date().getDay() === 0 ? 'dashboard' : 'cours');
-  } else {
-    alert('Code incorrect');
-  }
-}
-
-/* ---------- onglets parent ---------- */
-function changerOngletParent(nom){
-  ['cours','enfants','historique','dashboard','histoires'].forEach(o => {
-    document.getElementById('onglet-'+o).style.display = (o===nom) ? 'block' : 'none';
-    document.getElementById('tab-'+o).classList.toggle('actif', o===nom);
-  });
-  if(nom === 'historique') chargerHistorique();
-  if(nom === 'dashboard') chargerDashboard();
-  if(nom === 'histoires') chargerHistoiresParent();
-}
-
-/* ---------- histoires des prophètes ---------- */
-async function chargerHistoiresParent(){
-  const zone = document.getElementById('liste-histoires-parent');
-  zone.innerHTML = '<p>Chargement…</p>';
-  const { data, error } = await db.from('histoires').select('*').order('cree_le', { ascending:false });
-  if(error){ zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible.</p>'; return; }
-  if(!data || data.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Aucune histoire ajoutée pour l\'instant.</p>'; return; }
-  zone.innerHTML = '<h3>Histoires ajoutées</h3>' + data.map(h => `
-    <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <strong>${h.titre}</strong>
-        <button class="bouton petit secondaire" style="color:#E4776B;border-color:#FBE1DD;" onclick="supprimerHistoire('${h.id}')">supprimer</button>
-      </div>
-      ${h.prophete ? `<p style="font-size:12px;color:#8a7d68;margin:2px 0;">Prophète : ${h.prophete}</p>` : ''}
-    </div>
-  `).join('');
-}
-
-let imagesHistoireMots = {1:null, 2:null, 3:null, 4:null};
-
-function previsualiserImageMot(i){
-  const fichier = document.getElementById(`histoire-fichier-${i}`).files[0];
-  if(!fichier) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = new Image();
-    img.onload = () => {
-      const taille = 120;
-      const cote = Math.min(img.width, img.height);
-      const canvas = document.createElement('canvas');
-      canvas.width = taille; canvas.height = taille;
-      canvas.getContext('2d').drawImage(img, (img.width-cote)/2, (img.height-cote)/2, cote, cote, 0, 0, taille, taille);
-      imagesHistoireMots[i] = canvas.toDataURL('image/jpeg', 0.7);
-      const apercu = document.getElementById(`histoire-apercu-${i}`);
-      apercu.src = imagesHistoireMots[i];
-      apercu.style.display = 'block';
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(fichier);
-}
-
-async function ajouterHistoire(){
-  const titre = document.getElementById('histoire-titre').value.trim();
-  const texte = document.getElementById('histoire-texte').value.trim();
-  if(!titre || !texte){ alert('Le titre et le texte sont obligatoires'); return; }
-  const prophete = document.getElementById('histoire-prophete').value.trim();
-  const vocabulaire = [];
-  for(let i=1;i<=4;i++){
-    const mot = document.getElementById(`histoire-mot-${i}`).value.trim();
-    const emoji = imagesHistoireMots[i] || document.getElementById(`histoire-emoji-${i}`).value.trim();
-    if(mot && emoji) vocabulaire.push({ mot, emoji });
-  }
-  const { error } = await db.from('histoires').insert({ titre, prophete, texte, vocabulaire });
-  if(error){ alert('Erreur : ' + error.message); return; }
-  ['histoire-titre','histoire-prophete','histoire-texte'].forEach(id => document.getElementById(id).value = '');
-  for(let i=1;i<=4;i++){
-    document.getElementById(`histoire-mot-${i}`).value='';
-    document.getElementById(`histoire-emoji-${i}`).value='';
-    document.getElementById(`histoire-fichier-${i}`).value='';
-    document.getElementById(`histoire-apercu-${i}`).style.display='none';
-    imagesHistoireMots[i] = null;
-  }
-  chargerHistoiresParent();
-}
-
-async function supprimerHistoire(id){
-  if(!confirm('Supprimer cette histoire ?')) return;
-  await db.from('histoires').delete().eq('id', id);
-  chargerHistoiresParent();
-}
-
-/* ---------- gestion enfants ---------- */
-let couleurChoisie = '#2EC4B6';
-let avatarChoisi = null;
-
-function initialiserCasesAvatars(){
-  const zone = document.getElementById('cases-avatars');
-  let html = `<div class="case" style="min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;" onclick="choisirAvatar(this, null)">aucun</div>`;
-  for(let i=1;i<=6;i++){
-    html += `<div class="case" style="padding:5px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;" onclick="choisirAvatar(this, 'avatar-${i}.png')"><img src="avatar-${i}.png" style="width:40px;height:40px;object-fit:cover;object-position:top;border-radius:50%;display:block;" onerror="this.parentElement.style.display='none'"></div>`;
-  }
-  zone.innerHTML = html;
-}
-function choisirAvatar(el, fichier){
-  el.parentElement.querySelectorAll('.case').forEach(c => c.style.outline = 'none');
-  el.style.outline = '3px solid #3A3227';
-  avatarChoisi = fichier;
-  document.getElementById('apercu-photo-avatar').style.display = 'none';
-}
-
-// alternative : choisir une vraie photo de l'enfant plutôt qu'un avatar dessiné
-function previsualiserPhotoAvatar(){
-  const fichier = document.getElementById('champ-photo-avatar').files[0];
-  if(!fichier) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = new Image();
-    img.onload = () => {
-      const taille = 300;
-      const cote = Math.min(img.width, img.height);
-      const canvas = document.createElement('canvas');
-      canvas.width = taille; canvas.height = taille;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, (img.width-cote)/2, (img.height-cote)/2, cote, cote, 0, 0, taille, taille);
-      avatarChoisi = canvas.toDataURL('image/jpeg', 0.7);
-      document.querySelectorAll('#cases-avatars .case').forEach(c => c.style.outline = 'none');
-      const apercu = document.getElementById('apercu-photo-avatar');
-      apercu.src = avatarChoisi;
-      apercu.style.display = 'inline-block';
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(fichier);
-}
-
-function choisirCouleur(el, couleur){
-  el.parentElement.querySelectorAll('.case').forEach(c => c.style.outline = 'none');
-  el.style.outline = '3px solid #3A3227';
-  couleurChoisie = couleur;
-}
-async function ajouterEnfant(){
-  const nom = document.getElementById('nouveau-nom').value.trim();
-  if(!nom){ alert('Entre un prénom'); return; }
-  const { error } = await db.from('enfants').insert({ nom, couleur: couleurChoisie, avatar_url: avatarChoisi });
-  if(error){ alert('Erreur : ' + error.message); return; }
-  document.getElementById('nouveau-nom').value = '';
-  document.getElementById('champ-photo-avatar').value = '';
-  document.getElementById('apercu-photo-avatar').style.display = 'none';
-  avatarChoisi = null;
-  chargerEnfants();
-}
-function dessinerListeEnfantsParent(){
-  const zone = document.getElementById('liste-enfants-parent');
-  if(enfants.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Pas encore d\'enfant ajouté.</p>'; return; }
-  zone.innerHTML = '<h3>Mes enfants</h3>' + enfants.map(e => `
-    <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-        <label style="width:36px;height:36px;border-radius:50%;background:${e.couleur};flex-shrink:0;overflow:hidden;margin:0;cursor:pointer;position:relative;">
-          ${e.avatar_url ? `<img src="${e.avatar_url}" style="width:100%;height:100%;object-fit:cover;object-position:top;" onerror="this.style.display='none'">` : ''}
-          <input type="file" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="changerAvatarEnfant('${e.id}', this)">
-        </label>
-        <div style="flex:1;font-weight:700;">${e.nom}</div>
-        <div style="color:#8a7d68;font-size:13px;">⭐ ${e.etoiles || 0}</div>
-        <button class="bouton petit secondaire" style="color:#E4776B;border-color:#FBE1DD;" onclick="supprimerEnfant('${e.id}','${e.nom}')">supprimer</button>
-      </div>
-      <label style="margin:0 0 2px;">Niveau de départ — Je m'avance</label>
-      <select onchange="definirNiveauAvance('${e.id}', this.value)">
-        ${PARCOURS_AVANCE.map((n,i) => `<option value="${i+1}" ${((e.niveau_avance||1)===i+1)?'selected':''}>${i+1}. ${n.titre}</option>`).join('')}
-      </select>
-    </div>
-  `).join('');
-}
-
-function changerAvatarEnfant(enfantId, input){
-  const fichier = input.files[0];
-  if(!fichier) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = new Image();
-    img.onload = async () => {
-      const taille = 300;
-      const cote = Math.min(img.width, img.height);
-      const canvas = document.createElement('canvas');
-      canvas.width = taille; canvas.height = taille;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, (img.width-cote)/2, (img.height-cote)/2, cote, cote, 0, 0, taille, taille);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-      await db.from('enfants').update({ avatar_url: dataUrl }).eq('id', enfantId);
-      chargerEnfants();
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(fichier);
-}
-
-async function supprimerEnfant(id, nom){
-  if(!confirm(`Supprimer ${nom} et toutes ses données (cours, scores, progression) ? Cette action est irréversible.`)) return;
-  await db.from('enfants').delete().eq('id', id);
-  chargerEnfants();
-}
-
-async function definirNiveauAvance(enfantId, niveau){
-  await db.from('enfants').update({ niveau_avance: parseInt(niveau, 10) }).eq('id', enfantId);
-  chargerEnfants();
-}
-function remplirSelectEnfants(){
-  const options = enfants.map(e => `<option value="${e.id}">${e.nom}</option>`).join('');
-  document.getElementById('champ-enfant-cours').innerHTML = options;
-  const selHist = document.getElementById('champ-enfant-historique');
-  const valeurActuelle = selHist.value;
-  selHist.innerHTML = options;
-  if(valeurActuelle) selHist.value = valeurActuelle;
-}
-
-/* ---------- historique des cours ---------- */
-async function chargerHistorique(){
-  const zone = document.getElementById('zone-historique');
-  const enfantId = document.getElementById('champ-enfant-historique').value;
-  if(!enfantId){ zone.innerHTML = '<p style="color:#8a7d68;">Ajoute d\'abord un enfant.</p>'; return; }
-  zone.innerHTML = '<p>Chargement…</p>';
-  const { data: cours, error } = await db.from('cours')
-    .select('*').eq('enfant_id', enfantId).order('cree_le', { ascending:false });
-  if(error){ zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible — vérifie ta connexion internet et réessaie.</p>'; return; }
-  if(!cours || cours.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Aucun cours enregistré pour cet enfant.</p>'; return; }
-  zone.innerHTML = cours.map(c => {
-    let photos = [];
-    if(c.photo_url){
-      try { photos = JSON.parse(c.photo_url); if(!Array.isArray(photos)) photos = [c.photo_url]; }
-      catch(e){ photos = [c.photo_url]; }
-    }
-    return `
-    <div style="padding:10px 0;border-bottom:1px solid var(--vert-clair);">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <strong>${new Date(c.cree_le).toLocaleDateString('fr-FR')}</strong>
-        <span style="font-size:12px;color:#8a7d68;">${c.categorie === 'avance' ? '🚀 avance' : '📚 école'}</span>
-      </div>
-      <p style="font-size:13px;color:#6b5f4d;margin:4px 0;">${c.notions || '(pas de note)'}</p>
-      ${photos.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">${photos.map(p=>`<img src="${p}" style="width:56px;height:56px;object-fit:cover;border-radius:8px;">`).join('')}</div>` : ''}
-      <button class="bouton petit secondaire" style="color:#E4776B;border-color:#FBE1DD;" onclick="supprimerCours('${c.id}')">supprimer ce cours</button>
-    </div>
-  `;
-  }).join('');
-}
-
-async function supprimerCours(id){
-  if(!confirm('Supprimer ce cours et ses défis associés ?')) return;
-  await db.from('defis').delete().eq('cours_id', id);
-  await db.from('cours').delete().eq('id', id);
-  chargerHistorique();
-}
-
-/* ---------- export de sauvegarde ---------- */
-async function exporterSauvegarde(){
-  try{
-    const [e,c,d,r,p] = await Promise.all([
-      db.from('enfants').select('*'),
-      db.from('cours').select('*'),
-      db.from('defis').select('*'),
-      db.from('resultats').select('*'),
-      db.from('progression').select('*')
-    ]);
-    const sauvegarde = { date_export: new Date().toISOString(), enfants:e.data, cours:c.data, defis:d.data, resultats:r.data, progression:p.data };
-    const blob = new Blob([JSON.stringify(sauvegarde, null, 2)], { type:'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `mission-arabe-sauvegarde-${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-  }catch(e){
-    alert('Impossible d\'exporter — vérifie ta connexion internet.');
-  }
-}
-
-/* ---------- formulaire ajout de cours ---------- */
-function toggleCase(el){ el.classList.toggle('actif'); }
-function choisirCategorie(el){
-  el.parentElement.querySelectorAll('.case').forEach(c => c.classList.remove('actif'));
-  el.classList.add('actif');
-}
-function previsualiserPhoto(){
-  const fichiers = Array.from(document.getElementById('champ-photo').files);
-  if(fichiers.length === 0) return;
-  photosBase64 = [];
-  const zone = document.getElementById('apercu-photo');
-  zone.innerHTML = '';
-  zone.style.display = 'flex';
-  fichiers.forEach(fichier => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const maxW = 800;
-        const ratio = Math.min(1, maxW / img.width);
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width * ratio;
-        canvas.height = img.height * ratio;
-        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-        photosBase64.push(dataUrl);
-        const miniature = document.createElement('img');
-        miniature.src = dataUrl;
-        miniature.style.cssText = 'width:64px;height:64px;object-fit:cover;border-radius:10px;';
-        zone.appendChild(miniature);
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(fichier);
-  });
-}
-
-async function creerCoursEtDefis(){
-  const enfantId = document.getElementById('champ-enfant-cours').value;
-  if(!enfantId){ alert("Ajoute d'abord un enfant"); return; }
-  const categorie = document.querySelector('#onglet-cours .cases div.actif[data-cat]')?.dataset.cat || 'ecole';
-  const lettres = document.getElementById('champ-lettres').value.trim().split(/\s+/).filter(Boolean);
-  const contenu = document.getElementById('champ-contenu').value.trim();
-  const aRevoir = document.getElementById('champ-a-revoir').value.trim();
-
-  const { data: cours, error } = await db.from('cours').insert({
-    enfant_id: enfantId,
-    photo_url: photosBase64.length ? JSON.stringify(photosBase64) : null,
-    notions: contenu,
-    categorie
-  }).select().single();
-
-  if(error){ alert('Erreur : ' + error.message); return; }
-
-  if(lettres.length > 0){
-    await genererDefisDepuisLettres(cours.id, lettres);
-  }
-  if(aRevoir){
-    await db.from('progression').insert({ enfant_id: enfantId, notion: aRevoir, niveau_maitrise: 0, prochaine_revision: new Date().toISOString().slice(0,10) });
-  }
-
-  alert('Mission de la semaine créée ✅');
-  document.getElementById('champ-lettres').value = '';
-  document.getElementById('champ-contenu').value = '';
-  document.getElementById('champ-a-revoir').value = '';
-  document.getElementById('champ-photo').value = '';
-  photosBase64 = [];
-  document.getElementById('apercu-photo').innerHTML = '';
-  document.getElementById('apercu-photo').style.display = 'none';
-}
-
-async function genererDefisDepuisLettres(coursId, lettres){
-  const lignes = [];
-  // reconnais la lettre : une question par lettre
-  lettres.forEach(cible => {
-    const distracteurs = melange(lettres.filter(l => l !== cible)).slice(0,2);
-    while(distracteurs.length < 2) distracteurs.push(lettres[Math.floor(Math.random()*lettres.length)]);
-    lignes.push({
-      cours_id: coursId, type: 'reconnais',
-      question: cible,
-      reponses: melange([cible, ...distracteurs]),
-      bonne_reponse: cible
-    });
-  });
-  // trouve la lettre : une question globale
-  lignes.push({
-    cours_id: coursId, type: 'trouve',
-    question: lettres[Math.floor(Math.random()*lettres.length)],
-    reponses: melange(lettres),
-    bonne_reponse: lettres[Math.floor(Math.random()*lettres.length)]
-  });
-  // écoute et choisis : reconnaissance orale
-  const cibleAudio = lettres[Math.floor(Math.random()*lettres.length)];
-  const distracteursAudio = melange(lettres.filter(l => l !== cibleAudio)).slice(0,2);
-  lignes.push({
-    cours_id: coursId, type: 'ecoute',
-    question: cibleAudio,
-    reponses: melange([cibleAudio, ...distracteursAudio]),
-    bonne_reponse: cibleAudio
-  });
-  // cherche et trouve : grille plus grande, plus de distracteurs
-  lignes.push({ cours_id: coursId, ...genererDefiCherche(lettres) });
-  // formes de la lettre (début/milieu/fin) — si au moins une lettre a des formes connues
-  const formes = genererDefiFormes(lettres);
-  if(formes) lignes.push({ cours_id: coursId, ...formes });
-  // traçage d'une des lettres du cours
-  lignes.push({ cours_id: coursId, type:'trace', question: lettres[Math.floor(Math.random()*lettres.length)], reponses:[], bonne_reponse:null });
-  // mémoire : une seule entrée qui contient toutes les lettres à apparier
-  lignes.push({
-    cours_id: coursId, type: 'memoire',
-    question: 'memoire',
-    reponses: lettres,
-    bonne_reponse: null
-  });
-  const { error } = await db.from('defis').insert(lignes);
-  if(error) console.error(error);
-}
-
-function melange(t){
-  const a = [...t];
-  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
-  return a;
-}
-
-/* ---------- dashboard maman ---------- */
-async function chargerDashboard(){
-  const zone = document.getElementById('zone-dashboard');
-  zone.innerHTML = '<p>Chargement…</p>';
-  try{
-    let html = new Date().getDay() === 0
-      ? '<div style="background:#F6E4BC;color:#8a6112;padding:10px 14px;border-radius:12px;font-size:13px;font-weight:600;margin-bottom:12px;">🌙 C\'est dimanche — pense à prendre en photo le cours de la semaine pour préparer les missions !</div>'
-      : '';
-    html += '<h3>Vue d\'ensemble</h3>';
-    for(const e of enfants){
-      const { data: progression } = await db.from('progression').select('*').eq('enfant_id', e.id);
-      const aRevoir = (progression || []).filter(p => (p.niveau_maitrise||0) < SEUIL_VALIDATION*100);
-      const pctEcole = Math.min(100, e.xp_ecole || 0);
-      const pctAvance = Math.min(100, e.xp_avance || 0);
-      html += `
-        <div class="ligne-enfant" style="flex-direction:column;align-items:stretch;">
-          <div style="display:flex;justify-content:space-between;"><strong>${e.nom}</strong><span>⭐ ${e.etoiles||0} ${(e.streak||0)>0?`· 🔥${e.streak}`:''}</span></div>
-          <div style="font-size:11px;color:#8a7d68;">${(e.missions_reussies||0)} missions réussies · ${(e.badges||[]).length} badge${(e.badges||[]).length>1?'s':''}</div>
-          <div style="font-size:11px;color:#8a7d68;margin-top:4px;">mon école</div>
-          <div class="mini-barre"><div style="width:${pctEcole}%;background:#2EC4B6;"></div></div>
-          <div style="font-size:11px;color:#8a7d68;">je m'avance</div>
-          <div class="mini-barre"><div style="width:${pctAvance}%;background:#3E8BE0;"></div></div>
-          ${aRevoir.length ? `<div style="font-size:12px;color:#E4776B;font-weight:600;margin-top:4px;">à revoir : ${aRevoir.map(p=>p.notion).join(', ')}</div>` : ''}
-        </div>
-      `;
-    }
-    zone.innerHTML = html || '<p>Aucun enfant.</p>';
-  }catch(e){
-    zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible — vérifie ta connexion internet et réessaie.</p>';
-  }
-}
-
-/* ---------- espace enfant : ouverture mission ---------- */
-async function ouvrirMission(enfantId){
-  enfantActifId = enfantId;
-  categorieActive = 'ecole';
-  document.getElementById('toggle-ecole').classList.add('actif');
-  document.getElementById('toggle-avance').classList.remove('actif');
-  const e = enfants.find(x => x.id === enfantId);
-  document.getElementById('titre-mission').textContent = e ? e.nom : 'Mission';
-  afficherEcran('ecran-mission');
-  await afficherInfoMission();
-}
-
-function choisirCategorieEnfant(cat){
-  categorieActive = cat;
-  document.getElementById('toggle-ecole').classList.toggle('actif', cat==='ecole');
-  document.getElementById('toggle-avance').classList.toggle('actif', cat==='avance');
-  document.getElementById('toggle-histoires').classList.toggle('actif', cat==='histoires');
-  afficherInfoMission();
-}
-
-async function afficherInfoMission(){
-  const zone = document.getElementById('zone-mission-info');
-  zone.innerHTML = '<p>Chargement…</p>';
-  document.getElementById('zone-vocab-bonus').style.display = 'none';
-  document.getElementById('zone-comprehension-bonus').style.display = 'none';
-
-  if(categorieActive === 'histoires'){
-    const { data, error } = await db.from('histoires').select('*').order('cree_le', { ascending:false });
-    if(error){ zone.innerHTML = '<p style="color:#E4776B;">Connexion impossible.</p>'; return; }
-    if(!data || data.length === 0){ zone.innerHTML = '<p style="color:#8a7d68;">Pas encore d\'histoire ajoutée — demande à maman de commencer 📖</p>'; return; }
-    zone.innerHTML = '<h3>📖 Choisis une histoire</h3>' + data.map(h => `
-      <div class="carte-secondaire" style="cursor:pointer;margin-bottom:8px;" onclick='ouvrirHistoire(${JSON.stringify(h).replace(/'/g,"&apos;")})'>
-        <div class="puce">📖</div>
-        <div class="txt"><div>${h.titre}</div>${h.prophete ? `<div>Prophète ${h.prophete}</div>` : ''}</div>
-      </div>
-    `).join('');
-    return;
-  }
-
-  if(categorieActive === 'avance'){
-    const e = enfants.find(x => x.id === enfantActifId);
-    const niveauIndex = Math.min(PARCOURS_AVANCE.length - 1, (e.niveau_avance || 1) - 1);
-    const niveau = PARCOURS_AVANCE[niveauIndex];
-    const apercu = niveau.unites ? niveau.unites.join('  ')
-      : niveau.mode === 'vocabulaire' ? VOCABULAIRE.slice(0,5).map(v=>v.emoji).join(' ')
-      : niveau.mode === 'phrases' ? '🏠 🐱 ☀️ 📖'
-      : '📖 lecture + compréhension';
-    zone.innerHTML = `
-      <h3>🚀 ${niveau.titre}</h3>
-      <p style="color:#8a7d68;font-size:13px;">${apercu}</p>
-      <p style="color:#8a7d68;font-size:12px;">reconnaissance visuelle, écrite et orale — environ 5 min</p>
-      ${(e.badges||[]).length ? `<div style="margin:8px 0;font-size:22px;">${(e.badges||[]).map(id => BADGES.find(b=>b.id===id)?.emoji || '').join(' ')}</div>` : ''}
-      <button class="bouton" onclick="lancerMissionAvance()">Commencer</button>
-    `;
-    document.getElementById('zone-vocab-bonus').style.display = 'block';
-    document.getElementById('zone-vocab-bonus').innerHTML = `
-      <h3 style="margin-top:0;">🖼️ Séance vocabulaire (bonus, à tout niveau)</h3>
-      <p style="color:#8a7d68;font-size:12px;">image ↔ mot, écoute ↔ image/mot, phonologie</p>
-      <button class="bouton secondaire" onclick="lancerSessionVocabulaireBonus('debutant')">Débutant</button>
-      <button class="bouton secondaire" onclick="lancerSessionVocabulaireBonus('avance')" style="margin-top:8px;">Avancé</button>
-    `;
-    document.getElementById('zone-comprehension-bonus').style.display = 'block';
-    document.getElementById('zone-comprehension-bonus').innerHTML = `
-      <h3 style="margin-top:0;">📖 Séance compréhension (bonus, à tout niveau)</h3>
-      <p style="color:#8a7d68;font-size:12px;">lire une phrase ou un texte et choisir l'image</p>
-      <button class="bouton secondaire" onclick="lancerSessionComprehensionBonus('debutant')">Débutant</button>
-      <button class="bouton secondaire" onclick="lancerSessionComprehensionBonus('intermediaire')" style="margin-top:8px;">Intermédiaire</button>
-      <button class="bouton secondaire" onclick="lancerSessionComprehensionBonus('texte')" style="margin-top:8px;">Texte</button>
-    `;
-    return;
-  }
-  document.getElementById('zone-vocab-bonus').style.display = 'none';
-  document.getElementById('zone-comprehension-bonus').style.display = 'none';
-
-  // catégorie "ecole" : dernier cours non terminé
-  const e = enfants.find(x => x.id === enfantActifId);
-  const { data: cours } = await db.from('cours')
-    .select('*').eq('enfant_id', enfantActifId).eq('categorie','ecole')
-    .order('cree_le', { ascending:false }).limit(1);
-
-  if(!cours || cours.length === 0){
-    await proposerRevisionOuVide(zone);
-    return;
-  }
-
-  const { data: defis } = await db.from('defis').select('*').eq('cours_id', cours[0].id);
-  if(!defis || defis.length === 0){
-    await proposerRevisionOuVide(zone);
-    return;
-  }
-  zone.innerHTML = `
-    <h3>🎯 Mission du jour</h3>
-    <p style="color:#8a7d68;font-size:13px;">${defis.length} défis · environ 5 minutes</p>
-    <button class="bouton" onclick='lancerMissionEcole(${JSON.stringify(defis).replace(/'/g,"&apos;")})'>Commencer</button>
-  `;
-}
-
-// quand il n'y a pas de nouveau cours : propose une révision des notions dues, sinon un message d'attente
-async function proposerRevisionOuVide(zone){
-  const aujourdHui = new Date().toISOString().slice(0,10);
-  const { data: dues } = await db.from('progression')
-    .select('*').eq('enfant_id', enfantActifId).lte('prochaine_revision', aujourdHui);
-  if(dues && dues.length > 0){
-    const notions = dues.map(d => d.notion);
-    zone.innerHTML = `
-      <h3>🔁 Révision du jour</h3>
-      <p style="color:#8a7d68;font-size:13px;">${notions.join(', ')}</p>
-      <button class="bouton" onclick='lancerRevision(${JSON.stringify(notions).replace(/'/g,"&apos;")})'>Commencer</button>
-    `;
-  } else {
-    zone.innerHTML = '<p style="color:#8a7d68;">Pas encore de cours ajouté cette semaine — demande à maman 🌙</p>';
-  }
-}
-
-function lancerRevision(notions){
-  etatJeu = { defis: genererMissionMixte(notions), index:0, bonnes:0, enfantId: enfantActifId, categorie:'ecole' };
-  afficherEcran('ecran-jeu');
-  jouerDefiCourant();
-}
-
-/* ---------- moteur de jeu ---------- */
-function lancerMissionEcole(defis){
-  etatJeu = { defis, index:0, bonnes:0, enfantId: enfantActifId, categorie:'ecole' };
-  afficherEcran('ecran-jeu');
-  jouerDefiCourant();
-}
-
-function lancerMissionAvance(){
-  const e = enfants.find(x => x.id === enfantActifId);
-  const niveauIndex = Math.min(PARCOURS_AVANCE.length - 1, (e.niveau_avance || 1) - 1);
-  const niveau = PARCOURS_AVANCE[niveauIndex];
-  let defis;
-  if(niveau.mode === 'vocabulaire') defis = genererDefisVocabulaire();
-  else if(niveau.mode === 'phrases') defis = genererDefisPhrases();
-  else if(niveau.mode === 'texte') defis = genererDefisTexte();
-  else defis = genererMissionMixte(niveau.unites);
-  etatJeu = { defis, index:0, bonnes:0, enfantId: enfantActifId, categorie:'avance' };
-  afficherEcran('ecran-jeu');
-  jouerDefiCourant();
-}
-
-// séance bonus vocabulaire — ne fait pas progresser le niveau principal, juste XP et étoiles
-function lancerSessionVocabulaireBonus(tier){
-  etatJeu = { defis: genererSessionVocabulaireBonus(tier), index:0, bonnes:0, enfantId: enfantActifId, categorie:'vocab' };
-  afficherEcran('ecran-jeu');
-  jouerDefiCourant();
-}
-
-// séance bonus compréhension — idem, ne touche pas au niveau principal
-function lancerSessionComprehensionBonus(tier){
-  etatJeu = { defis: genererSessionComprehensionBonus(tier), index:0, bonnes:0, enfantId: enfantActifId, categorie:'vocab' };
-  afficherEcran('ecran-jeu');
-  jouerDefiCourant();
-}
-
-// lecture d'une histoire choisie par l'enfant
-let histoireActive = null;
-function ouvrirHistoire(h){
-  histoireActive = h;
-  document.getElementById('titre-histoire').textContent = h.titre;
-  document.getElementById('texte-histoire').textContent = h.texte;
-  document.getElementById('bouton-quiz-histoire').style.display = (h.vocabulaire && h.vocabulaire.length >= 2) ? 'block' : 'none';
-  afficherEcran('ecran-histoire');
-}
-
-function lancerQuizHistoire(){
-  if(!histoireActive || !histoireActive.vocabulaire || histoireActive.vocabulaire.length < 2) return;
-  const mots = histoireActive.vocabulaire;
-  const defis = mots.map(cible => {
-    const distracteurs = melange(mots.filter(m => m.mot !== cible.mot)).slice(0,2);
-    return Math.random() < 0.5
-      ? { type:'vocab-image', question:cible.emoji, reponses: melange([cible.mot, ...distracteurs.map(d=>d.mot)]), bonne_reponse:cible.mot }
-      : { type:'vocab-mot', question:cible.mot, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse:cible.emoji };
-  });
-  etatJeu = { defis, index:0, bonnes:0, enfantId: enfantActifId, categorie:'vocab' };
-  afficherEcran('ecran-jeu');
-  jouerDefiCourant();
-}
-
-// vocabulaire imagé : associer un mot à son image, dans les deux sens
-function genererDefisVocabulaire(){
-  const defis = [];
-  for(let i=0;i<5;i++){
-    const cible = VOCABULAIRE[Math.floor(Math.random()*VOCABULAIRE.length)];
-    const distracteurs = melange(VOCABULAIRE.filter(v => v.mot !== cible.mot)).slice(0,2);
-    if(Math.random() < 0.5){
-      defis.push({ type:'vocab-image', question:cible.emoji, reponses: melange([cible.mot, ...distracteurs.map(d=>d.mot)]), bonne_reponse: cible.mot });
-    } else {
-      defis.push({ type:'vocab-mot', question:cible.mot, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse: cible.emoji });
-    }
-  }
-  return defis;
-}
-
-// séance bonus "vocabulaire" — accessible à tous, indépendamment du niveau d'alphabet
-// mélange : image→mot, mot→image, écoute→image, écoute→mot, phonologie
-function genererSessionVocabulaireBonus(tier){
-  const mots = tier === 'debutant' ? VOCAB_DEBUTANT : VOCAB_AVANCE;
-  const tirer = () => {
-    const cible = mots[Math.floor(Math.random()*mots.length)];
-    const distracteurs = melange(mots.filter(m => m.mot !== cible.mot)).slice(0,2);
-    return { cible, distracteurs };
-  };
-  const types = ['vocab-image','vocab-mot','vocab-ecoute-image','vocab-ecoute-mot','phonologie','vocab-image'];
-  return types.map(type => {
-    if(type === 'phonologie') return genererDefiPhonologie(mots);
-    const { cible, distracteurs } = tirer();
-    if(type === 'vocab-image') return { type, question:cible.emoji, reponses: melange([cible.mot, ...distracteurs.map(d=>d.mot)]), bonne_reponse: cible.mot };
-    if(type === 'vocab-mot') return { type, question:cible.mot, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse: cible.emoji };
-    if(type === 'vocab-ecoute-image') return { type, question:cible.mot, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse: cible.emoji };
-    return { type:'vocab-ecoute-mot', question:cible.mot, reponses: melange([cible.mot, ...distracteurs.map(d=>d.mot)]), bonne_reponse: cible.mot };
-  });
-}
-
-// phonologie : écoute le son d'une lettre, retrouve le mot (image) qui commence par ce son
-function genererDefiPhonologie(mots){
-  const cible = mots[Math.floor(Math.random()*mots.length)];
-  const premiereLettre = [...cible.mot.replace(/[\u064B-\u0652]/g,'')][0];
-  const distracteurs = melange(mots.filter(m => [...m.mot.replace(/[\u064B-\u0652]/g,'')][0] !== premiereLettre)).slice(0,2);
-  return { type:'phonologie', question: premiereLettre, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse: cible.emoji };
-}
-
-// phrases simples : comprendre une petite phrase et choisir l'image qui correspond
-function genererDefisPhrases(){
-  return melange(PHRASES).map(p => {
-    const distracteurs = melange(VOCABULAIRE.map(v=>v.emoji).filter(e => e !== p.emoji)).slice(0,2);
-    return { type:'phrase-image', question:p.phrase, reponses: melange([p.emoji, ...distracteurs]), bonne_reponse:p.emoji };
-  });
-}
-
-// lecture de texte : lire un court texte puis retrouver l'image qui correspond à un mot du texte
-function genererDefisTexte(){
-  return melange(TEXTES).map(t => {
-    const distracteurs = melange(VOCABULAIRE.map(v=>v.emoji).filter(e => e !== t.emoji)).slice(0,2);
-    return { type:'texte', texte:t.texte, question:t.mot, reponses: melange([t.emoji, ...distracteurs]), bonne_reponse:t.emoji };
-  });
-}
-
-// séance bonus "compréhension" — 3 paliers, accessible à tous quel que soit le niveau d'alphabet
-function genererSessionComprehensionBonus(tier){
-  if(tier === 'texte') return genererDefisTexte();
-  const liste = tier === 'debutant' ? PHRASES_DEBUTANT : PHRASES_INTERMEDIAIRE;
-  return melange(liste).map(p => {
-    const distracteurs = melange(VOCABULAIRE.map(v=>v.emoji).filter(e => e !== p.emoji)).slice(0,2);
-    return { type:'phrase-image', question:p.phrase, reponses: melange([p.emoji, ...distracteurs]), bonne_reponse:p.emoji };
-  });
-}
-
-// mélange reconnaissance visuelle (reconnais), écrite/ciblée (trouve) et orale (ecoute)
-function genererMissionMixte(unites){
-  const defis = [];
-  const types = ['reconnais','ecoute','trouve','cherche','ecoute'];
-  types.forEach(type => {
-    if(type === 'cherche'){ defis.push(genererDefiCherche(unites)); return; }
-    const cible = unites[Math.floor(Math.random()*unites.length)];
-    const distracteurs = melange(unites.filter(u=>u!==cible)).slice(0,2);
-    while(distracteurs.length < 2 && unites.length > 1) distracteurs.push(unites[Math.floor(Math.random()*unites.length)]);
-    defis.push({ type, question:cible, reponses: melange([cible,...distracteurs]), bonne_reponse: cible });
-  });
-  if(unites.length >= 3){
-    defis.push({ type:'memoire', question:'memoire', reponses: melange(unites).slice(0,4), bonne_reponse:null });
-  }
-  defis.push(genererDefiComplete());
-  // phonologie et formes de lettres : uniquement pour des lettres isolées (alphabet), pas pour harakāt/syllabes/mots
-  if(unites.every(u => [...u].length === 1)){
-    const p = genererDefiPhonologieAlphabet(unites);
-    if(p) defis.push(p);
-    const f = genererDefiFormes(unites);
-    if(f) defis.push(f);
-    defis.push({ type:'trace', question: unites[Math.floor(Math.random()*unites.length)] });
-  }
-  return defis;
-}
-
-// formes de la lettre : reconnaître qu'une forme début/milieu/fin correspond à la même lettre isolée
-function genererDefiFormes(unites){
-  const candidats = unites.filter(u => FORMES_LETTRES[u]);
-  if(candidats.length === 0) return null;
-  const cible = candidats[Math.floor(Math.random()*candidats.length)];
-  const formesDispo = Object.entries(FORMES_LETTRES[cible]).filter(([k,v]) => v);
-  if(formesDispo.length === 0) return null;
-  const [, formeAffichee] = formesDispo[Math.floor(Math.random()*formesDispo.length)];
-  const distracteurs = melange(unites.filter(u => u !== cible)).slice(0,2);
-  while(distracteurs.length < 2 && unites.length > 1) distracteurs.push(unites[Math.floor(Math.random()*unites.length)]);
-  return { type:'formes', question: formeAffichee, reponses: melange([cible, ...distracteurs]), bonne_reponse: cible };
-}
-
-// phonologie pour l'alphabet : écoute une lettre du niveau en cours, retrouve le mot (image) qui commence par elle
-function genererDefiPhonologieAlphabet(unites){
-  const enleverHarakat = m => [...m.replace(/[\u064B-\u0652]/g,'')][0];
-  const candidats = VOCABULAIRE.filter(v => unites.includes(enleverHarakat(v.mot)));
-  if(candidats.length === 0) return null;
-  const cible = candidats[Math.floor(Math.random()*candidats.length)];
-  const lettreCible = enleverHarakat(cible.mot);
-  const distracteurs = melange(VOCABULAIRE.filter(v => enleverHarakat(v.mot) !== lettreCible)).slice(0,2);
-  return { type:'phonologie', question:lettreCible, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse:cible.emoji };
-}
-
-// cherche et trouve : la bonne lettre se cache dans une grille plus grande (plus de distracteurs)
-function genererDefiCherche(unites){
-  const pool = LETTRES_TOUTES.length ? LETTRES_TOUTES : unites;
-  const cible = unites[Math.floor(Math.random()*unites.length)];
-  const autresDistracteurs = melange(pool.filter(l => l !== cible)).slice(0,7);
-  return { type:'cherche', question:cible, reponses: melange([cible, ...autresDistracteurs]), bonne_reponse: cible };
-}
-
-// mot à compléter : une lettre manque dans un mot simple, l'enfant retrouve laquelle
-const MOTS_A_COMPLETER = ["باب","بيت","كتاب","قلم","درس"];
-function genererDefiComplete(){
-  const mot = MOTS_A_COMPLETER[Math.floor(Math.random()*MOTS_A_COMPLETER.length)];
-  const lettres = [...mot];
-  const idx = 1 + Math.floor(Math.random()*(lettres.length-1));
-  const bonne = lettres[idx];
-  const affichage = lettres.map((l,i) => i===idx ? '▢' : l).join('');
-  const distracteurs = melange(LETTRES_TOUTES.filter(l => l !== bonne)).slice(0,2);
-  return { type:'complete', question: affichage, reponses: melange([bonne, ...distracteurs]), bonne_reponse: bonne };
-}
-
-function majBarreJeu(){
-  document.getElementById('barre-progression').style.width = (etatJeu.index/etatJeu.defis.length*100)+'%';
-}
-
-// adapte la taille du texte arabe : très grand pour une lettre seule,
-// plus petit pour une syllabe ou un mot, afin de rester lisible sans déborder
-function tailleArabe(texte){
-  const n = (texte || '').replace(/[\u064B-\u0652]/g, '').length; // sans compter les harakāt
-  if(n <= 1) return '96px';
-  if(n <= 2) return '76px';
-  if(n <= 4) return '54px';
-  return '38px';
-}
-
-// synthèse vocale arabe — gratuite, pas de fichier audio à héberger
-// noms des lettres — utilisés pour l'audio à la place du glyphe brut (le elif seul n'a pas de son propre par exemple)
-const NOMS_LETTRES = {
-  "ا":"أَلِف", "ب":"بَاء", "ت":"تَاء", "ث":"ثَاء", "ج":"جِيم", "ح":"حَاء", "خ":"خَاء",
-  "د":"دَال", "ذ":"ذَال", "ر":"رَاء", "ز":"زَاي", "س":"سِين", "ش":"شِين", "ص":"صَاد",
-  "ض":"ضَاد", "ط":"طَاء", "ظ":"ظَاء", "ع":"عَين", "غ":"غَين", "ف":"فَاء", "ق":"قَاف",
-  "ك":"كَاف", "ل":"لَام", "م":"مِيم", "ن":"نُون", "ه":"هَاء", "و":"وَاو", "ي":"يَاء"
-};
-
-function jouerAudioLettre(texte){
-  try{
-    speechSynthesis.cancel();
-    // si c'est une lettre isolée (sans harakāt), on fait dire son nom plutôt que le glyphe brut
-    const texteAudio = NOMS_LETTRES[texte] || texte;
-    const u = new SpeechSynthesisUtterance(texteAudio);
-    u.lang = 'ar-SA';
-    u.rate = 0.75;
-    speechSynthesis.speak(u);
-  }catch(e){ console.warn('audio indisponible', e); }
-}
-
-// petit son de retour (réussi / raté) — synthétisé, pas de fichier à héberger
-function jouerSonReponse(correct){
-  try{
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain); gain.connect(ctx.destination);
-    osc.type = 'sine';
-    if(correct){
-      osc.frequency.setValueAtTime(660, ctx.currentTime);
-      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
-    } else {
-      osc.frequency.setValueAtTime(280, ctx.currentTime);
-    }
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-    osc.start(); osc.stop(ctx.currentTime + 0.25);
-  }catch(e){}
-}
-
-// la mascotte réagit à chaque réponse — jamais triste, juste plus ou moins joyeuse
-function reagirMascotte(correct){
-  const m = document.getElementById('mascotte-jeu');
-  if(!m) return;
-  m.classList.remove('mascotte-content','mascotte-encourage');
-  void m.offsetWidth;
-  m.classList.add(correct ? 'mascotte-content' : 'mascotte-encourage');
-}
-
-function lancerConfettis(){
-  const emojis = ['⭐','✨','🎉','🌟'];
-  for(let i=0;i<18;i++){
-    const c = document.createElement('div');
-    c.className = 'confetti-piece';
-    c.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-    c.style.left = Math.random()*100 + 'vw';
-    c.style.animationDelay = (Math.random()*0.3) + 's';
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 1800);
-  }
-}
-
-function estImage(v){ return typeof v === 'string' && v.startsWith('data:image'); }
-
-function jouerDefiCourant(){
-  majBarreJeu();
-  const defi = etatJeu.defis[etatJeu.index];
-  const scene = document.getElementById('scene-lettre');
-  document.getElementById('zone-choix').style.display = (defi.type === 'memoire' || defi.type === 'trace') ? 'none' : 'grid';
-  document.getElementById('zone-memoire').style.display = defi.type === 'memoire' ? 'grid' : 'none';
-  document.getElementById('zone-trace').style.display = defi.type === 'trace' ? 'block' : 'none';
-  scene.style.display = (defi.type === 'memoire' || defi.type === 'trace') ? 'none' : 'flex';
-  scene.style.height = (defi.type === 'texte') ? 'auto' : '170px';
-  scene.style.padding = (defi.type === 'texte') ? '16px 10px' : '0';
-
-  if(defi.type === 'trace'){
-    initialiserTrace(defi.question);
-    return;
-  }
-
-  if(defi.type === 'reconnais' || defi.type === 'trouve' || defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'cherche' || defi.type === 'complete' || defi.type === 'formes'){
-    scene.innerHTML = `<div class="lettre-grande" style="font-size:${tailleArabe(defi.question)}">${defi.question}</div>`;
-  } else if(defi.type === 'vocab-image'){
-    scene.innerHTML = estImage(defi.question)
-      ? `<img src="${defi.question}" style="width:110px;height:110px;object-fit:cover;border-radius:16px;">`
-      : `<div style="font-size:90px;">${defi.question}</div>`;
-  } else if(defi.type === 'ecoute' || defi.type === 'vocab-ecoute-image' || defi.type === 'vocab-ecoute-mot' || defi.type === 'phonologie'){
-    scene.innerHTML = `<div onclick="jouerAudioLettre('${defi.question}')" style="cursor:pointer;font-size:64px;">🔊</div>`;
-    setTimeout(() => jouerAudioLettre(defi.question), 300);
-  } else if(defi.type === 'texte'){
-    scene.innerHTML = `
-      <div style="font-family:'Noto Naskh Arabic',serif;font-size:24px;line-height:2.1;direction:rtl;text-align:center;">${defi.texte}</div>
-      <div style="margin-top:10px;font-family:'Baloo 2';font-size:13px;color:#8a7d68;text-align:center;">
-        quelle image correspond à <span style="font-family:'Noto Naskh Arabic',serif;font-size:19px;color:var(--vert);">${defi.question}</span> ?
-      </div>`;
-  }
-
-  if(defi.type !== 'memoire' && defi.type !== 'trace'){
-    const emojiChoix = (defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'texte' || defi.type === 'vocab-ecoute-image' || defi.type === 'phonologie');
-    const zone = document.getElementById('zone-choix');
-    zone.innerHTML = '';
-    (defi.reponses || []).forEach(item => {
-      const b = document.createElement('div');
-      b.className = 'choix';
-      if(estImage(item)){
-        b.innerHTML = `<img src="${item}" style="width:80%;height:80%;object-fit:cover;border-radius:12px;">`;
-      } else {
-        b.style.fontSize = emojiChoix ? '40px' : tailleArabe(item);
-        b.textContent = item;
-      }
-      b.onclick = () => validerReponse(b, item === defi.bonne_reponse, defi.bonne_reponse);
-      zone.appendChild(b);
-    });
-  } else {
-    jouerMemoire(defi.reponses);
-  }
-}
-
-// répétition espacée simple : échec → revoir demain, réussite → +3j, bonne maîtrise (2 réussites) → +7j
-async function enregistrerProgression(enfantId, notion, reussite){
-  if(!notion) return;
-  const { data: existant } = await db.from('progression').select('*').eq('enfant_id', enfantId).eq('notion', notion).limit(1);
-  const ligne = existant && existant[0];
-  const aujourdHui = new Date();
-  let niveauMaitrise = ligne ? (ligne.niveau_maitrise || 0) : 0;
-  let joursAvant;
-  if(reussite){
-    niveauMaitrise = Math.min(100, niveauMaitrise + 34);
-    joursAvant = niveauMaitrise >= 68 ? 7 : 3;
-  } else {
-    niveauMaitrise = Math.max(0, niveauMaitrise - 20);
-    joursAvant = 1;
-  }
-  const prochaine = new Date(aujourdHui.getTime() + joursAvant*24*3600*1000).toISOString().slice(0,10);
-  if(ligne){
-    await db.from('progression').update({ niveau_maitrise: niveauMaitrise, prochaine_revision: prochaine, maj_le: new Date().toISOString() }).eq('id', ligne.id);
-  } else {
-    await db.from('progression').insert({ enfant_id: enfantId, notion, niveau_maitrise: niveauMaitrise, prochaine_revision: prochaine });
-  }
-}
-
-// met à jour le streak de jours consécutifs — appelé une fois par mission jouée
-function calculerNouveauStreak(e){
-  const aujourdHui = new Date().toISOString().slice(0,10);
-  if(e.dernier_jour_joue === aujourdHui) return { streak: e.streak || 1, dernier_jour_joue: aujourdHui };
-  const hier = new Date(Date.now() - 24*3600*1000).toISOString().slice(0,10);
-  const nouveauStreak = (e.dernier_jour_joue === hier) ? (e.streak || 0) + 1 : 1;
-  return { streak: nouveauStreak, dernier_jour_joue: aujourdHui };
-}
-
-function validerReponse(bouton, correct, notion){
-  document.querySelectorAll('.choix').forEach(c => c.onclick = null);
-  bouton.classList.add(correct ? 'bonne' : 'mauvaise');
-  jouerSonReponse(correct);
-  reagirMascotte(correct);
-  if(correct) etatJeu.bonnes++;
-  if(notion) enregistrerProgression(etatJeu.enfantId, notion, correct);
-  setTimeout(() => {
-    etatJeu.index++;
-    if(etatJeu.index >= etatJeu.defis.length) terminerMission();
-    else jouerDefiCourant();
-  }, 600);
-}
-
-// ---------- traçage d'une lettre ----------
-let ctxTrace = null, enTrainDeDessiner = false;
-function initialiserTrace(lettre){
-  document.getElementById('lettre-guide-trace').textContent = lettre;
-  const canvas = document.getElementById('canvas-trace');
-  ctxTrace = canvas.getContext('2d');
-  ctxTrace.clearRect(0,0,canvas.width,canvas.height);
-  ctxTrace.strokeStyle = '#1F5C4F';
-  ctxTrace.lineWidth = 8;
-  ctxTrace.lineCap = 'round';
-  ctxTrace.lineJoin = 'round';
-
-  const position = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const pt = e.touches ? e.touches[0] : e;
-    return { x: pt.clientX - rect.left, y: pt.clientY - rect.top };
-  };
-  canvas.onpointerdown = (e) => {
-    enTrainDeDessiner = true;
-    const p = position(e);
-    ctxTrace.beginPath();
-    ctxTrace.moveTo(p.x, p.y);
-  };
-  canvas.onpointermove = (e) => {
-    if(!enTrainDeDessiner) return;
-    const p = position(e);
-    ctxTrace.lineTo(p.x, p.y);
-    ctxTrace.stroke();
-  };
-  canvas.onpointerup = () => { enTrainDeDessiner = false; };
-  canvas.onpointerleave = () => { enTrainDeDessiner = false; };
-}
-
-function effacerTrace(){
-  const canvas = document.getElementById('canvas-trace');
-  ctxTrace.clearRect(0,0,canvas.width,canvas.height);
-}
-
-function validerTrace(){
-  // pas de reconnaissance d'écriture en V1 : on valide dès que l'enfant a essayé
-  jouerSonReponse(true);
-  reagirMascotte(true);
-  etatJeu.bonnes++;
-  setTimeout(() => {
-    etatJeu.index++;
-    if(etatJeu.index >= etatJeu.defis.length) terminerMission();
-    else jouerDefiCourant();
-  }, 400);
-}
-
-function jouerMemoire(lettres){
-  const cartes = melange([...lettres, ...lettres]);
-  const zone = document.getElementById('zone-memoire');
-  zone.innerHTML = '';
-  let retournees = [], trouvees = 0, verrou = false;
-  cartes.forEach(lettre => {
-    const carte = document.createElement('div');
-    carte.className = 'carte-memoire';
-    carte.innerHTML = `<div class="face dos">🌙</div><div class="face recto">${lettre}</div>`;
-    carte.onclick = () => {
-      if(verrou || carte.classList.contains('retournee') || carte.classList.contains('trouvee')) return;
-      carte.classList.add('retournee');
-      retournees.push({carte, lettre});
-      if(retournees.length === 2){
-        verrou = true;
-        const [a,b] = retournees;
-        if(a.lettre === b.lettre){
-          jouerSonReponse(true);
-          reagirMascotte(true);
-          setTimeout(() => {
-            a.carte.classList.add('trouvee'); b.carte.classList.add('trouvee');
-            trouvees++; retournees = []; verrou = false;
-            etatJeu.bonnes++;
-            if(trouvees === lettres.length){ setTimeout(terminerMission, 400); }
-          }, 350);
-        } else {
-          setTimeout(() => { a.carte.classList.remove('retournee'); b.carte.classList.remove('retournee'); retournees=[]; verrou=false; }, 650);
-        }
-      }
-    };
-    zone.appendChild(carte);
-  });
-}
-
-async function terminerMission(){
-  const total = etatJeu.defis.reduce((n,d) => n + (d.type==='memoire' ? d.reponses.length : 1), 0);
-  const score = etatJeu.bonnes / total;
-  const reussi = score >= SEUIL_VALIDATION;
-  const xp = Math.round(etatJeu.bonnes * 10);
-
-  const e = enfants.find(x => x.id === etatJeu.enfantId);
-  const champXp = (etatJeu.categorie === 'avance' || etatJeu.categorie === 'vocab') ? 'xp_avance' : 'xp_ecole';
-  const nouveauXp = (e[champXp] || 0) + xp;
-  const maj = { etoiles: (e.etoiles||0) + etatJeu.bonnes, [champXp]: nouveauXp };
-  if(etatJeu.categorie === 'avance' && reussi){
-    maj.niveau_avance = Math.min(PARCOURS_AVANCE.length, (e.niveau_avance || 1) + 1);
-  }
-  if(reussi){
-    maj.missions_reussies = (e.missions_reussies || 0) + 1;
-  }
-  Object.assign(maj, calculerNouveauStreak(e));
-
-  // badges : on vérifie les conditions sur l'état de l'enfant après mise à jour
-  const enfantApresMaj = { ...e, ...maj };
-  const dejaObtenus = e.badges || [];
-  const nouveauxBadges = BADGES.filter(b => !dejaObtenus.includes(b.id) && b.condition(enfantApresMaj, score));
-  if(nouveauxBadges.length){
-    maj.badges = [...dejaObtenus, ...nouveauxBadges.map(b => b.id)];
-  }
-
-  await db.from('enfants').update(maj).eq('id', e.id);
-
-  document.getElementById('resume-fin').textContent =
-    `${etatJeu.bonnes}/${total} bonnes réponses — ${Math.round(score*100)}%` +
-    (reussi ? ' ✅ mission validée !' : ' (moins de 90%, on retente demain 💪)');
-  document.getElementById('xp-valeur').textContent = xp;
-
-  const zoneBadges = document.getElementById('badges-nouveaux');
-  zoneBadges.innerHTML = nouveauxBadges.map(b => `
-    <div class="badge-carte"><span class="emoji-badge">${b.emoji}</span> Nouveau badge : ${b.titre}</div>
-  `).join('');
-
-  const mascotteFin = document.getElementById('mascotte-fin');
-  mascotteFin.textContent = reussi ? '🦊' : '🦊';
-  mascotteFin.className = 'emoji ' + (reussi ? 'mascotte-content' : 'mascotte-encourage');
-
-  afficherEcran('ecran-fin');
-  if(reussi) lancerConfettis();
-  chargerEnfants();
-}
-
-/* ---------- démarrage ---------- */
-initialiserCasesAvatars();
-chargerEnfants();
+let state; try{ state=JSON.parse(localStorage.getItem(STORE)||'null')||structuredClone(defaultState); }catch(e){ state=structuredClone(defaultState); localStorage.removeItem(STORE); }
+state.children.forEach((c,i)=>{ if(!/^[1-6]$/.test(String(c.avatarId||''))){ c.avatarId=String((i%6)+1); } if(!c.avatarConfig){ c.avatarConfig={hero:c.avatarId,companion:['🦊','🐼','🐰','🦉'][i]||'🦊',badge:['⭐','🌟','💫','🌙'][i]||'⭐'}; } if(!c.avatarConfig.hero)c.avatarConfig.hero=c.avatarId; c.avatar=c.avatarConfig.hero; });
+state.children.forEach(c=>{if(!c.evolution)c.evolution={stage:0,unlocked:[0]};});
+let challenges=[],ci=0,mode='daily';
+
+const letters=['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
+const harakat=['بَ','بِ','بُ','تَ','تِ','تُ','مَ','مِ','مُ','سَ','سِ','سُ'];
+const words=['باب','بيت','تاج','جمل','حوت','يد','ماء','نور','قلم','كتاب'];
+const path=[
+ ["L’alphabet — ب ت ث",["ب","ت","ث"]],["L’alphabet — ج ح خ",["ج","ح","خ"]],["L’alphabet — د ذ",["د","ذ"]],
+ ["L’alphabet — ر ز",["ر","ز"]],["L’alphabet — س ش",["س","ش"]],["L’alphabet — ص ض",["ص","ض"]],
+ ["L’alphabet — ط ظ",["ط","ظ"]],["L’alphabet — ع غ",["ع","غ"]],["L’alphabet — ف ق",["ف","ق"]],
+ ["L’alphabet — ك ل",["ك","ل"]],["L’alphabet — م ن",["م","ن"]],["L’alphabet — ه و ي ا",["ه","و","ي","ا"]],
+ ["Harakāt — fatha",["بَ","تَ","ثَ","جَ","سَ"]],["Harakāt — kasra",["بِ","تِ","ثِ","جِ","سِ"]],
+ ["Harakāt — damma",["بُ","تُ","ثُ","جُ","سُ"]],["Syllabes simples",["بَا","بِي","بُو","مَا","مِي","مُو"]],
+ ["Premiers mots",["بَاب","بَيْت","كِتَاب","قَلَم","دَرْس"]],["Lecture de mots",["شَمْس","قَمَر","وَرْدَة","تُفَّاحَة","كِتَاب"]],
+ ["Vocabulaire imagé",["بيت","كتاب","قلم","باب","ماء"]],["Phrases simples",["هَذَا كِتَابٌ","هَذَا بَيْتٌ"]],["Je lis un petit texte",["أَنَا أَقْرَأُ","هَذَا بَيْتِي"]]
+];
+
+function save(){localStorage.setItem(STORE,JSON.stringify(state))}
+function me(){return state.children[state.selected]}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function tokens(s){return (s||'').replace(/[،,;|/]/g,' ').split(/\s+/).filter(Boolean)}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1800)}
+function showScreen(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav').forEach(x=>x.classList.remove('on'));
+ if(id==='home')document.querySelectorAll('.nav')[0].classList.add('on');
+ if(id==='mission')document.querySelectorAll('.nav')[1].classList.add('on');
+ if(id==='map')document.querySelectorAll('.nav')[2].classList.add('on');
+ window.scrollTo(0,0); render();
+ if(id==='trace')initCanvas();
+}
+function render(){
+ const c=me();
+ document.getElementById('childName').textContent=c.name;
+ document.getElementById('profileAvatarInline').innerHTML=avatarHTML((c.avatarConfig&&c.avatarConfig.hero)||c.avatarId||'1','avatar-mini');document.getElementById('progressName').textContent=c.name;
+ document.getElementById('xp').textContent=c.xp;document.getElementById('stars').textContent=c.stars;document.getElementById('mastery').textContent=c.mastery+'%';
+ document.getElementById('streak').textContent=c.streak;document.getElementById('levelText').textContent='Niveau '+c.level;document.getElementById('badgeCount').textContent=c.badges.length+' gagnés';
+ document.getElementById('dots').innerHTML=state.children.map((_,i)=>`<i class="${i===state.selected?'on':''}"></i>`).join('');
+ renderParent();renderProgress();renderMap();renderBadges();renderAvatars();
+}
+function profiles(){
+ let h='<div class="kicker">Qui joue aujourd’hui ?</div><h2>Choisis ton profil ✨</h2><p style="color:var(--muted);font-size:12px">Chaque enfant retrouve son propre avatar, ses étoiles et sa progression.</p><div class="profile-grid">';
+ state.children.forEach((c,i)=>{
+   const cfg=c.avatarConfig||{hero:c.avatarId||String(i+1)};
+   h+=`<button class="profile-card ${i===state.selected?'active':''}" onclick="selectChild(${i})">${avatarHTML(cfg.hero,'pc-avatar')}<div class="pc-name">${esc(c.name)}</div><div class="pc-meta">Niveau ${c.level} · ${c.xp} XP</div><div class="pc-streak">🔥 ${c.streak} jours</div></button>`;
+ });
+ h+='</div><button class="secondary" onclick="editNames()" style="margin-top:15px">✏️ Modifier les prénoms</button><button class="secondary" onclick="closeModal()">Fermer</button>';
+ openModal(h);
+}
+function selectChild(i){state.selected=i;save();closeModal();render();showScreen('home')}
+function editNames(){
+ let h='<h2>Mes 4 enfants</h2>';
+ state.children.forEach((c,i)=>h+=`<div class="field"><label>Enfant ${i+1}</label><input id="n${i}" value="${esc(c.name)}"></div>`);
+ h+='<button class="primary" onclick="saveNames()">Enregistrer</button>';openModal(h)
+}
+function saveNames(){state.children.forEach((c,i)=>c.name=document.getElementById('n'+i).value.trim()||'Enfant '+(i+1));save();closeModal();render();toast('Profils enregistrés ✨')}
+function parentLogin(){
+ const p=prompt('PIN parent');if(p===null)return;if(p!==state.pin){toast('PIN incorrect');return}
+ document.getElementById('lessonDate').value=new Date().toISOString().slice(0,10);showScreen('parent')
+}
+function addLesson(){
+ const childIndex=+document.getElementById('lessonChild').value,content=document.getElementById('lessonContent').value.trim();
+ if(!content){toast('Ajoute le contenu de la leçon');return}
+ const l={id:Date.now(),child:childIndex,date:document.getElementById('lessonDate').value,type:document.getElementById('lessonType').value,content,review:document.getElementById('lessonReview').value.trim()};
+ state.lessons.push(l);state.children[childIndex].lessons.push(l.id);
+ if(l.review)state.children[childIndex].mistakes.push(...tokens(l.review));
+ state.selected=childIndex;save();render();toast('Leçon enregistrée ✨');startDaily()
+}
+function recentContent(c){
+ const ls=c.lessons.map(id=>state.lessons.find(l=>l.id===id)).filter(Boolean).slice(-7);
+ const arr=[...new Set(ls.flatMap(l=>tokens(l.content)))].filter(x=>x.length<=18);
+ return arr.length?arr:letters.slice(0,8)
+}
+function makeChallenges(){
+ const c=me(),src=recentContent(c),pool=[...new Set([...src,...letters])];
+ challenges=[];
+ for(let i=0;i<5;i++){
+   const correct=src[i%src.length];
+   const answers=[correct,...pool.filter(x=>x!==correct).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
+   const types=['find','memory','listen','find','complete'];
+   challenges.push({type:types[i],correct,answers})
+ }
+}
+function startDaily(){mode='daily';ci=0;makeChallenges();showScreen('mission');renderChallenge()}
+function startAhead(){
+ mode='ahead';ci=0;const c=me(),pool=c.level<=1?letters.slice(0,12):c.level<=3?harakat:words;
+ challenges=Array.from({length:5},(_,i)=>{let correct=pool[(c.xp+i)%pool.length];return{type:'ahead',correct,answers:[correct,...pool.filter(x=>x!==correct).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5)}});showScreen('mission');renderChallenge()
+}
+function renderChallenge(){
+ if(ci>=challenges.length){finishMission();return}
+ const a=challenges[ci];document.getElementById('missionCount').textContent=(ci+1)+'/5';document.getElementById('missionProgress').style.width=(ci/5*100)+'%';
+ document.getElementById('missionTitle').textContent=mode==='ahead'?'Je prends de l’avance 🚀':'Défi du jour 🎯';
+ let q={find:'Trouve exactement ce que tu vois.',memory:'Quelle réponse correspond ?',listen:'Écoute puis choisis.',complete:'Quelle réponse complète correctement ?',ahead:'Reconnais ce nouvel élément.'}[a.type];
+ let html=`<div><div class="kicker">${q}</div><div class="arabic">${esc(a.correct)}</div><button class="audio" onclick="speak('${encodeURIComponent(a.correct)}')">🔊</button><div class="answers">`;
+ a.answers.forEach(x=>html+=`<button class="answer" dir="rtl" onclick="answer(this,${JSON.stringify(x)},${JSON.stringify(a.correct)})">${esc(x)}</button>`);
+ html+='</div><div class="feedback" id="feedback"></div></div>';document.getElementById('challenge').innerHTML=html
+}
+function speak(t){try{speechSynthesis.cancel();let text=decodeURIComponent(t);const names={'ا':'أَلِف','ب':'بَاء','ت':'تَاء','ث':'ثَاء','ج':'جِيم','ح':'حَاء','خ':'خَاء','د':'دَال','ذ':'ذَال','ر':'رَاء','ز':'زَاي','س':'سِين','ش':'شِين','ص':'صَاد','ض':'ضَاد','ط':'طَاء','ظ':'ظَاء','ع':'عَيْن','غ':'غَيْن','ف':'فَاء','ق':'قَاف','ك':'كَاف','ل':'لَام','م':'مِيم','ن':'نُون','ه':'هَاء','و':'وَاو','ي':'يَاء'};let u=new SpeechSynthesisUtterance(names[text]||text);u.lang='ar-SA';u.rate=.72;speechSynthesis.speak(u)}catch(e){}}
+function answer(btn,val,correct){
+ document.querySelectorAll('.answer').forEach(x=>x.disabled=true);
+ const ok=val===correct,c=me();btn.classList.add(ok?'ok':'no');document.getElementById('feedback').textContent=ok?'Bravo ! +10 XP ⭐':'Presque — on reverra celui-ci.';
+ if(ok){const before=evolutionStageForXP(c.xp);c.xp+=10;c.stars+=1;c.mastery=Math.min(100,c.mastery+2);if(c.xp>=50&&!c.badges.includes('50xp'))c.badges.push('50xp');const after=evolutionStageForXP(c.xp);if(after>before)toast('🌟 Nouveau niveau de personnage débloqué !')}
+ else c.mistakes.push(correct);
+ save();setTimeout(()=>{ci++;renderChallenge();render()},650)
+}
+function finishMission(){
+ const c=me();c.streak=Math.max(1,c.streak);if(c.xp>=100&&!c.badges.includes('100xp'))c.badges.push('100xp');save();render();
+ document.getElementById('missionCount').textContent='✓';document.getElementById('missionProgress').style.width='100%';
+ document.getElementById('challenge').innerHTML=`<div><div style="font-size:76px">🎉</div><h2 style="font-family:'El Messiri'">Mission terminée !</h2><p style="color:var(--muted)">Tu as terminé tes 5 petits défis. Ton aventure continue demain.</p><button class="primary" onclick="showScreen('home')">Retour à l’accueil</button></div>`
+}
+function renderMap(){
+ const c=me(),lvl=currentLevel();
+ const zones=[
+  ['🌳','La clairière des lettres','Alphabet',1,'ب ت ث ج ح خ'],
+  ['🌿','Le jardin des sons','Harakāt',2,'بَ بِ بُ'],
+  ['🪵','Le chemin des syllabes','Syllabes',3,'بَا بِي بُو'],
+  ['🏘️','Le village des mots','Mots',4,'بَيْت · قَلَم'],
+  ['📚','La bibliothèque','Lecture',5,'هَذَا كِتَابٌ'],
+  ['🕌','La grande porte','Lecture avancée',6,'مَدّ · شَدَّة · سُكُون']
+ ];
+ document.getElementById('mapLevel').textContent=lvl+'/6';
+ document.getElementById('worldZones').innerHTML=`<div class="adventure-world"><div class="map-sky"><div class="moon-art"></div><div class="lantern">🏮</div><div class="hill"></div><div class="hill two"></div></div><div class="map-road"></div><div class="zone-grid">${zones.map((z,i)=>{const unlocked=i<lvl,done=i<lvl-1;return `<div class="zone ${done?'done':''} ${!unlocked?'locked':''}"><div class="zone-art">${z[0]}</div><b>${z[1]}</b><small>${z[2]} · ${z[4]}</small><span class="lock">${done?'✓':unlocked?'🌙':'🔒'}</span></div>`}).join('')}</div></div>`;
+}
+function renderProgress(){
+ const c=me(),skills=[['Alphabet',Math.min(100,c.mastery+18)],['Harakāt',Math.min(100,Math.max(0,c.mastery-5))],['Syllabes',Math.min(100,Math.max(0,c.mastery-18))],['Lecture',Math.min(100,Math.max(0,c.mastery-30))],['Vocabulaire',Math.min(100,Math.max(0,c.mastery-42))]];
+ document.getElementById('skills').innerHTML=skills.map(s=>`<div style="margin:13px 0"><div style="display:flex;justify-content:space-between"><b>${s[0]}</b><small>${s[1]}%</small></div><div class="progress" style="margin-top:6px"><i style="width:${s[1]}%"></i></div></div>`).join('');
+ const m=[...new Set(c.mistakes)].slice(-12);document.getElementById('review').innerHTML=m.length?m.map(x=>`<span class="tag" dir="rtl">${esc(x)}</span>`).join(''):'<div class="empty">Tout va bien pour le moment 🎉</div>'
+}
+function renderBadges(){
+ const bs=[['🌱','Premier pas','Commencer l’aventure'],['⭐','10 étoiles','Faire 10 défis réussis'],['🌟','50 XP','Atteindre 50 XP'],['🏆','100 XP','Atteindre 100 XP'],['🔥','7 jours','Construire une belle série']];
+ document.getElementById('badges').innerHTML=bs.map((b,i)=>`<div class="tile" style="opacity:${(i===2&&me().badges.includes('50xp'))||(i===3&&me().badges.includes('100xp'))?'1':'.48'}"><div class="ico">${b[0]}</div><strong>${b[1]}</strong><small>${b[2]}</small></div>`).join('')
+}
+function avatarConfig(){
+ const c=me();
+ if(!c.avatarConfig)c.avatarConfig={hero:c.avatarId||'1',companion:'🦊',badge:'⭐'};
+ if(!c.avatarConfig.hero)c.avatarConfig.hero=c.avatarId||'1';
+ if(!c.evolution)c.evolution={stage:0,unlocked:[0]};
+ return c.avatarConfig;
+}
+const heroAvatars=[
+ {id:'1',name:'Adam',src:'assets/avatars/avatar1.png'},
+ {id:'2',name:'Yassine',src:'assets/avatars/avatar2.png'},
+ {id:'3',name:'Rayan',src:'assets/avatars/avatar3.png'},
+ {id:'4',name:'Inaya',src:'assets/avatars/avatar4.png'},
+ {id:'5',name:'Lina',src:'assets/avatars/avatar5.png'},
+ {id:'6',name:'Safiya',src:'assets/avatars/avatar6.png'}
+];
+function avatarSrc(id){return heroAvatars.find(x=>x.id===String(id))?.src||heroAvatars[0].src}
+function avatarName(id){return heroAvatars.find(x=>x.id===String(id))?.name||'Mon personnage'}
+function avatarHTML(id,cls='avatar-mini'){const src=avatarSrc(id); return `<img class="${cls}" src="${src}" alt="${avatarName(id)}" loading="eager" decoding="async" onerror="this.style.display='none'">`}
+const companions=['🦊','🐼','🐰','🦉','🐱','🦋'];
+const badges=['⭐','🌙','🌟','💫','👑','🏆'];
+const evolutionStages=[
+ {name:'Petit explorateur',need:0,icon:'🌱',effect:'✨',desc:'Tu commences ton aventure.'},
+ {name:'Aventurier',need:50,icon:'🧭',effect:'⭐',desc:'Une aura dorée accompagne ton avatar.'},
+ {name:'Gardien des lettres',need:120,icon:'🛡️',effect:'🌟',desc:'Ton personnage gagne son insigne de gardien.'},
+ {name:'Voyageur des mots',need:250,icon:'🗝️',effect:'💫',desc:'Ton monde s’illumine autour de toi.'},
+ {name:'Maître de la lumière',need:500,icon:'👑',effect:'👑',desc:'La grande récompense de l’aventure.'}
+];
+function evolutionStageForXP(xp){let idx=0;for(let i=0;i<evolutionStages.length;i++)if(xp>=evolutionStages[i].need)idx=i;return idx}
+function evolutionUnlock(){const c=me(),stage=evolutionStageForXP(c.xp);if(!c.evolution)c.evolution={stage:0,unlocked:[0]};for(let i=0;i<=stage;i++)if(!c.evolution.unlocked.includes(i))c.evolution.unlocked.push(i);if(c.evolution.stage>stage)c.evolution.stage=stage;return c.evolution}
+function renderAvatars(){
+ const cfg=avatarConfig(), evo=evolutionUnlock();
+ const card=(x,type,active)=>{if(type==='hero')return `<button class="avatar-option ${active?'selected':''}" onclick="chooseAvatarPart('hero','${x.id}')"><img class="avatar-img" src="${x.src}" alt="${x.name}"><small>${x.name} ${active?'✓':''}</small></button>`;return `<button class="avatar-option ${active?'selected':''}" onclick="chooseAvatarPart('${type}','${x}')"><div class="avatar-big">${x}</div><small>${active?'✓ choisi':'Choisir'}</small></button>`};
+ document.getElementById('avatars').innerHTML=heroAvatars.map(x=>card(x,'hero',cfg.hero===x.id)).join('');
+ document.getElementById('companions').innerHTML=companions.map(x=>card(x,'companion',cfg.companion===x)).join('');
+ document.getElementById('avatarBadges').innerHTML=badges.map(x=>card(x,'badge',cfg.badge===x)).join('');
+ const st=evolutionStages[evo.stage], next=evolutionStages[evo.stage+1];
+ document.getElementById('avatarPreview').innerHTML=`<div class="avatar-stage evo-stage-${evo.stage}"><div class="evo-aura"></div><div class="evo-stars">✦ · ✧ · ✦</div><div class="evo-accessory">${st.effect}</div>${avatarHTML(cfg.hero,'avatar-preview-img')}<span class="companion-float">${cfg.companion}</span></div><div style="text-align:center;margin-top:-6px;position:relative;z-index:5"><span class="tag">${st.icon} ${st.name}</span><span class="tag">${me().xp} XP</span></div>`;
+ document.getElementById('evoProgressText').textContent=next?`${me().xp}/${next.need} XP`:'Niveau ultime ✨';
+ document.getElementById('evolutionGrid').innerHTML=evolutionStages.map((e,i)=>{const unlocked=evo.unlocked.includes(i);const selected=evo.stage===i;return `<div class="evo-card ${unlocked?'unlocked':'locked'}"><div style="font-size:24px">${e.icon}</div><strong>${e.name}</strong><small>${e.need===0?'Départ':e.need+' XP'} · ${e.desc}</small>${unlocked?`<button onclick="selectEvolution(${i})">${selected?'✓ Équipé':'Équiper'}</button>`:'<button disabled>🔒 Encore '+Math.max(0,e.need-me().xp)+' XP</button>'}</div>`}).join('');
+}
+function selectEvolution(i){const evo=evolutionUnlock();if(!evo.unlocked.includes(i)){toast('Continue ton aventure pour le débloquer ✨');return}evo.stage=i;save();renderAvatars();render();toast('Nouvelle apparence équipée ✨')}
+function chooseAvatarPart(type,x){const cfg=avatarConfig();cfg[type]=x;me().avatarId=cfg.hero;me().avatar=cfg.hero;save();renderAvatars();render();toast('Personnalisation enregistrée ✨')}
+function setPin(){let p=document.getElementById('pin').value.trim();if(!/^\d{4,6}$/.test(p)){toast('PIN : 4 à 6 chiffres');return}state.pin=p;save();toast('PIN modifié')}
+function openModal(h){document.getElementById('sheet').innerHTML=h;document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+let canvas,ctx,drawing=false;
+function initCanvas(){canvas=document.getElementById('draw');if(!canvas)return;canvas.width=canvas.clientWidth*2;canvas.height=canvas.clientHeight*2;ctx=canvas.getContext('2d');ctx.scale(2,2);ctx.lineWidth=4;ctx.lineCap='round';ctx.strokeStyle='#21164a';canvas.onpointerdown=e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY)};canvas.onpointermove=e=>{if(drawing){ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke()}};canvas.onpointerup=()=>drawing=false;canvas.onpointerleave=()=>drawing=false}
+function clearDraw(){if(ctx)ctx.clearRect(0,0,canvas.width,canvas.height)}
+function traceDone(){me().xp+=5;me().stars+=1;save();render();toast('Bravo pour ton tracé ! +5 XP ✨')}
+render();
+
+/* ==================== ARABIYA V3 ENGINE ==================== */
+const V3KEY='arabiya_v3_extra';
+let v3=JSON.parse(localStorage.getItem(V3KEY)||'null')||{
+ stories:[
+  {title:'Le courage et la patience',art:'🌙',text:'Une petite histoire pour réfléchir au courage, à la patience et à la confiance en Allah.',q:'Quel mot retiens-tu ?',a:['صبر','بيت','قلم'],ok:'صبر'},
+  {title:'Un bon geste',art:'🌿',text:'Chaque petit geste de bonté peut devenir une belle habitude. Apprenons un mot arabe autour de la gentillesse.',q:'Quel mot associer à cette histoire ?',a:['خير','كتاب','باب'],ok:'خير'}
+ ],
+ vocab:[
+  {ar:'بَيْت',fr:'maison',art:'🏠'},
+  {ar:'كِتَاب',fr:'livre',art:'📖'},
+  {ar:'قَلَم',fr:'stylo',art:'✏️'},
+  {ar:'مَاء',fr:'eau',art:'💧'},
+  {ar:'شَمْس',fr:'soleil',art:'☀️'},
+  {ar:'قَمَر',fr:'lune',art:'🌙'},
+  {ar:'بَاب',fr:'porte',art:'🚪'},
+  {ar:'وَرْدَة',fr:'fleur',art:'🌷'}
+ ]};
+function saveV3(){localStorage.setItem(V3KEY,JSON.stringify(v3))}
+function currentLevel(){return Math.max(1,Math.min(6,Number(me().level)||1))}
+function levelName(n){return ['','Alphabet','Harakāt','Syllabes','Mots','Lecture','Lecture avancée'][n]||'Alphabet'}
+function setChildLevel(i,n){state.children[i].level=n;save();render();toast('Niveau mis à jour ✨')}
+function quickLesson(type){
+ document.getElementById('lessonType').value=type;
+ document.getElementById('lessonContent').value=type==='letters'?'ب ت ث':'بَ بِ بُ — تَ تِ تُ';
+ document.getElementById('lessonReview').value='';
+}
+function addLesson(){
+ const childIndex=+document.getElementById('lessonChild').value,content=document.getElementById('lessonContent').value.trim();
+ if(!content){toast('Ajoute le contenu de la leçon');return}
+ const l={id:Date.now(),child:childIndex,date:document.getElementById('lessonDate').value,type:document.getElementById('lessonType').value,content,review:document.getElementById('lessonReview').value.trim(),level:+document.getElementById('lessonLevel').value};
+ state.lessons.push(l);state.children[childIndex].lessons.push(l.id);
+ state.children[childIndex].level=l.level;
+ if(l.review)state.children[childIndex].mistakes.push(...tokens(l.review));
+ state.selected=childIndex;save();render();toast('Leçon enregistrée ✨');startDaily()
+}
+function renderParent(){
+ document.getElementById('lessonChild').innerHTML=state.children.map((c,i)=>`<option value="${i}" ${i===state.selected?'selected':''}>${esc(c.name)}</option>`).join('');
+ const lv=document.getElementById('lessonLevel');if(lv)lv.value=currentLevel();
+ document.getElementById('parentChildren').innerHTML=state.children.map((c,i)=>`<div class="lesson"><div class="mini">${avatarHTML((c.avatarConfig&&c.avatarConfig.hero)||c.avatarId||'1','avatar-mini')}</div><div style="flex:1"><b>${esc(c.name)}</b><br><small>Niveau ${c.level} · ${levelName(c.level)} · ${c.mastery}% maîtrisé · ${c.xp} XP</small><div class="progress" style="margin-top:7px"><i style="width:${c.mastery}%"></i></div><div class="child-level" style="margin-top:8px">${[1,2,3,4,5,6].map(n=>`<button class="level-pill ${c.level===n?'active':''}" onclick="setChildLevel(${i},${n})">${n}</button>`).join('')}</div></div></div>`).join('');
+ const ls=state.lessons.slice(-8).reverse();document.getElementById('lessonList').innerHTML=ls.length?ls.map(l=>`<div class="lesson"><div class="mini">📚</div><div><b>${esc(state.children[l.child]?.name||'')}</b><br><small>${esc(l.date)} · ${esc(l.type)} · niveau ${l.level||1}</small><div style="margin-top:3px">${esc(l.content).slice(0,120)}</div></div></div>`).join(''):'<div class="empty">Aucune leçon enregistrée.</div>'
+}
+function makeChallenges(){
+ const c=me(), lessons=c.lessons.map(id=>state.lessons.find(l=>l.id===id)).filter(Boolean).slice(-5);
+ const all=lessons.flatMap(l=>tokens(l.content)).filter(Boolean);
+ const source=[...new Set(all.length?all:recentContent(c))];
+ const pool=[...new Set([...source,...(c.level<=2?letters:c.level===3?harakat:words)])];
+ challenges=[];
+ const types=lessons.length?lessons.flatMap(l=>{
+   if(l.type==='letters')return ['find','listen'];
+   if(l.type==='harakat')return ['listen','complete'];
+   if(l.type==='reading')return ['find','complete'];
+   if(l.type==='vocab')return ['memory','find'];
+   return ['find'];
+ }):['find','memory','listen','complete','find'];
+ for(let i=0;i<5;i++){
+   const correct=source[i%source.length]||letters[i];
+   const answers=[correct,...pool.filter(x=>x!==correct).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
+   challenges.push({type:types[i%types.length],correct,answers})
+ }
+}
+function startAhead(){
+ mode='ahead';ci=0;const c=me(),lvl=currentLevel();
+ const pools={1:letters.slice(0,12),2:harakat.slice(0,8),3:['بَا','بِي','بُو','مَا','مِي','مُو'],4:words.slice(0,6),5:['هَذَا كِتَابٌ','هَذَا بَيْتٌ','أَنَا أَقْرَأُ'],6:['مَدّ','شَدَّة','سُكُون','تَنْوِين']};
+ const pool=pools[lvl]||letters;
+ challenges=Array.from({length:5},(_,i)=>{const correct=pool[(c.xp+i)%pool.length];return{type:'ahead',correct,answers:[correct,...pool.filter(x=>x!==correct).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5)}});showScreen('mission');renderChallenge()
+}
+function showStories(){
+ showScreen('bonus');
+ const el=document.getElementById('bonusContent');
+ el.innerHTML='<div class="card"><div class="sectionhead"><h3>📖 Histoires</h3><span>✨</span></div>'+v3.stories.map((s,i)=>`<div class="story"><div class="storyart">${s.art}</div><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p><button class="secondary" onclick="storyQuiz(${i})">Répondre au mini-quiz</button></div>`).join('')+'</div>';
+}
+function storyQuiz(i){
+ const s=v3.stories[i];openModal(`<h2>${esc(s.title)}</h2><p style="color:var(--muted)">${esc(s.q)}</p><div class="choice-list">${s.a.map(a=>`<button onclick="storyAnswer(this,'${encodeURIComponent(a)}','${encodeURIComponent(s.ok)}')"><span dir="rtl" style="font-family:'El Messiri';font-size:23px">${esc(a)}</span></button>`).join('')}</div>`)
+}
+function storyAnswer(btn,a,ok){const good=decodeURIComponent(a)===decodeURIComponent(ok);btn.style.borderColor=good?'#65c79b':'#db7583';toast(good?'Bravo ! ⭐':'On réessaiera une autre fois.');if(good){me().xp+=8;me().stars+=1;save();render()}}
+function showVocab(){
+ showScreen('bonus');
+ document.getElementById('bonusContent').innerHTML='<div class="card"><div class="sectionhead"><h3>🧩 Vocabulaire</h3><span>🔊</span></div>'+v3.vocab.map((w,i)=>`<div class="word-card"><div class="word-art">${w.art}</div><div style="flex:1"><div class="word-ar">${esc(w.ar)}</div><small>${esc(w.fr)}</small></div><button class="iconbtn" onclick="speak('${encodeURIComponent(w.ar)}')">🔊</button></div>`).join('')+'</div>';
+}
+function addStory(){
+ const title=document.getElementById('storyTitle').value.trim(),text=document.getElementById('storyText').value.trim();
+ if(!title||!text){toast('Ajoute un titre et une histoire');return}
+ v3.stories.push({title,art:'📖',text,q:'Quel mot retiens-tu ?',a:['خير','صبر','بيت'],ok:'خير'});saveV3();document.getElementById('storyTitle').value='';document.getElementById('storyText').value='';toast('Histoire ajoutée ✨')
+}
+
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
 </script>
 </body>
 </html>
+<style id="arabiya-v8-art-direction">
+/* ===== V8 — Moodboard exact: enchanted Arabic night world ===== */
+:root{
+  --night:#080416;
+  --night2:#12072a;
+  --night3:#241044;
+  --plum:#6c3e86;
+  --plum-hi:#9a63b5;
+  --aqua:#5cc7ba;
+  --aqua-deep:#225f67;
+  --coral:#d36e72;
+  --sand:#f5dfaa;
+  --gold:#ffd76b;
+  --gold2:#e9ad43;
+  --paper:#fff8e9;
+  --soft:#d8cbe1;
+  --muted:#a99ab8;
+}
+
+body{
+  background:
+    radial-gradient(780px 460px at 50% -10%,rgba(121,74,170,.46),transparent 67%),
+    radial-gradient(520px 330px at 8% 48%,rgba(55,142,145,.13),transparent 68%),
+    radial-gradient(520px 300px at 92% 72%,rgba(148,69,107,.12),transparent 68%),
+    linear-gradient(180deg,#170b31 0%,#0c061e 44%,#070414 100%);
+}
+body:before{
+  opacity:.62;
+  background-image:
+    radial-gradient(circle at 8% 13%,rgba(255,241,184,.86) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 27% 21%,rgba(255,241,184,.55) 0 1px,transparent 1.6px),
+    radial-gradient(circle at 68% 12%,rgba(255,241,184,.86) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 87% 30%,rgba(255,241,184,.58) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 49% 42%,rgba(255,241,184,.45) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 91% 73%,rgba(255,241,184,.72) 0 1px,transparent 1.8px);
+  background-size:170px 160px,230px 190px,260px 190px,210px 230px,250px 215px,290px 250px;
+}
+body:after{
+  content:"";
+  position:fixed;
+  inset:auto 0 0;
+  height:32vh;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,transparent 0%,rgba(3,2,10,.2) 25%,rgba(3,2,10,.88) 100%),
+    radial-gradient(ellipse at 50% 100%,rgba(27,97,94,.22),transparent 58%);
+  z-index:0;
+}
+.app{position:relative;z-index:1;max-width:760px;padding:10px 16px calc(122px + env(safe-area-inset-bottom));}
+
+.top{height:54px;position:relative;z-index:5}
+.top:before{
+  content:"";position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);
+  width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.55;
+}
+.iconbtn{background:rgba(14,7,31,.52);border-color:rgba(255,221,135,.24);box-shadow:0 9px 25px rgba(0,0,0,.34)}
+
+.hero{padding:14px 0 8px;position:relative}
+.hero:before{content:"✦   ·   ✧   ·   ✦   ·   ✧   ·   ✦";display:block;color:rgba(255,226,145,.64);font-size:9px;letter-spacing:7px;margin-bottom:8px}
+.logo{font-family:Georgia,"Times New Roman",serif;font-size:38px;letter-spacing:.14em;color:var(--gold);text-shadow:0 0 24px rgba(255,216,107,.18),0 4px 22px rgba(0,0,0,.5)}
+.hero h1{font-family:Georgia,"Times New Roman",serif;font-size:28px;margin:7px auto 4px;max-width:420px;letter-spacing:-.02em}
+.hero p{color:#c7b8d3}
+
+.letters{gap:12px;max-width:620px;margin:22px auto 18px}
+.letter{height:118px;border-radius:31px;font-size:67px;position:relative;overflow:hidden;box-shadow:0 22px 44px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.12)}
+.letter:after{content:"";position:absolute;right:-24px;bottom:-30px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.08);filter:blur(1px)}
+.c1{background:linear-gradient(150deg,#bb6784 0%,#743552 58%,#4c233e 100%)}
+.c2{background:linear-gradient(150deg,#8f5dc0 0%,#54317b 58%,#382050 100%)}
+.c3{background:linear-gradient(150deg,#4cbfae 0%,#267d79 58%,#184e56 100%)}
+.c4{background:linear-gradient(150deg,#d07162 0%,#934137 58%,#5d2c31 100%)}
+.streak{margin-top:2px}
+
+.world-card{
+  min-height:210px;
+  padding:28px 24px;
+  margin-top:14px;
+  border-radius:34px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 74% 16%,rgba(255,234,154,.16) 0 3px,transparent 4px),
+    radial-gradient(circle at 66% 32%,rgba(255,234,154,.12) 0 2px,transparent 3px),
+    linear-gradient(130deg,#2b1648 0%,#4f2c68 42%,#173f49 100%);
+  border:1px solid rgba(255,226,141,.18);
+  box-shadow:0 28px 65px rgba(0,0,0,.48);
+}
+.world-card:before{
+  content:"";position:absolute;inset:auto -10% -24%;height:54%;
+  background:radial-gradient(ellipse at 50% 50%,#183e41 0 31%,transparent 66%);
+}
+.world-card:after{
+  content:"🏮";position:absolute;right:22px;bottom:20px;font-size:38px;filter:drop-shadow(0 0 14px rgba(255,212,103,.42));
+}
+.world-card .moon{font-size:54px;filter:drop-shadow(0 0 24px rgba(255,224,154,.35))}
+.world-card h2{font-family:Georgia,"Times New Roman",serif;font-size:26px;max-width:450px;line-height:1.15}
+.world-card p{font-size:13px;line-height:1.65;color:#eee3f0;max-width:430px}
+
+.profile{margin:13px 0 18px}
+.profile-main{background:linear-gradient(100deg,rgba(29,13,58,.92),rgba(18,9,39,.96));border:1px solid rgba(255,214,107,.62);box-shadow:0 10px 28px rgba(0,0,0,.36)}
+.add{border-color:rgba(255,216,107,.22);background:rgba(24,11,47,.82)}
+
+.banner{
+  min-height:138px;padding:20px 22px;border-radius:31px;
+  border-color:rgba(255,255,255,.12);box-shadow:0 25px 55px rgba(0,0,0,.42);
+}
+.banner:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.06),transparent 52%,rgba(255,255,255,.03));pointer-events:none}
+.banner:after{width:220px;height:220px;right:-80px;top:-85px;background:rgba(255,246,208,.08)}
+.banner .art{font-size:52px;text-shadow:0 9px 15px rgba(0,0,0,.35)}
+.banner h2{font-family:Georgia,"Times New Roman",serif;font-size:23px}
+.banner p{font-size:12px;line-height:1.55;color:#f1e8f2}
+.bmission{background:linear-gradient(115deg,#406f66 0%,#785240 50%,#a95836 100%)}
+.bmap{background:linear-gradient(115deg,#6d5138 0%,#49356d 48%,#2f214c 100%)}
+.bbonus{background:linear-gradient(115deg,#6a3a55 0%,#5d376d 50%,#382650 100%)}
+
+.kicker{font-size:10px;letter-spacing:.22em;color:#b5a8bf}
+.tiles{gap:13px}
+.tile{
+  min-height:132px;border-radius:27px;padding:18px;
+  background:linear-gradient(145deg,rgba(37,21,69,.97),rgba(15,8,32,.98));
+  border:1px solid rgba(137,107,165,.48);
+  box-shadow:0 19px 42px rgba(0,0,0,.38);
+}
+.tile .ico{font-size:33px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.34))}
+.tile strong{font-size:14px}.tile small{font-size:11px;color:#bdaec9}
+.tile:active,.banner:active,.answer:active,.profile-card:active{transform:translateY(1px) scale(.988)}
+
+.card{
+  background:linear-gradient(150deg,rgba(34,20,70,.98),rgba(13,7,29,.98));
+  border:1px solid rgba(122,96,150,.55);
+  border-radius:30px;padding:20px;
+  box-shadow:0 22px 55px rgba(0,0,0,.42);
+}
+
+/* Adventure map = central world, closer to the mockup */
+.adventure-world{padding:12px;background:linear-gradient(160deg,#100725,#28134d 48%,#103742);border-color:rgba(255,221,129,.18);border-radius:34px;box-shadow:0 28px 68px rgba(0,0,0,.46)}
+.map-sky{
+  height:285px;border-radius:30px;
+  background:
+    radial-gradient(circle at 74% 16%,rgba(255,242,185,.94) 0 2px,transparent 3px),
+    radial-gradient(circle at 17% 22%,rgba(255,242,185,.72) 0 1px,transparent 2px),
+    radial-gradient(circle at 42% 17%,rgba(255,242,185,.5) 0 1px,transparent 2px),
+    radial-gradient(ellipse at 50% 104%,rgba(32,88,80,.48) 0 24%,transparent 58%),
+    linear-gradient(180deg,#211048 0%,#352261 49%,#16424a 100%);
+}
+.map-sky:after{content:"✦   ✧        ·        ✦         ·      ✧";position:absolute;top:28px;left:22px;color:rgba(255,234,158,.8);font-size:12px;letter-spacing:8px}
+.moon-art{right:60px;top:42px;width:72px;height:72px;background:#ffeab0;box-shadow:0 0 55px rgba(255,232,166,.28)}
+.moon-art:after{content:"";position:absolute;width:62px;height:62px;right:-17px;top:-10px;border-radius:50%;background:#24124b}
+.hill{bottom:-44px;background:#113c40}.hill.two{background:#182b50}
+.lantern{bottom:65px;left:8%;font-size:32px}
+.map-road{margin:-25px 25px 0;height:35px;border-top:5px dotted rgba(245,215,122,.7);transform:rotate(1deg)}
+.zone-grid{gap:13px;margin-top:12px}
+.zone{min-height:168px;padding:17px;border-radius:28px;border-color:rgba(255,255,255,.1);box-shadow:0 17px 34px rgba(0,0,0,.33)}
+.zone-art{font-size:47px}.zone b{font-family:Georgia,"Times New Roman",serif;font-size:18px}.zone small{font-size:11px;color:#e0d4e7}
+.zone:before{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(255,255,255,.08),transparent 38%);pointer-events:none}
+
+/* Child profile selection feels like the mockup */
+.profile-grid{gap:13px}
+.profile-card{min-height:250px;padding:14px 11px 15px;border-radius:30px;background:radial-gradient(circle at 50% 16%,#5a3a74 0%,#231344 53%,#120927 100%);border-color:rgba(159,126,183,.5);box-shadow:0 18px 38px rgba(0,0,0,.36)}
+.profile-card.active{border-color:var(--gold);background:radial-gradient(circle at 50% 16%,#6a457f 0%,#281648 52%,#130a2d 100%);box-shadow:0 0 0 2px rgba(255,213,102,.12),0 20px 44px rgba(0,0,0,.42)}
+.profile-card .pc-avatar{height:190px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 11px 16px rgba(0,0,0,.34))}
+.profile-card .pc-name{font-family:Georgia,"Times New Roman",serif;font-size:17px}
+.profile-card .pc-meta,.profile-card .pc-streak{font-size:10px}
+
+/* Avatar room */
+.avatar-stage{
+  min-height:360px;border-radius:36px;
+  background:
+    radial-gradient(circle at 50% 18%,rgba(163,103,184,.52),transparent 29%),
+    radial-gradient(ellipse at 50% 110%,rgba(23,72,73,.56),transparent 57%),
+    linear-gradient(180deg,#34205a 0%,#1e103d 50%,#0c0621 100%);
+  border-color:rgba(255,223,147,.2);box-shadow:inset 0 1px rgba(255,255,255,.09),0 28px 62px rgba(0,0,0,.48)
+}
+.avatar-stage:before{content:"✦      ✧      ·      ✦      ·      ✧      ✦";top:25px;color:rgba(255,232,164,.72);letter-spacing:10px}
+.avatar-stage:after{bottom:-86px;width:440px;height:165px;background:#0b2432;box-shadow:220px 15px 0 #132945}
+.avatar-preview-img{height:285px;width:225px}
+.companion-float{font-size:56px;right:25px;bottom:42px}
+.evo-accessory{font-size:37px;filter:drop-shadow(0 0 10px rgba(255,214,108,.3))}
+.evolution-grid{gap:12px}
+.evo-card{min-height:118px;border-radius:24px;padding:15px;background:linear-gradient(145deg,#181037,#0f0829);border-color:#493768}
+.evo-card.unlocked{background:linear-gradient(145deg,#322052,#170c32);border-color:#d6b256;box-shadow:inset 0 1px rgba(255,255,255,.05),0 13px 28px rgba(0,0,0,.3)}
+.evo-card button{border-radius:14px;background:#241448}
+.evo-card.unlocked button{background:linear-gradient(180deg,#f6d56e,#e1ae44);color:#2a1608;border-color:transparent;font-weight:900}
+
+.avatar-builder{gap:12px}
+.avatar-option{min-height:200px;border-radius:25px;background:radial-gradient(circle at 50% 14%,#4a2f63,#13092e 72%);border-color:#493567;box-shadow:0 12px 28px rgba(0,0,0,.3)}
+.avatar-option.selected{background:radial-gradient(circle at 50% 14%,#5a3974,#13092e 72%);border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,215,107,.11),0 15px 32px rgba(0,0,0,.38)}
+.avatar-img{height:164px;object-position:center bottom;filter:drop-shadow(0 10px 14px rgba(0,0,0,.32))}
+.avatar-section h3{font-family:Georgia,"Times New Roman",serif;font-size:16px;color:#f1e7ee}
+
+/* Challenge screen */
+.challenge{min-height:64vh;padding-bottom:18px}
+.challenge>div{max-width:580px;margin:auto;width:100%}
+.challenge h2{font-family:Georgia,"Times New Roman",serif;font-size:25px}
+.arabic{font-size:108px;line-height:1.05;text-shadow:0 10px 34px rgba(255,210,95,.12)}
+.audio{background:linear-gradient(145deg,#3b225e,#17102f);border-color:rgba(255,215,107,.46)}
+.answer{min-height:92px;border-radius:25px;background:linear-gradient(145deg,#241547,#120a2d);box-shadow:0 12px 25px rgba(0,0,0,.28);font-size:34px}
+.answer.ok{background:linear-gradient(145deg,#216c59,#174738);border-color:#6dd4b2}.answer.no{background:linear-gradient(145deg,#783448,#4b2132);border-color:#df7b88}
+
+/* Forms and interactions */
+.primary{background:linear-gradient(180deg,#ffdd74,#e9b546);box-shadow:0 12px 25px rgba(224,169,54,.18);color:#2d1908}
+.secondary{background:linear-gradient(145deg,#221343,#130a2d);border-color:#594472}
+.field input,.field textarea,.field select{background:rgba(12,6,28,.82);border-color:#4c3965;box-shadow:inset 0 1px rgba(255,255,255,.02)}
+
+.bottom{
+  width:min(760px,100%);padding:9px 10px calc(11px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(16,8,34,.76),rgba(8,4,17,.98));
+  border-top:1px solid rgba(255,220,139,.16);backdrop-filter:blur(20px);box-shadow:0 -20px 54px rgba(0,0,0,.55)
+}
+.nav{min-height:47px;border-radius:16px;color:#9a8ba7}.nav.on{background:rgba(255,214,104,.09);color:var(--gold);box-shadow:inset 0 0 0 1px rgba(255,214,104,.08)}
+
+/* Tiny ornamental separators */
+.sectionhead h2,.sectionhead h3{font-family:Georgia,"Times New Roman",serif}
+.tag{background:rgba(92,56,116,.42);border:1px solid rgba(255,255,255,.05);color:#eaddeb}
+
+/* Responsive: phone first, no horizontal overflow */
+@media (max-width: 600px){
+  .app{padding-left:11px;padding-right:11px}
+  .hero{padding-top:8px}.logo{font-size:30px}.hero h1{font-size:22px}.hero p{font-size:10px}
+  .letters{gap:7px;margin-top:17px}.letter{height:88px;border-radius:23px;font-size:48px}
+  .world-card{min-height:155px;padding:19px;border-radius:27px}.world-card h2{font-size:20px}.world-card p{font-size:11px;max-width:77%}.world-card .moon{font-size:43px;right:12px}
+  .banner{min-height:111px;padding:15px 14px;border-radius:25px}.banner .art{width:50px;font-size:39px}.banner h2{font-size:18px}.banner p{font-size:10px}
+  .tiles{gap:8px}.tile{min-height:106px;padding:13px;border-radius:21px}.tile .ico{font-size:28px}.tile strong{font-size:12px}.tile small{font-size:9px}
+  .card{padding:15px;border-radius:24px}
+  .adventure-world{padding:8px;border-radius:27px}.map-sky{height:205px;border-radius:23px}.map-road{margin:-18px 13px 0}.zone-grid{gap:8px}.zone{min-height:142px;padding:13px;border-radius:22px}.zone-art{font-size:39px}.zone b{font-size:14px}.zone small{font-size:9px}
+  .profile-grid{gap:8px}.profile-card{min-height:185px;border-radius:22px;padding:9px 7px 12px}.profile-card .pc-avatar{height:132px}.profile-card .pc-name{font-size:14px}.profile-card .pc-meta,.profile-card .pc-streak{font-size:8px}
+  .avatar-stage{min-height:255px;border-radius:27px}.avatar-preview-img{height:210px;width:175px}.companion-float{font-size:43px;right:16px;bottom:30px}.evo-accessory{font-size:31px}.evo-stars{font-size:13px}
+  .avatar-builder{grid-template-columns:repeat(2,1fr);gap:8px}.avatar-option{min-height:155px;border-radius:21px;padding:8px 6px}.avatar-img{height:122px}.avatar-option small{font-size:9px}
+  .evolution-grid{grid-template-columns:1fr 1fr;gap:8px}.evo-card{min-height:100px;padding:11px;border-radius:18px}.evo-card strong{font-size:11px}.evo-card small{font-size:9px}.evo-card button{padding:7px;font-size:10px}
+  .challenge{min-height:58vh}.arabic{font-size:74px}.answers{gap:8px}.answer{min-height:75px;border-radius:19px;font-size:29px}
+  .bottom{padding-left:4px;padding-right:4px}.nav{min-height:44px;padding:3px 1px;font-size:8px}.nav b{font-size:18px}
+}
+@media (max-width: 380px){
+  .letters .letter{height:80px;font-size:43px}.letters{gap:5px}
+  .world-card p{max-width:73%}
+  .banner .art{width:42px;font-size:34px}.banner h2{font-size:16px}.banner p{font-size:9px}.banner{gap:8px}
+  .profile-card .pc-avatar{height:118px}.profile-card{min-height:170px}
+  .avatar-option{min-height:140px}.avatar-img{height:108px}
+  .bottom .nav:nth-child(5){display:none}.bottom{grid-template-columns:repeat(4,1fr)}
+}
+@media (min-width: 601px){
+  .tiles{grid-template-columns:repeat(4,1fr)}
+  .profile-grid{grid-template-columns:repeat(3,1fr)}
+  .zone-grid{grid-template-columns:repeat(3,1fr)}
+  .avatar-builder{grid-template-columns:repeat(3,1fr)}
+}
+@media (prefers-reduced-motion: no-preference){
+  .world-card,.banner,.tile,.profile-card,.zone,.avatar-option{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+  .world-card:hover,.banner:hover,.tile:hover,.profile-card:hover,.zone:hover,.avatar-option:hover{transform:translateY(-2px)}
+}
+</style>
