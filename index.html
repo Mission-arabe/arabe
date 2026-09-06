@@ -547,17 +547,28 @@ function renderChallenge(){
  document.getElementById('missionTitle').textContent=mode==='ahead'?'Je prends de l’avance 🚀':'Défi du jour 🎯';
  let q={find:'Trouve exactement ce que tu vois.',memory:'Quelle réponse correspond ?',listen:'Écoute puis choisis.',complete:'Quelle réponse complète correctement ?',ahead:'Reconnais ce nouvel élément.'}[a.type];
  let html=`<div><div class="kicker">${q}</div><div class="arabic">${esc(a.correct)}</div><button class="audio" onclick="speak('${encodeURIComponent(a.correct)}')">🔊</button><div class="answers">`;
- a.answers.forEach(x=>html+=`<button class="answer" type="button" dir="rtl" data-answer="${encodeURIComponent(x)}" data-correct="${encodeURIComponent(a.correct)}" onclick="answer(this)">${esc(x)}</button>`);
+ a.answers.forEach(x=>html+=`<button class="answer" type="button" dir="rtl" data-answer="${encodeURIComponent(x)}" data-correct="${encodeURIComponent(a.correct)}" data-action="answer">${esc(x)}</button>`);
  html+='</div><div class="feedback" id="feedback"></div></div>';document.getElementById('challenge').innerHTML=html
 }
 function speak(t){try{speechSynthesis.cancel();let text=decodeURIComponent(t);const names={'ا':'أَلِف','ب':'بَاء','ت':'تَاء','ث':'ثَاء','ج':'جِيم','ح':'حَاء','خ':'خَاء','د':'دَال','ذ':'ذَال','ر':'رَاء','ز':'زَاي','س':'سِين','ش':'شِين','ص':'صَاد','ض':'ضَاد','ط':'طَاء','ظ':'ظَاء','ع':'عَيْن','غ':'غَيْن','ف':'فَاء','ق':'قَاف','ك':'كَاف','ل':'لَام','م':'مِيم','ن':'نُون','ه':'هَاء','و':'وَاو','ي':'يَاء'};let u=new SpeechSynthesisUtterance(names[text]||text);u.lang='ar-SA';u.rate=.72;speechSynthesis.speak(u)}catch(e){}}
-function answer(btn,val,correct){
- if(arguments.length===2){ correct=decodeURIComponent(btn.dataset.correct||''); val=decodeURIComponent(btn.dataset.answer||''); }
- document.querySelectorAll('.answer').forEach(x=>x.disabled=true);
- const ok=val===correct,c=me();btn.classList.add(ok?'ok':'no');document.getElementById('feedback').textContent=ok?'Bravo ! +10 XP ⭐':'Presque — on reverra celui-ci.';
- if(ok){const before=evolutionStageForXP(c.xp);c.xp+=10;c.stars+=1;c.mastery=Math.min(100,c.mastery+2);if(c.xp>=50&&!c.badges.includes('50xp'))c.badges.push('50xp');const after=evolutionStageForXP(c.xp);if(after>before)toast('🌟 Nouveau niveau de personnage débloqué !')}
- else c.mistakes.push(correct);
- save();setTimeout(()=>{ci++;renderChallenge();render()},650)
+function answer(btn){
+  if(!btn) return;
+  const val=decodeURIComponent(btn.dataset.answer||'');
+  const correct=decodeURIComponent(btn.dataset.correct||'');
+  const ok=val===correct;
+  document.querySelectorAll('.answer').forEach(x=>x.disabled=true);
+  btn.classList.remove('ok','no');
+  btn.classList.add(ok?'ok':'no');
+  const feedback=document.getElementById('feedback');
+  if(feedback) feedback.textContent=ok?'Bravo ! +10 XP ⭐':'Presque — on reverra celui-ci.';
+  const c=me();
+  if(ok){
+    const before=evolutionStageForXP(c.xp); c.xp+=10; c.stars+=1; c.mastery=Math.min(100,c.mastery+2);
+    if(c.xp>=50&&!c.badges.includes('50xp'))c.badges.push('50xp');
+    const after=evolutionStageForXP(c.xp); if(after>before)toast('🌟 Nouveau niveau de personnage débloqué !');
+  } else if(!c.mistakes.includes(correct)) c.mistakes.push(correct);
+  save();
+  setTimeout(()=>{ci++;renderChallenge();render()},650);
 }
 function finishMission(){
  const c=me();c.streak=Math.max(1,c.streak);if(c.xp>=100&&!c.badges.includes('100xp'))c.badges.push('100xp');save();render();
@@ -773,6 +784,13 @@ function addStory(){
 
 
 // V12 — photo lessons: preview + optional Arabic OCR. The parent always validates the extracted text.
+document.addEventListener('click', function(e){
+  const btn=e.target.closest && e.target.closest('[data-action="answer"]');
+  if(!btn || btn.disabled) return;
+  e.preventDefault();
+  answer(btn);
+}, true);
+
 document.addEventListener('change',e=>{
   if(e.target && e.target.id==='lessonPhotos'){
     const files=[...e.target.files].slice(0,8), box=document.getElementById('lessonPhotoPreview');
@@ -1055,4 +1073,10 @@ body:after{
   .world-card,.banner,.tile,.profile-card,.zone,.avatar-option{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
   .world-card:hover,.banner:hover,.tile:hover,.profile-card:hover,.zone:hover,.avatar-option:hover{transform:translateY(-2px)}
 }
+</style>
+
+<style>
+.answers{position:relative;z-index:30;pointer-events:auto}
+.answer{position:relative;z-index:31;pointer-events:auto!important;cursor:pointer;user-select:none;-webkit-user-select:none}
+.answer:disabled{opacity:.92;cursor:default}
 </style>
