@@ -267,18 +267,18 @@ button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.se
     <div class="welcome-moon">🌙</div><div class="welcome-logo">ARABIYA</div><div class="welcome-sub">Famille</div>
     <p class="welcome-copy">Un petit monde pour apprendre l’arabe, relever des défis et grandir un peu chaque jour.</p>
     <div class="welcome-characters">
-      <div class="welcome-character"><img src="assets/avatars/avatar-1.png" alt="Personnage 1"></div>
-      <div class="welcome-character"><img src="assets/avatars/avatar-2.png" alt="Personnage 2"></div>
-      <div class="welcome-character"><img src="assets/avatars/avatar-3.png" alt="Personnage 3"></div>
-      <div class="welcome-character"><img src="assets/avatars/avatar-4.png" alt="Personnage 4"></div>
+      <div class="welcome-character"><img src="avatar-1.png" alt="Personnage 1"></div>
+      <div class="welcome-character"><img src="avatar-2.png" alt="Personnage 2"></div>
+      <div class="welcome-character"><img src="avatar-3.png" alt="Personnage 3"></div>
+      <div class="welcome-character"><img src="avatar-4.png" alt="Personnage 4"></div>
     </div>
-    <div class="welcome-cta"><button class="primary" onclick="showScreen('choose')">Commencer mon aventure ✨</button></div>
+    <div class="welcome-cta"><button class="primary" onclick="startApp()">Commencer mon aventure ✨</button></div>
     <div class="welcome-note">Apprendre aujourd’hui · grandir demain</div>
   </div></div>
 </section>
 
 <section id="choose" class="screen choose-screen">
-  <div class="choose-head"><div class="welcome-logo">ARABIYA</div><h1>Qui joue aujourd’hui ?</h1><p>Choisis ton profil puis ton personnage avant d’entrer dans ton monde.</p></div>
+  <div class="choose-head"><div class="welcome-logo">ARABIYA</div><h1>Qui joue aujourd’hui ?</h1><p>Choisis ton profil. Ton personnage reste le tien jusqu’à ce que tu décides de le modifier.</p></div>
   <div class="choose-profile-grid" id="chooseProfiles"></div>
   <div class="choose-avatar-card">
     <div class="choose-avatar-head"><h2>✨ Choisis ton personnage</h2><span id="chooseAvatarFor">—</span></div>
@@ -400,14 +400,17 @@ button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.se
 const STORE='arabiya_v2';
 const defaultState={
  pin:'1234', selected:0, children:[
-  {name:'Enfant 1',avatar:'1',avatarId:'1',avatarConfig:{hero:'1',companion:'🦊',badge:'⭐'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[]},
-  {name:'Enfant 2',avatar:'2',avatarId:'2',avatarConfig:{hero:'2',companion:'🐼',badge:'🌟'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[]},
-  {name:'Enfant 3',avatar:'3',avatarId:'3',avatarConfig:{hero:'3',companion:'🐰',badge:'💫'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[]},
+  {name:'Enfant 1',avatar:'1',avatarId:'1',avatarConfig:{hero:'1',companion:'🦊',badge:'⭐'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[],profileReady:false},
+  {name:'Enfant 2',avatar:'2',avatarId:'2',avatarConfig:{hero:'2',companion:'🐼',badge:'🌟'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[],profileReady:false},
+  {name:'Enfant 3',avatar:'3',avatarId:'3',avatarConfig:{hero:'3',companion:'🐰',badge:'💫'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[],profileReady:false},
   {name:'Enfant 4',avatar:'4',avatarId:'4',avatarConfig:{hero:'4',companion:'🦉',badge:'🌙'},xp:0,stars:0,mastery:0,streak:1,level:1,lessons:[],mistakes:[],badges:[]}
  ], lessons:[]
 };
 let state; try{ state=JSON.parse(localStorage.getItem(STORE)||'null')||structuredClone(defaultState); }catch(e){ state=structuredClone(defaultState); localStorage.removeItem(STORE); }
 state.children.forEach((c,i)=>{ if(!/^[1-6]$/.test(String(c.avatarId||''))){ c.avatarId=String((i%6)+1); } if(!c.avatarConfig){ c.avatarConfig={hero:c.avatarId,companion:['🦊','🐼','🐰','🦉'][i]||'🦊',badge:['⭐','🌟','💫','🌙'][i]||'⭐'}; } if(!c.avatarConfig.hero)c.avatarConfig.hero=c.avatarId; c.avatar=c.avatarConfig.hero; });
+// V10: preserve each child's profile/avatar after first setup. Existing V9 profiles are treated as ready.
+state.children.forEach((c)=>{ if(typeof c.profileReady!=='boolean') c.profileReady=!!c.avatarConfig?.hero; });
+
 state.children.forEach(c=>{if(!c.evolution)c.evolution={stage:0,unlocked:[0]};});
 let challenges=[],ci=0,mode='daily';
 
@@ -456,11 +459,27 @@ function renderChooser(){
   return `<button class="choose-profile ${i===state.selected?'selected':''}" onclick="choosePlayer(${i})">${avatarHTML(cfg.hero,'')}<strong>${esc(c.name)}</strong><small>Niveau ${c.level} · ${c.xp} XP</small></button>`;
  }).join('');
  document.getElementById('chooseAvatarFor').textContent=selected.name;
- document.getElementById('chooseAvatars').innerHTML=heroAvatars.map(a=>`<button class="choose-avatar-option ${selected.avatarConfig.hero===a.id?'selected':''}" onclick="chooseIntroAvatar('${a.id}')"><img src="${a.src}" alt="${a.name}"><b>${a.name}</b></button>`).join('');
+ const avatarBox=document.getElementById('chooseAvatars');
+ const ready=!!selected.profileReady;
+ avatarBox.innerHTML=ready
+   ? `<div class="already-ready"><div class="ready-avatar">${avatarHTML(selected.avatarConfig.hero,'avatar-preview-img')}</div><div><strong>${esc(selected.name)}, ton personnage t’attend ✨</strong><p>Tu peux entrer dans ton aventure. Ton personnage reste le même tant que tu ne le modifies pas.</p><button class="secondary" onclick="editMyAvatar()">✏️ Modifier mon avatar</button></div></div>`
+   : heroAvatars.map(a=>`<button class="choose-avatar-option ${selected.avatarConfig.hero===a.id?'selected':''}" onclick="chooseIntroAvatar('${a.id}')"><img src="${a.src}" alt="${a.name}"><b>${a.name}</b></button>`).join('');
 }
 function choosePlayer(i){state.selected=i;save();renderChooser();}
-function chooseIntroAvatar(id){const cfg=avatarConfig();cfg.hero=id;me().avatarId=id;me().avatar=id;save();renderChooser();toast('Ton personnage est prêt ✨');}
+function chooseIntroAvatar(id){const cfg=avatarConfig();cfg.hero=id;me().avatarId=id;me().avatar=id;me().profileReady=true;save();renderChooser();render();toast('Ton personnage est créé ✨');}
 function enterAdventure(){sessionStorage.setItem('arabiya_started','1');showScreen('home');toast('Bienvenue dans ton monde ✨')}
+function editMyAvatar(){
+ const selected=me();
+ document.getElementById('chooseAvatarFor').textContent=selected.name+' — choisir un nouveau personnage';
+ document.getElementById('chooseAvatars').innerHTML=heroAvatars.map(a=>`<button class="choose-avatar-option ${selected.avatarConfig.hero===a.id?'selected':''}" onclick="chooseIntroAvatar('${a.id}')"><img src="${a.src}" alt="${a.name}"><b>${a.name}</b></button>`).join('');
+}
+function startApp(){
+ const hasSetup=state.children.some(c=>c.profileReady);
+ if(!hasSetup){ showScreen('choose'); return; }
+ // Returning users land on the player picker, without resetting characters.
+ showScreen('choose');
+}
+
 function profiles(){
  let h='<div class="kicker">Qui joue aujourd’hui ?</div><h2>Choisis ton profil ✨</h2><p style="color:var(--muted);font-size:12px">Chaque enfant retrouve son propre avatar, ses étoiles et sa progression.</p><div class="profile-grid">';
  state.children.forEach((c,i)=>{
@@ -561,12 +580,12 @@ function avatarConfig(){
  return c.avatarConfig;
 }
 const heroAvatars=[
- {id:'1',name:'Adam',src:'assets/avatars/avatar-1.png'},
- {id:'2',name:'Yassine',src:'assets/avatars/avatar-2.png'},
- {id:'3',name:'Rayan',src:'assets/avatars/avatar-3.png'},
- {id:'4',name:'Inaya',src:'assets/avatars/avatar-4.png'},
- {id:'5',name:'Lina',src:'assets/avatars/avatar-5.png'},
- {id:'6',name:'Safiya',src:'assets/avatars/avatar-6.png'}
+ {id:'1',name:'Adam',src:'avatar-1.png'},
+ {id:'2',name:'Yassine',src:'avatar-2.png'},
+ {id:'3',name:'Rayan',src:'avatar-3.png'},
+ {id:'4',name:'Inaya',src:'avatar-4.png'},
+ {id:'5',name:'Lina',src:'avatar-5.png'},
+ {id:'6',name:'Safiya',src:'avatar-6.png'}
 ];
 function avatarSrc(id){return heroAvatars.find(x=>x.id===String(id))?.src||heroAvatars[0].src}
 function avatarName(id){return heroAvatars.find(x=>x.id===String(id))?.name||'Mon personnage'}
@@ -691,6 +710,10 @@ function addStory(){
 
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
 </script>
+
+<style id="v10-profile-persistence">
+.already-ready{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center;background:linear-gradient(145deg,#1b0e3b,#0f0825);border:1px solid #5a4270;border-radius:24px;padding:14px;text-align:left}.already-ready p{margin:5px 0 10px;color:#c7bdd4;font-size:12px;line-height:1.5}.ready-avatar{height:150px;display:flex;align-items:flex-end;justify-content:center}.ready-avatar img{height:145px;max-width:120px;object-fit:contain}.choose-avatar-option img{object-position:center bottom}@media(max-width:520px){.already-ready{grid-template-columns:90px 1fr;padding:11px;gap:10px}.ready-avatar{height:120px}.ready-avatar img{height:116px}.already-ready p{font-size:11px}}
+</style>
 </body>
 </html>
 <style id="arabiya-v8-art-direction">
@@ -942,4 +965,3 @@ body:after{
   .world-card:hover,.banner:hover,.tile:hover,.profile-card:hover,.zone:hover,.avatar-option:hover{transform:translateY(-2px)}
 }
 </style>
-
