@@ -357,6 +357,18 @@
     <div class="scene-lettre" id="scene-lettre"><div class="lettre-grande" id="lettre-affichee">ب</div></div>
     <div class="grille-choix" id="zone-choix"></div>
     <div class="grille-memoire" id="zone-memoire" style="display:none;"></div>
+    <div id="zone-trace" style="display:none;">
+      <p style="text-align:center;color:#B9BEE8;font-size:13px;margin-bottom:10px;">Trace la lettre avec ton doigt, en suivant le pointillé</p>
+      <div style="position:relative;width:260px;height:260px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;">
+        <div id="lettre-guide-trace" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+          font-family:'Noto Naskh Arabic',serif;font-size:200px;color:transparent;-webkit-text-stroke:2px #DCEBE6;text-stroke:2px #DCEBE6;pointer-events:none;"></div>
+        <canvas id="canvas-trace" width="260" height="260" style="position:absolute;inset:0;touch-action:none;"></canvas>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button class="bouton secondaire" style="flex:1;" onclick="effacerTrace()">Effacer</button>
+        <button class="bouton" style="flex:1;" onclick="validerTrace()">C'est tracé !</button>
+      </div>
+    </div>
   </section>
 
   <!-- ===================== FIN ===================== -->
@@ -505,6 +517,40 @@ const BADGES = [
 ];
 // alias conservé pour compatibilité avec l'ancien code
 const NIVEAUX_AVANCE = PARCOURS_AVANCE.map(n => n.unites);
+
+// formes contextuelles des lettres (isolée / début / milieu / fin) — codes Unicode Arabic Presentation Forms-B
+// certaines lettres ne se lient jamais à la lettre suivante (ا د ذ ر ز و) donc pas de forme début/milieu
+const FORMES_LETTRES = {
+  "ا": { finale:"\uFE8E" },
+  "ب": { debut:"\uFE91", milieu:"\uFE92", finale:"\uFE90" },
+  "ت": { debut:"\uFE97", milieu:"\uFE98", finale:"\uFE96" },
+  "ث": { debut:"\uFE9B", milieu:"\uFE9C", finale:"\uFE9A" },
+  "ج": { debut:"\uFE9F", milieu:"\uFEA0", finale:"\uFE9E" },
+  "ح": { debut:"\uFEA3", milieu:"\uFEA4", finale:"\uFEA2" },
+  "خ": { debut:"\uFEA7", milieu:"\uFEA8", finale:"\uFEA6" },
+  "د": { finale:"\uFEAA" },
+  "ذ": { finale:"\uFEAC" },
+  "ر": { finale:"\uFEAE" },
+  "ز": { finale:"\uFEB0" },
+  "س": { debut:"\uFEB3", milieu:"\uFEB4", finale:"\uFEB2" },
+  "ش": { debut:"\uFEB7", milieu:"\uFEB8", finale:"\uFEB6" },
+  "ص": { debut:"\uFEBB", milieu:"\uFEBC", finale:"\uFEBA" },
+  "ض": { debut:"\uFEBF", milieu:"\uFEC0", finale:"\uFEBE" },
+  "ط": { debut:"\uFEC3", milieu:"\uFEC4", finale:"\uFEC2" },
+  "ظ": { debut:"\uFEC7", milieu:"\uFEC8", finale:"\uFEC6" },
+  "ع": { debut:"\uFECB", milieu:"\uFECC", finale:"\uFECA" },
+  "غ": { debut:"\uFECF", milieu:"\uFED0", finale:"\uFECE" },
+  "ف": { debut:"\uFED3", milieu:"\uFED4", finale:"\uFED2" },
+  "ق": { debut:"\uFED7", milieu:"\uFED8", finale:"\uFED6" },
+  "ك": { debut:"\uFEDB", milieu:"\uFEDC", finale:"\uFEDA" },
+  "ل": { debut:"\uFEDF", milieu:"\uFEE0", finale:"\uFEDE" },
+  "م": { debut:"\uFEE3", milieu:"\uFEE4", finale:"\uFEE2" },
+  "ن": { debut:"\uFEE7", milieu:"\uFEE8", finale:"\uFEE6" },
+  "ه": { debut:"\uFEEB", milieu:"\uFEEC", finale:"\uFEEA" },
+  "و": { finale:"\uFEEE" },
+  "ي": { debut:"\uFEF3", milieu:"\uFEF4", finale:"\uFEF2" }
+};
+
 // toutes les lettres de l'alphabet (sans harakāt) — pool de distracteurs pour "cherche" et "mot à compléter"
 const LETTRES_TOUTES = [...new Set(PARCOURS_AVANCE.slice(0,12).flatMap(n => n.unites))];
 
@@ -933,6 +979,11 @@ async function genererDefisDepuisLettres(coursId, lettres){
   });
   // cherche et trouve : grille plus grande, plus de distracteurs
   lignes.push({ cours_id: coursId, ...genererDefiCherche(lettres) });
+  // formes de la lettre (début/milieu/fin) — si au moins une lettre a des formes connues
+  const formes = genererDefiFormes(lettres);
+  if(formes) lignes.push({ cours_id: coursId, ...formes });
+  // traçage d'une des lettres du cours
+  lignes.push({ cours_id: coursId, type:'trace', question: lettres[Math.floor(Math.random()*lettres.length)], reponses:[], bonne_reponse:null });
   // mémoire : une seule entrée qui contient toutes les lettres à apparier
   lignes.push({
     cours_id: coursId, type: 'memoire',
@@ -1245,7 +1296,39 @@ function genererMissionMixte(unites){
     defis.push({ type:'memoire', question:'memoire', reponses: melange(unites).slice(0,4), bonne_reponse:null });
   }
   defis.push(genererDefiComplete());
+  // phonologie et formes de lettres : uniquement pour des lettres isolées (alphabet), pas pour harakāt/syllabes/mots
+  if(unites.every(u => [...u].length === 1)){
+    const p = genererDefiPhonologieAlphabet(unites);
+    if(p) defis.push(p);
+    const f = genererDefiFormes(unites);
+    if(f) defis.push(f);
+    defis.push({ type:'trace', question: unites[Math.floor(Math.random()*unites.length)] });
+  }
   return defis;
+}
+
+// formes de la lettre : reconnaître qu'une forme début/milieu/fin correspond à la même lettre isolée
+function genererDefiFormes(unites){
+  const candidats = unites.filter(u => FORMES_LETTRES[u]);
+  if(candidats.length === 0) return null;
+  const cible = candidats[Math.floor(Math.random()*candidats.length)];
+  const formesDispo = Object.entries(FORMES_LETTRES[cible]).filter(([k,v]) => v);
+  if(formesDispo.length === 0) return null;
+  const [, formeAffichee] = formesDispo[Math.floor(Math.random()*formesDispo.length)];
+  const distracteurs = melange(unites.filter(u => u !== cible)).slice(0,2);
+  while(distracteurs.length < 2 && unites.length > 1) distracteurs.push(unites[Math.floor(Math.random()*unites.length)]);
+  return { type:'formes', question: formeAffichee, reponses: melange([cible, ...distracteurs]), bonne_reponse: cible };
+}
+
+// phonologie pour l'alphabet : écoute une lettre du niveau en cours, retrouve le mot (image) qui commence par elle
+function genererDefiPhonologieAlphabet(unites){
+  const enleverHarakat = m => [...m.replace(/[\u064B-\u0652]/g,'')][0];
+  const candidats = VOCABULAIRE.filter(v => unites.includes(enleverHarakat(v.mot)));
+  if(candidats.length === 0) return null;
+  const cible = candidats[Math.floor(Math.random()*candidats.length)];
+  const lettreCible = enleverHarakat(cible.mot);
+  const distracteurs = melange(VOCABULAIRE.filter(v => enleverHarakat(v.mot) !== lettreCible)).slice(0,2);
+  return { type:'phonologie', question:lettreCible, reponses: melange([cible.emoji, ...distracteurs.map(d=>d.emoji)]), bonne_reponse:cible.emoji };
 }
 
 // cherche et trouve : la bonne lettre se cache dans une grille plus grande (plus de distracteurs)
@@ -1283,10 +1366,20 @@ function tailleArabe(texte){
 }
 
 // synthèse vocale arabe — gratuite, pas de fichier audio à héberger
+// noms des lettres — utilisés pour l'audio à la place du glyphe brut (le elif seul n'a pas de son propre par exemple)
+const NOMS_LETTRES = {
+  "ا":"أَلِف", "ب":"بَاء", "ت":"تَاء", "ث":"ثَاء", "ج":"جِيم", "ح":"حَاء", "خ":"خَاء",
+  "د":"دَال", "ذ":"ذَال", "ر":"رَاء", "ز":"زَاي", "س":"سِين", "ش":"شِين", "ص":"صَاد",
+  "ض":"ضَاد", "ط":"طَاء", "ظ":"ظَاء", "ع":"عَين", "غ":"غَين", "ف":"فَاء", "ق":"قَاف",
+  "ك":"كَاف", "ل":"لَام", "م":"مِيم", "ن":"نُون", "ه":"هَاء", "و":"وَاو", "ي":"يَاء"
+};
+
 function jouerAudioLettre(texte){
   try{
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(texte);
+    // si c'est une lettre isolée (sans harakāt), on fait dire son nom plutôt que le glyphe brut
+    const texteAudio = NOMS_LETTRES[texte] || texte;
+    const u = new SpeechSynthesisUtterance(texteAudio);
     u.lang = 'ar-SA';
     u.rate = 0.75;
     speechSynthesis.speak(u);
@@ -1341,13 +1434,19 @@ function jouerDefiCourant(){
   majBarreJeu();
   const defi = etatJeu.defis[etatJeu.index];
   const scene = document.getElementById('scene-lettre');
-  document.getElementById('zone-choix').style.display = defi.type === 'memoire' ? 'none' : 'grid';
+  document.getElementById('zone-choix').style.display = (defi.type === 'memoire' || defi.type === 'trace') ? 'none' : 'grid';
   document.getElementById('zone-memoire').style.display = defi.type === 'memoire' ? 'grid' : 'none';
-  scene.style.display = defi.type === 'memoire' ? 'none' : 'flex';
+  document.getElementById('zone-trace').style.display = defi.type === 'trace' ? 'block' : 'none';
+  scene.style.display = (defi.type === 'memoire' || defi.type === 'trace') ? 'none' : 'flex';
   scene.style.height = (defi.type === 'texte') ? 'auto' : '170px';
   scene.style.padding = (defi.type === 'texte') ? '16px 10px' : '0';
 
-  if(defi.type === 'reconnais' || defi.type === 'trouve' || defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'cherche' || defi.type === 'complete'){
+  if(defi.type === 'trace'){
+    initialiserTrace(defi.question);
+    return;
+  }
+
+  if(defi.type === 'reconnais' || defi.type === 'trouve' || defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'cherche' || defi.type === 'complete' || defi.type === 'formes'){
     scene.innerHTML = `<div class="lettre-grande" style="font-size:${tailleArabe(defi.question)}">${defi.question}</div>`;
   } else if(defi.type === 'vocab-image'){
     scene.innerHTML = estImage(defi.question)
@@ -1364,7 +1463,7 @@ function jouerDefiCourant(){
       </div>`;
   }
 
-  if(defi.type !== 'memoire'){
+  if(defi.type !== 'memoire' && defi.type !== 'trace'){
     const emojiChoix = (defi.type === 'vocab-mot' || defi.type === 'phrase-image' || defi.type === 'texte' || defi.type === 'vocab-ecoute-image' || defi.type === 'phonologie');
     const zone = document.getElementById('zone-choix');
     zone.innerHTML = '';
@@ -1429,6 +1528,56 @@ function validerReponse(bouton, correct, notion){
     if(etatJeu.index >= etatJeu.defis.length) terminerMission();
     else jouerDefiCourant();
   }, 600);
+}
+
+// ---------- traçage d'une lettre ----------
+let ctxTrace = null, enTrainDeDessiner = false;
+function initialiserTrace(lettre){
+  document.getElementById('lettre-guide-trace').textContent = lettre;
+  const canvas = document.getElementById('canvas-trace');
+  ctxTrace = canvas.getContext('2d');
+  ctxTrace.clearRect(0,0,canvas.width,canvas.height);
+  ctxTrace.strokeStyle = '#1F5C4F';
+  ctxTrace.lineWidth = 8;
+  ctxTrace.lineCap = 'round';
+  ctxTrace.lineJoin = 'round';
+
+  const position = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const pt = e.touches ? e.touches[0] : e;
+    return { x: pt.clientX - rect.left, y: pt.clientY - rect.top };
+  };
+  canvas.onpointerdown = (e) => {
+    enTrainDeDessiner = true;
+    const p = position(e);
+    ctxTrace.beginPath();
+    ctxTrace.moveTo(p.x, p.y);
+  };
+  canvas.onpointermove = (e) => {
+    if(!enTrainDeDessiner) return;
+    const p = position(e);
+    ctxTrace.lineTo(p.x, p.y);
+    ctxTrace.stroke();
+  };
+  canvas.onpointerup = () => { enTrainDeDessiner = false; };
+  canvas.onpointerleave = () => { enTrainDeDessiner = false; };
+}
+
+function effacerTrace(){
+  const canvas = document.getElementById('canvas-trace');
+  ctxTrace.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function validerTrace(){
+  // pas de reconnaissance d'écriture en V1 : on valide dès que l'enfant a essayé
+  jouerSonReponse(true);
+  reagirMascotte(true);
+  etatJeu.bonnes++;
+  setTimeout(() => {
+    etatJeu.index++;
+    if(etatJeu.index >= etatJeu.defis.length) terminerMission();
+    else jouerDefiCourant();
+  }, 400);
 }
 
 function jouerMemoire(lettres){
