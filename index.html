@@ -57,7 +57,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
 .progress{height:7px;background:#33264c;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#e9904a);border-radius:99px}
 .challenge{min-height:66vh;display:flex;flex-direction:column;justify-content:center;text-align:center}.challenge h2{font-family:"El Messiri";font-size:22px}.arabic{font-family:"El Messiri",serif;font-size:90px;font-weight:700;direction:rtl;margin:18px 0;color:#fff7df;text-shadow:0 7px 25px rgba(243,204,85,.12)}
 .audio{width:55px;height:55px;border-radius:50%;border:1px solid rgba(243,204,85,.45);background:#211447;color:var(--gold);font-size:24px}
-.answers{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}.answer{min-height:74px;border-radius:20px;background:#1a1041;border:1px solid #493763;color:var(--cream);font-family:"El Messiri";font-size:31px;font-weight:700}.answer.ok{background:#205d4b;border-color:#65c79b}.answer.no{background:#6c3044;border-color:#db7583}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}.answer{position:relative;z-index:5;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:74px;border-radius:20px;background:#1a1041;border:1px solid #493763;color:var(--cream);font-family:"El Messiri";font-size:31px;font-weight:700}.answer.ok{background:#205d4b;border-color:#65c79b}.answer.no{background:#6c3044;border-color:#db7583}
 .feedback{height:31px;margin:11px;color:var(--gold);font-weight:900}
 .missionbar{height:7px;background:#32254b;border-radius:99px;overflow:hidden}.missionbar i{display:block;height:100%;background:var(--gold);transition:.3s}
 .field{margin:12px 0}.field label{display:block;font-size:11px;color:#bdb2ca;margin:0 0 6px}.field input,.field textarea,.field select{width:100%;background:#0f0727;color:var(--cream);border:1px solid #4a3866;border-radius:15px;padding:12px;outline:none}.field textarea{min-height:100px}
@@ -258,6 +258,9 @@ button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.se
 @media(max-width:620px){.welcome-shell{padding:28px 15px 23px;border-radius:30px}.welcome-logo{font-size:37px}.welcome-characters{min-height:175px;margin-top:19px}.welcome-character img{height:166px}.choose-profile-grid{grid-template-columns:repeat(2,1fr)}.choose-profile{min-height:180px}.choose-profile img{height:132px}}
 @media(max-width:390px){.welcome-shell{padding-top:24px}.welcome-moon{font-size:56px}.welcome-logo{font-size:31px}.welcome-sub{font-size:15px}.welcome-copy{font-size:12px}.welcome-characters{min-height:140px}.welcome-character img{height:138px}.choose-head h1{font-size:24px}.choose-avatar-grid{grid-template-columns:repeat(2,1fr)}.choose-avatar-option{min-height:143px}.choose-avatar-option img{height:110px}}
 
+
+.card-inset{margin:12px 0;padding:13px;border-radius:20px;background:rgba(9,5,24,.5);border:1px dashed rgba(255,215,107,.25)}
+.photo-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.photo-head b{display:block}.photo-head small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.photo-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:9px 0}.photo-preview img{width:100%;height:86px;object-fit:cover;border-radius:12px;border:1px solid #493567}.photo-status{font-size:10px;color:var(--muted);margin-top:8px;line-height:1.45}.photo-status.ok{color:#8fe0bd}.photo-status.warn{color:#f2c56b}
 </style>
 </head>
 <body>
@@ -372,6 +375,13 @@ button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.se
     <div class="field"><label>Type de leçon</label><select id="lessonType"><option value="letters">Lettres</option><option value="harakat">Harakāt</option><option value="reading">Lecture</option><option value="vocab">Vocabulaire</option><option value="quran">Coran</option><option value="tajwid">Tajwid</option></select></div>
     <div class="field"><label>Niveau de l’enfant</label><select id="lessonLevel"><option value="1">1 · Alphabet</option><option value="2">2 · Harakāt</option><option value="3">3 · Syllabes</option><option value="4">4 · Mots</option><option value="5">5 · Lecture</option><option value="6">6 · Lecture avancée</option></select></div>
     <div class="field"><label>Ce qui a été travaillé</label><textarea id="lessonContent" placeholder="Ex : ب ت ث — fatha — بَ تَ ثَ"></textarea></div>
+    <div class="photo-lesson card-inset">
+      <div class="photo-head"><div><b>📸 Importer le cours en photo</b><small>Une ou plusieurs photos du cahier, de la feuille ou du tableau.</small></div><span>✨</span></div>
+      <input id="lessonPhotos" type="file" accept="image/*" multiple>
+      <div id="lessonPhotoPreview" class="photo-preview"></div>
+      <button type="button" class="secondary" onclick="extractLessonFromPhotos()">🔎 Lire les photos et préparer la leçon</button>
+      <div id="photoOcrStatus" class="photo-status"></div>
+    </div>
     <div class="field"><label>À revoir en priorité</label><input id="lessonReview" placeholder="Ex : ث ، تَ"></div>
     <button class="secondary" onclick="quickLesson('letters')">⚡ Saisie rapide : lettres</button>
     <button class="secondary" onclick="quickLesson('harakat')">⚡ Saisie rapide : harakāt</button>
@@ -506,7 +516,7 @@ function parentLogin(){
 function addLesson(){
  const childIndex=+document.getElementById('lessonChild').value,content=document.getElementById('lessonContent').value.trim();
  if(!content){toast('Ajoute le contenu de la leçon');return}
- const l={id:Date.now(),child:childIndex,date:document.getElementById('lessonDate').value,type:document.getElementById('lessonType').value,content,review:document.getElementById('lessonReview').value.trim()};
+ const photoFiles=[...document.getElementById('lessonPhotos').files].slice(0,8).map(f=>f.name); const l={id:Date.now(),child:childIndex,date:document.getElementById('lessonDate').value,type:document.getElementById('lessonType').value,content,review:document.getElementById('lessonReview').value.trim(),photos:photoFiles};
  state.lessons.push(l);state.children[childIndex].lessons.push(l.id);
  if(l.review)state.children[childIndex].mistakes.push(...tokens(l.review));
  state.selected=childIndex;save();render();toast('Leçon enregistrée ✨');startDaily()
@@ -537,11 +547,12 @@ function renderChallenge(){
  document.getElementById('missionTitle').textContent=mode==='ahead'?'Je prends de l’avance 🚀':'Défi du jour 🎯';
  let q={find:'Trouve exactement ce que tu vois.',memory:'Quelle réponse correspond ?',listen:'Écoute puis choisis.',complete:'Quelle réponse complète correctement ?',ahead:'Reconnais ce nouvel élément.'}[a.type];
  let html=`<div><div class="kicker">${q}</div><div class="arabic">${esc(a.correct)}</div><button class="audio" onclick="speak('${encodeURIComponent(a.correct)}')">🔊</button><div class="answers">`;
- a.answers.forEach(x=>html+=`<button class="answer" dir="rtl" onclick="answer(this,${JSON.stringify(x)},${JSON.stringify(a.correct)})">${esc(x)}</button>`);
+ a.answers.forEach(x=>html+=`<button class="answer" type="button" dir="rtl" data-answer="${encodeURIComponent(x)}" data-correct="${encodeURIComponent(a.correct)}" onclick="answer(this)">${esc(x)}</button>`);
  html+='</div><div class="feedback" id="feedback"></div></div>';document.getElementById('challenge').innerHTML=html
 }
 function speak(t){try{speechSynthesis.cancel();let text=decodeURIComponent(t);const names={'ا':'أَلِف','ب':'بَاء','ت':'تَاء','ث':'ثَاء','ج':'جِيم','ح':'حَاء','خ':'خَاء','د':'دَال','ذ':'ذَال','ر':'رَاء','ز':'زَاي','س':'سِين','ش':'شِين','ص':'صَاد','ض':'ضَاد','ط':'طَاء','ظ':'ظَاء','ع':'عَيْن','غ':'غَيْن','ف':'فَاء','ق':'قَاف','ك':'كَاف','ل':'لَام','م':'مِيم','ن':'نُون','ه':'هَاء','و':'وَاو','ي':'يَاء'};let u=new SpeechSynthesisUtterance(names[text]||text);u.lang='ar-SA';u.rate=.72;speechSynthesis.speak(u)}catch(e){}}
 function answer(btn,val,correct){
+ if(arguments.length===2){ correct=decodeURIComponent(btn.dataset.correct||''); val=decodeURIComponent(btn.dataset.answer||''); }
  document.querySelectorAll('.answer').forEach(x=>x.disabled=true);
  const ok=val===correct,c=me();btn.classList.add(ok?'ok':'no');document.getElementById('feedback').textContent=ok?'Bravo ! +10 XP ⭐':'Presque — on reverra celui-ci.';
  if(ok){const before=evolutionStageForXP(c.xp);c.xp+=10;c.stars+=1;c.mastery=Math.min(100,c.mastery+2);if(c.xp>=50&&!c.badges.includes('50xp'))c.badges.push('50xp');const after=evolutionStageForXP(c.xp);if(after>before)toast('🌟 Nouveau niveau de personnage débloqué !')}
@@ -688,7 +699,7 @@ function setChildLevel(i,n){state.children[i].level=n;save();render();toast('Niv
 function quickLesson(type){
  document.getElementById('lessonType').value=type;
  document.getElementById('lessonContent').value=type==='letters'?'ب ت ث':'بَ بِ بُ — تَ تِ تُ';
- document.getElementById('lessonReview').value='';
+ document.getElementById('lessonReview').value=''; if(document.getElementById('lessonPhotos')){document.getElementById('lessonPhotos').value='';document.getElementById('lessonPhotoPreview').innerHTML='';document.getElementById('photoOcrStatus').textContent='';}
 }
 function addLesson(){
  const childIndex=+document.getElementById('lessonChild').value,content=document.getElementById('lessonContent').value.trim();
@@ -758,6 +769,34 @@ function addStory(){
  const title=document.getElementById('storyTitle').value.trim(),text=document.getElementById('storyText').value.trim();
  if(!title||!text){toast('Ajoute un titre et une histoire');return}
  v3.stories.push({title,art:'📖',text,q:'Quel mot retiens-tu ?',a:['خير','صبر','بيت'],ok:'خير'});saveV3();document.getElementById('storyTitle').value='';document.getElementById('storyText').value='';toast('Histoire ajoutée ✨')
+}
+
+
+// V12 — photo lessons: preview + optional Arabic OCR. The parent always validates the extracted text.
+document.addEventListener('change',e=>{
+  if(e.target && e.target.id==='lessonPhotos'){
+    const files=[...e.target.files].slice(0,8), box=document.getElementById('lessonPhotoPreview');
+    box.innerHTML=''; files.forEach(f=>{const img=document.createElement('img');img.alt=f.name;const r=new FileReader();r.onload=ev=>img.src=ev.target.result;r.readAsDataURL(f);box.appendChild(img)});
+    const st=document.getElementById('photoOcrStatus'); if(st)st.textContent=files.length?`${files.length} photo(s) prêtes à être analysées.`:'';
+  }
+});
+async function extractLessonFromPhotos(){
+  const input=document.getElementById('lessonPhotos'), status=document.getElementById('photoOcrStatus');
+  if(!input.files.length){toast('Ajoute au moins une photo 📸');return;}
+  status.className='photo-status warn';status.textContent='Lecture des photos… cela peut prendre quelques secondes.';
+  try{
+    if(!window.Tesseract){
+      await new Promise((resolve,reject)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';sc.onload=resolve;sc.onerror=reject;document.head.appendChild(sc)});
+    }
+    const worker=await Tesseract.createWorker('ara'); let all=[];
+    for(const file of [...input.files].slice(0,8)){const out=await worker.recognize(file); if(out.data.text) all.push(out.data.text.trim());}
+    await worker.terminate();
+    const text=all.join('\
+').trim();
+    if(text){document.getElementById('lessonContent').value=(document.getElementById('lessonContent').value+'\
+'+text).trim();status.className='photo-status ok';status.textContent='Texte extrait. Vérifie-le rapidement avant de créer la mission — surtout les lettres et les voyelles arabes.';toast('Cours préparé ✨');}
+    else {status.textContent='Je n’ai pas réussi à lire le texte. Tu peux garder les photos comme support et saisir quelques éléments clés ci-dessus.';}
+  }catch(err){status.className='photo-status warn';status.textContent='La lecture automatique n’est pas disponible ici. Les photos restent sélectionnées : ajoute simplement les éléments importants dans « Ce qui a été travaillé ». ';}
 }
 
 if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
