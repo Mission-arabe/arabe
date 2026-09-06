@@ -252,6 +252,9 @@ button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.se
 .choose-avatar-card{background:linear-gradient(160deg,rgba(34,20,72,.98),rgba(15,9,34,.98));border:1px solid #4b3865;border-radius:28px;padding:16px;box-shadow:0 18px 45px rgba(0,0,0,.30)}
 .choose-avatar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.choose-avatar-head h2{margin:0;font-family:Georgia,'Times New Roman',serif;font-size:19px}.choose-avatar-head span{color:#d6cae0;font-size:11px}
 .choose-avatar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.choose-avatar-option{border:1px solid #493665;background:radial-gradient(circle at 50% 17%,#4b2f65,#13092d 72%);border-radius:20px;padding:7px;color:#fff;min-height:144px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}.choose-avatar-option.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(247,211,103,.10),0 12px 26px #0005;background:radial-gradient(circle at 50% 17%,#61407b,#160b35 72%)}.choose-avatar-option img{height:112px;width:100%;object-fit:contain;object-position:center bottom}.choose-avatar-option b{font-size:10px;margin-top:4px}.choose-confirm{margin-top:12px}.gate-hidden .bottom{display:none}
+
+/* V11 — gestion dynamique des profils */
+.child-admin-grid{display:grid;grid-template-columns:1fr;gap:10px}.child-admin-row{display:flex;align-items:center;gap:10px;padding:12px;border-radius:18px;background:#10082a;border:1px solid #41305e}.child-admin-row .admin-avatar{width:52px;height:52px;border-radius:16px;object-fit:contain;background:linear-gradient(145deg,#25164a,#132d38);flex:0 0 52px}.child-admin-info{flex:1;min-width:0}.child-admin-info b{display:block;font-size:15px}.child-admin-info small{color:var(--muted)}.admin-actions{display:flex;gap:7px}.admin-icon{width:38px;height:38px;border:1px solid #4c3a67;background:#1a0f3b;color:#fff;border-radius:12px}.admin-danger{border-color:#7e4051;color:#ffc0cb}.add-child-panel{margin-top:12px;padding:15px;border-radius:20px;background:linear-gradient(145deg,#24154b,#122f35);border:1px solid #57436f}.add-child-panel h4{margin:0 0 4px;font-family:"El Messiri";font-size:18px}.new-avatar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.new-avatar-option{border:1px solid #47345f;background:#120a2d;border-radius:16px;padding:8px;color:#fff}.new-avatar-option.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(243,204,85,.12) inset}.new-avatar-option img{width:100%;height:84px;object-fit:contain}.new-avatar-option small{display:block;color:#cfc3db;margin-top:3px;font-size:10px}.limit-note{color:#bdb1cc;font-size:11px;margin-top:8px}
 @media(max-width:620px){.welcome-shell{padding:28px 15px 23px;border-radius:30px}.welcome-logo{font-size:37px}.welcome-characters{min-height:175px;margin-top:19px}.welcome-character img{height:166px}.choose-profile-grid{grid-template-columns:repeat(2,1fr)}.choose-profile{min-height:180px}.choose-profile img{height:132px}}
 @media(max-width:390px){.welcome-shell{padding-top:24px}.welcome-moon{font-size:56px}.welcome-logo{font-size:31px}.welcome-sub{font-size:15px}.welcome-copy{font-size:12px}.welcome-characters{min-height:140px}.welcome-character img{height:138px}.choose-head h1{font-size:24px}.choose-avatar-grid{grid-template-columns:repeat(2,1fr)}.choose-avatar-option{min-height:143px}.choose-avatar-option img{height:110px}}
 
@@ -374,7 +377,7 @@ button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.se
     <button class="secondary" onclick="quickLesson('harakat')">⚡ Saisie rapide : harakāt</button>
     <button class="primary" onclick="addLesson()">✨ Créer la mission</button>
   </div>
-  <div class="card"><h3>Mes enfants</h3><div id="parentChildren"></div></div>
+  <div class="card"><div class="sectionhead"><h3>Mes enfants</h3><span id="childrenCount">4 / 8</span></div><div id="parentChildren"></div><div class="add-child-panel"><h4>➕ Ajouter un enfant</h4><p style="color:var(--muted);font-size:12px;margin:4px 0 8px">Crée un profil en quelques secondes. Il apparaîtra ensuite sur l’écran « Qui joue aujourd’hui ? ».</p><div class="field"><label>Prénom</label><input id="newChildName" placeholder="Ex : Lina"></div><div class="field"><label>Niveau de départ</label><select id="newChildLevel"><option value="1">1 · Alphabet</option><option value="2">2 · Harakāt</option><option value="3">3 · Syllabes</option><option value="4">4 · Mots</option><option value="5">5 · Lecture</option><option value="6">6 · Lecture avancée</option></select></div><div class="field"><label>Choisis son avatar</label><div class="new-avatar-grid" id="newChildAvatarGrid"></div></div><button class="primary" onclick="addChild()">✨ Créer le profil</button><div class="limit-note">Maximum 8 profils enfants sur cet appareil.</div></div></div>
   <div class="card"><h3>Leçons récentes</h3><div id="lessonList"></div></div>
   <div class="card"><h3>📖 Ajouter une histoire</h3>
   <p style="color:var(--muted);font-size:12px">Crée une petite histoire familiale et son mini-quiz. Aucun texte religieux n’est généré automatiquement.</p>
@@ -382,7 +385,7 @@ button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.se
   <div class="field"><label>Texte</label><textarea id="storyText" placeholder="Ton histoire…"></textarea></div>
   <button class="primary" onclick="addStory()">Enregistrer l’histoire</button>
 </div>
-<div class="card"><h3>Réglages</h3><div class="field"><label>Changer le PIN parent</label><input id="pin" type="password" inputmode="numeric" placeholder="4 à 6 chiffres"></div><button class="secondary" onclick="setPin()">Modifier le PIN</button></div>
+<div class="card"><h3>Réglages</h3><p style="color:var(--muted);font-size:12px">Le compte parent protège ici la gestion des profils et des leçons. PIN de test initial : <b style="color:var(--gold)">1234</b>.</p><div class="field"><label>Changer le PIN parent</label><input id="pin" type="password" inputmode="numeric" placeholder="4 à 6 chiffres"></div><button class="secondary" onclick="setPin()">Modifier le PIN</button></div>
 </section>
 
 <nav class="bottom">
@@ -579,6 +582,44 @@ function avatarConfig(){
  if(!c.evolution)c.evolution={stage:0,unlocked:[0]};
  return c.avatarConfig;
 }
+let newChildAvatar='1';
+function renderNewChildAvatarGrid(){
+ const el=document.getElementById('newChildAvatarGrid');
+ if(!el)return;
+ el.innerHTML=heroAvatars.map(a=>`<button type="button" class="new-avatar-option ${newChildAvatar===a.id?'selected':''}" onclick="selectNewChildAvatar('${a.id}')"><img src="${a.src}" alt="${a.name}"><small>${a.name}</small></button>`).join('');
+}
+function selectNewChildAvatar(id){newChildAvatar=id;renderNewChildAvatarGrid()}
+function addChild(){
+ if(state.children.length>=8){toast('Tu as atteint la limite de 8 enfants');return}
+ const name=(document.getElementById('newChildName')?.value||'').trim();
+ if(!name){toast('Ajoute un prénom');return}
+ const level=Number(document.getElementById('newChildLevel')?.value||1);
+ const i=state.children.length;
+ const companions=['🦊','🐼','🐰','🦉','🐱','🦋'];
+ const badges=['⭐','🌟','💫','🌙','✨','🏆'];
+ state.children.push({name,avatar:newChildAvatar,avatarId:newChildAvatar,avatarConfig:{hero:newChildAvatar,companion:companions[i%companions.length],badge:badges[i%badges.length]},xp:0,stars:0,mastery:0,streak:0,level,lessons:[],mistakes:[],badges:[],profileReady:false,evolution:{stage:0,unlocked:[0]}});
+ state.selected=i; save();
+ const input=document.getElementById('newChildName'); if(input)input.value='';
+ render(); renderNewChildAvatarGrid();
+ toast(`${name} a maintenant son profil ✨`);
+}
+function removeChild(i){
+ if(state.children.length<=1){toast('Garde au moins un profil enfant');return}
+ const c=state.children[i];
+ if(!confirm(`Supprimer le profil de ${c.name} ? Cette action supprimera aussi sa progression sur cet appareil.`))return;
+ const removedIds=new Set(c.lessons||[]);
+ state.lessons=state.lessons.filter(l=>!removedIds.has(l.id));
+ state.children.splice(i,1);
+ if(state.selected>=state.children.length)state.selected=state.children.length-1;
+ save();render();toast('Profil supprimé');
+}
+function renameChild(i){
+ const c=state.children[i];
+ const n=prompt('Nouveau prénom',c.name);
+ if(n===null)return; const name=n.trim(); if(!name){toast('Le prénom ne peut pas être vide');return}
+ c.name=name; save(); render(); toast('Prénom modifié ✨');
+}
+
 const heroAvatars=[
  {id:'1',name:'Adam',src:'avatar-1.png'},
  {id:'2',name:'Yassine',src:'avatar-2.png'},
@@ -659,10 +700,21 @@ function addLesson(){
  state.selected=childIndex;save();showScreen('welcome');toast('Leçon enregistrée ✨');startDaily()
 }
 function renderParent(){
- document.getElementById('lessonChild').innerHTML=state.children.map((c,i)=>`<option value="${i}" ${i===state.selected?'selected':''}>${esc(c.name)}</option>`).join('');
- const lv=document.getElementById('lessonLevel');if(lv)lv.value=currentLevel();
- document.getElementById('parentChildren').innerHTML=state.children.map((c,i)=>`<div class="lesson"><div class="mini">${avatarHTML((c.avatarConfig&&c.avatarConfig.hero)||c.avatarId||'1','avatar-mini')}</div><div style="flex:1"><b>${esc(c.name)}</b><br><small>Niveau ${c.level} · ${levelName(c.level)} · ${c.mastery}% maîtrisé · ${c.xp} XP</small><div class="progress" style="margin-top:7px"><i style="width:${c.mastery}%"></i></div><div class="child-level" style="margin-top:8px">${[1,2,3,4,5,6].map(n=>`<button class="level-pill ${c.level===n?'active':''}" onclick="setChildLevel(${i},${n})">${n}</button>`).join('')}</div></div></div>`).join('');
- const ls=state.lessons.slice(-8).reverse();document.getElementById('lessonList').innerHTML=ls.length?ls.map(l=>`<div class="lesson"><div class="mini">📚</div><div><b>${esc(state.children[l.child]?.name||'')}</b><br><small>${esc(l.date)} · ${esc(l.type)} · niveau ${l.level||1}</small><div style="margin-top:3px">${esc(l.content).slice(0,120)}</div></div></div>`).join(''):'<div class="empty">Aucune leçon enregistrée.</div>'
+ const childSelect=document.getElementById('lessonChild');
+ if(childSelect)childSelect.innerHTML=state.children.map((c,i)=>`<option value="${i}" ${i===state.selected?'selected':''}>${esc(c.name)}</option>`).join('');
+ const lv=document.getElementById('lessonLevel'); if(lv)lv.value=currentLevel();
+ const count=document.getElementById('childrenCount'); if(count)count.textContent=`${state.children.length} / 8`;
+ const pc=document.getElementById('parentChildren');
+ if(pc){
+   pc.innerHTML=state.children.map((c,i)=>{
+     const hero=(c.avatarConfig&&c.avatarConfig.hero)||c.avatarId||String((i%6)+1);
+     return `<div class="child-admin-row"><img class="admin-avatar" src="${avatarSrc(hero)}" alt="${esc(c.name)}"><div class="child-admin-info"><b>${esc(c.name)}</b><small>Niveau ${c.level} · ${levelName(c.level)} · ${c.mastery}% maîtrisé · ${c.xp} XP</small><div class="progress" style="margin-top:7px"><i style="width:${c.mastery}%"></i></div><div class="child-level" style="margin-top:8px">${[1,2,3,4,5,6].map(n=>`<button class="level-pill ${c.level===n?'active':''}" onclick="setChildLevel(${i},${n})">${n}</button>`).join('')}</div></div><div class="admin-actions"><button class="admin-icon" title="Renommer" onclick="renameChild(${i})">✏️</button><button class="admin-icon admin-danger" title="Supprimer" onclick="removeChild(${i})">🗑️</button></div></div>`;
+   }).join('');
+ }
+ renderNewChildAvatarGrid();
+ const ls=state.lessons.slice(-8).reverse();
+ const lessonList=document.getElementById('lessonList');
+ if(lessonList)lessonList.innerHTML=ls.length?ls.map(l=>`<div class="lesson"><div class="mini">📚</div><div><b>${esc(state.children[l.child]?.name||'')}</b><br><small>${esc(l.date)} · ${esc(l.type)} · niveau ${l.level||1}</small><div style="margin-top:3px">${esc(l.content).slice(0,120)}</div></div></div>`).join(''):'<div class="empty">Aucune leçon enregistrée.</div>';
 }
 function makeChallenges(){
  const c=me(), lessons=c.lessons.map(id=>state.lessons.find(l=>l.id===id)).filter(Boolean).slice(-5);
