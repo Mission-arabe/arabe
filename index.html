@@ -232,14 +232,62 @@ button,input,textarea,select{max-width:100%} .copy,.lesson,.word-card,.story,.se
 .avatar-stage.evo-stage-3 .evo-aura{width:285px;height:285px;background:radial-gradient(circle,#c978a844,#6ec9c022 45%,transparent 69%)}
 .avatar-stage.evo-stage-4 .evo-aura{width:300px;height:300px;background:radial-gradient(circle,#ffd96b66,#a66be32a 40%,transparent 70%)}
 .avatar-stage.evo-stage-4 .evo-accessory{filter:drop-shadow(0 0 10px #f5cf6a99)}
+
+/* ===== V9 WELCOME + CHARACTER GATE ===== */
+.welcome-screen{min-height:calc(100vh - 20px);display:flex;align-items:center;justify-content:center;padding:18px 0 28px}
+.welcome-shell{width:100%;position:relative;overflow:hidden;border-radius:34px;padding:34px 22px 28px;background:radial-gradient(circle at 50% 18%,rgba(140,92,169,.40),transparent 34%),radial-gradient(circle at 80% 78%,rgba(38,117,111,.28),transparent 30%),linear-gradient(160deg,#211348 0%,#110b2b 52%,#091c29 100%);border:1px solid rgba(255,224,139,.18);box-shadow:0 26px 80px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.06);text-align:center}
+.welcome-shell:before{content:'✦ · ✧ ✦ · ✧ · ✦';position:absolute;top:16px;left:18px;right:18px;color:rgba(255,227,153,.55);font-size:11px;letter-spacing:8px;pointer-events:none}
+.welcome-moon{font-size:70px;filter:drop-shadow(0 0 24px rgba(255,221,116,.18));margin-top:8px}
+.welcome-logo{font-family:Georgia,'Times New Roman',serif;color:#f7d77a;font-size:44px;letter-spacing:.05em;margin-top:2px;text-shadow:0 8px 28px rgba(245,207,111,.16)}
+.welcome-sub{font-family:'El Messiri',Georgia,serif;font-size:17px;color:#f3e6f2;margin:2px 0 8px}
+.welcome-copy{max-width:390px;margin:0 auto;color:#c7bdd2;font-size:13px;line-height:1.6}
+.welcome-characters{display:flex;justify-content:center;gap:0;margin:24px auto 20px;max-width:520px;min-height:210px;align-items:flex-end}
+.welcome-character{width:23%;max-width:110px;transform-origin:center bottom;filter:drop-shadow(0 14px 16px rgba(0,0,0,.34))}
+.welcome-character:nth-child(2){transform:translateY(8px)}.welcome-character:nth-child(3){transform:translateY(-2px)}.welcome-character:nth-child(4){transform:translateY(7px)}
+.welcome-character img{width:100%;height:200px;object-fit:contain;object-position:center bottom;display:block}
+.welcome-cta{max-width:330px;margin:0 auto}.welcome-cta .primary{font-size:15px;min-height:56px;border-radius:20px;box-shadow:0 14px 30px rgba(241,191,65,.18)}
+.welcome-note{margin-top:12px;font-size:10px;color:#9388a7}
+.choose-screen{padding-bottom:28px}.choose-head{text-align:center;padding:14px 0 10px}.choose-head .welcome-logo{font-size:31px}.choose-head h1{font-family:Georgia,'Times New Roman',serif;font-size:27px;margin:8px 0 5px}.choose-head p{color:var(--muted);font-size:12px;margin:0}
+.choose-profile-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:14px 0}.choose-profile{border:1px solid #47335f;background:radial-gradient(circle at 50% 20%,#4c3167,#140b30 72%);border-radius:22px;padding:10px 6px 11px;color:#fff;min-height:170px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;box-shadow:0 14px 28px #0004}.choose-profile.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(247,211,103,.14),0 18px 34px #0005}.choose-profile img{height:120px;width:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 8px 10px rgba(0,0,0,.32))}.choose-profile strong{font-size:12px;margin-top:4px}.choose-profile small{font-size:9px;color:#c4b7cf;margin-top:2px}
+.choose-avatar-card{background:linear-gradient(160deg,rgba(34,20,72,.98),rgba(15,9,34,.98));border:1px solid #4b3865;border-radius:28px;padding:16px;box-shadow:0 18px 45px rgba(0,0,0,.30)}
+.choose-avatar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.choose-avatar-head h2{margin:0;font-family:Georgia,'Times New Roman',serif;font-size:19px}.choose-avatar-head span{color:#d6cae0;font-size:11px}
+.choose-avatar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.choose-avatar-option{border:1px solid #493665;background:radial-gradient(circle at 50% 17%,#4b2f65,#13092d 72%);border-radius:20px;padding:7px;color:#fff;min-height:144px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}.choose-avatar-option.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(247,211,103,.10),0 12px 26px #0005;background:radial-gradient(circle at 50% 17%,#61407b,#160b35 72%)}.choose-avatar-option img{height:112px;width:100%;object-fit:contain;object-position:center bottom}.choose-avatar-option b{font-size:10px;margin-top:4px}.choose-confirm{margin-top:12px}.gate-hidden .bottom{display:none}
+@media(max-width:620px){.welcome-shell{padding:28px 15px 23px;border-radius:30px}.welcome-logo{font-size:37px}.welcome-characters{min-height:175px;margin-top:19px}.welcome-character img{height:166px}.choose-profile-grid{grid-template-columns:repeat(2,1fr)}.choose-profile{min-height:180px}.choose-profile img{height:132px}}
+@media(max-width:390px){.welcome-shell{padding-top:24px}.welcome-moon{font-size:56px}.welcome-logo{font-size:31px}.welcome-sub{font-size:15px}.welcome-copy{font-size:12px}.welcome-characters{min-height:140px}.welcome-character img{height:138px}.choose-head h1{font-size:24px}.choose-avatar-grid{grid-template-columns:repeat(2,1fr)}.choose-avatar-option{min-height:143px}.choose-avatar-option img{height:110px}}
+
 </style>
 </head>
 <body>
 <div id="toast" class="toast"></div>
 <main class="app">
-<header class="top"><button class="iconbtn" onclick="parentLogin()">⚙️</button><div class="stepdots" id="dots"></div><button class="iconbtn" onclick="showScreen('progress')">⭐</button></header>
+<header class="top" id="appTop"><button class="iconbtn" onclick="parentLogin()">⚙️</button><div class="stepdots" id="dots"></div><button class="iconbtn" onclick="showScreen('progress')">⭐</button></header>
 
-<section id="home" class="screen active">
+<section id="welcome" class="screen active">
+  <div class="welcome-screen"><div class="welcome-shell">
+    <div class="welcome-moon">🌙</div><div class="welcome-logo">ARABIYA</div><div class="welcome-sub">Famille</div>
+    <p class="welcome-copy">Un petit monde pour apprendre l’arabe, relever des défis et grandir un peu chaque jour.</p>
+    <div class="welcome-characters">
+      <div class="welcome-character"><img src="assets/avatars/avatar-1.png" alt="Personnage 1"></div>
+      <div class="welcome-character"><img src="assets/avatars/avatar-2.png" alt="Personnage 2"></div>
+      <div class="welcome-character"><img src="assets/avatars/avatar-3.png" alt="Personnage 3"></div>
+      <div class="welcome-character"><img src="assets/avatars/avatar-4.png" alt="Personnage 4"></div>
+    </div>
+    <div class="welcome-cta"><button class="primary" onclick="showScreen('choose')">Commencer mon aventure ✨</button></div>
+    <div class="welcome-note">Apprendre aujourd’hui · grandir demain</div>
+  </div></div>
+</section>
+
+<section id="choose" class="screen choose-screen">
+  <div class="choose-head"><div class="welcome-logo">ARABIYA</div><h1>Qui joue aujourd’hui ?</h1><p>Choisis ton profil puis ton personnage avant d’entrer dans ton monde.</p></div>
+  <div class="choose-profile-grid" id="chooseProfiles"></div>
+  <div class="choose-avatar-card">
+    <div class="choose-avatar-head"><h2>✨ Choisis ton personnage</h2><span id="chooseAvatarFor">—</span></div>
+    <div class="choose-avatar-grid" id="chooseAvatars"></div>
+    <button class="primary choose-confirm" onclick="enterAdventure()">Entrer dans mon aventure →</button>
+  </div>
+</section>
+
+<section id="home" class="screen">
   <div class="hero">
     <div class="logo">ARABIYA</div>
     <div class="letters"><div class="letter c1">ا</div><div class="letter c2">ب</div><div class="letter c3">ت</div><div class="letter c4">ث</div></div>
@@ -385,11 +433,12 @@ function toast(t){let x=document.getElementById('toast');x.textContent=t;x.class
 function showScreen(id){
  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
  document.querySelectorAll('.nav').forEach(x=>x.classList.remove('on'));
+ const gated=(id==='welcome'||id==='choose');document.body.classList.toggle('gate-hidden',gated);
+ const top=document.getElementById('appTop');if(top)top.style.visibility=gated?'hidden':'visible';
  if(id==='home')document.querySelectorAll('.nav')[0].classList.add('on');
  if(id==='mission')document.querySelectorAll('.nav')[1].classList.add('on');
  if(id==='map')document.querySelectorAll('.nav')[2].classList.add('on');
- window.scrollTo(0,0); render();
- if(id==='trace')initCanvas();
+ window.scrollTo(0,0); render(); if(id==='trace')initCanvas(); if(id==='choose')renderChooser();
 }
 function render(){
  const c=me();
@@ -398,8 +447,20 @@ function render(){
  document.getElementById('xp').textContent=c.xp;document.getElementById('stars').textContent=c.stars;document.getElementById('mastery').textContent=c.mastery+'%';
  document.getElementById('streak').textContent=c.streak;document.getElementById('levelText').textContent='Niveau '+c.level;document.getElementById('badgeCount').textContent=c.badges.length+' gagnés';
  document.getElementById('dots').innerHTML=state.children.map((_,i)=>`<i class="${i===state.selected?'on':''}"></i>`).join('');
- renderParent();renderProgress();renderMap();renderBadges();renderAvatars();
+ renderParent();renderProgress();renderMap();renderBadges();renderAvatars();if(document.getElementById('choose').classList.contains('active'))renderChooser();
 }
+function renderChooser(){
+ const selected=me();
+ document.getElementById('chooseProfiles').innerHTML=state.children.map((c,i)=>{
+  const cfg=c.avatarConfig||{hero:String((i%6)+1)};
+  return `<button class="choose-profile ${i===state.selected?'selected':''}" onclick="choosePlayer(${i})">${avatarHTML(cfg.hero,'')}<strong>${esc(c.name)}</strong><small>Niveau ${c.level} · ${c.xp} XP</small></button>`;
+ }).join('');
+ document.getElementById('chooseAvatarFor').textContent=selected.name;
+ document.getElementById('chooseAvatars').innerHTML=heroAvatars.map(a=>`<button class="choose-avatar-option ${selected.avatarConfig.hero===a.id?'selected':''}" onclick="chooseIntroAvatar('${a.id}')"><img src="${a.src}" alt="${a.name}"><b>${a.name}</b></button>`).join('');
+}
+function choosePlayer(i){state.selected=i;save();renderChooser();}
+function chooseIntroAvatar(id){const cfg=avatarConfig();cfg.hero=id;me().avatarId=id;me().avatar=id;save();renderChooser();toast('Ton personnage est prêt ✨');}
+function enterAdventure(){sessionStorage.setItem('arabiya_started','1');showScreen('home');toast('Bienvenue dans ton monde ✨')}
 function profiles(){
  let h='<div class="kicker">Qui joue aujourd’hui ?</div><h2>Choisis ton profil ✨</h2><p style="color:var(--muted);font-size:12px">Chaque enfant retrouve son propre avatar, ses étoiles et sa progression.</p><div class="profile-grid">';
  state.children.forEach((c,i)=>{
@@ -500,12 +561,12 @@ function avatarConfig(){
  return c.avatarConfig;
 }
 const heroAvatars=[
- {id:'1',name:'Adam',src:'assets/avatars/avatar1.png'},
- {id:'2',name:'Yassine',src:'assets/avatars/avatar2.png'},
- {id:'3',name:'Rayan',src:'assets/avatars/avatar3.png'},
- {id:'4',name:'Inaya',src:'assets/avatars/avatar4.png'},
- {id:'5',name:'Lina',src:'assets/avatars/avatar5.png'},
- {id:'6',name:'Safiya',src:'assets/avatars/avatar6.png'}
+ {id:'1',name:'Adam',src:'assets/avatars/avatar-1.png'},
+ {id:'2',name:'Yassine',src:'assets/avatars/avatar-2.png'},
+ {id:'3',name:'Rayan',src:'assets/avatars/avatar-3.png'},
+ {id:'4',name:'Inaya',src:'assets/avatars/avatar-4.png'},
+ {id:'5',name:'Lina',src:'assets/avatars/avatar-5.png'},
+ {id:'6',name:'Safiya',src:'assets/avatars/avatar-6.png'}
 ];
 function avatarSrc(id){return heroAvatars.find(x=>x.id===String(id))?.src||heroAvatars[0].src}
 function avatarName(id){return heroAvatars.find(x=>x.id===String(id))?.name||'Mon personnage'}
@@ -576,7 +637,7 @@ function addLesson(){
  state.lessons.push(l);state.children[childIndex].lessons.push(l.id);
  state.children[childIndex].level=l.level;
  if(l.review)state.children[childIndex].mistakes.push(...tokens(l.review));
- state.selected=childIndex;save();render();toast('Leçon enregistrée ✨');startDaily()
+ state.selected=childIndex;save();showScreen('welcome');toast('Leçon enregistrée ✨');startDaily()
 }
 function renderParent(){
  document.getElementById('lessonChild').innerHTML=state.children.map((c,i)=>`<option value="${i}" ${i===state.selected?'selected':''}>${esc(c.name)}</option>`).join('');
@@ -881,3 +942,4 @@ body:after{
   .world-card:hover,.banner:hover,.tile:hover,.profile-card:hover,.zone:hover,.avatar-option:hover{transform:translateY(-2px)}
 }
 </style>
+
