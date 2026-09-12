@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b071c"><title>Arabiya Famille — Mon aventure arabe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#090719;--bg2:#120b2b;--panel:#171039;--panel2:#21164a;--gold:#f4ce62;--cream:#fff8ea;--muted:#b9b0cb;--teal:#35a69b;--plum:#824a8b;--coral:#c96755;--blue:#4566a5;--green:#58c194;--red:#df6878;--line:rgba(255,255,255,.1);--shadow:0 20px 50px rgba(0,0,0,.32);--r:24px}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 20% 0%,#25145c 0,transparent 34%),radial-gradient(circle at 90% 20%,#183d55 0,transparent 25%),var(--bg);color:var(--cream);font-family:Nunito,system-ui,sans-serif}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.32;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:72px 72px;z-index:0}.app{position:relative;z-index:1;max-width:1050px;margin:auto;padding-bottom:100px}.top{height:66px;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;position:sticky;top:0;z-index:20;background:linear-gradient(#090719ee,#090719bb,transparent);backdrop-filter:blur(8px)}button{font:inherit;border:0;cursor:pointer}.iconbtn{width:42px;height:42px;border-radius:15px;background:#ffffff10;color:white;border:1px solid var(--line);font-size:18px}.stepdots{display:flex;gap:5px}.dot{width:6px;height:6px;border-radius:50%;background:#ffffff22}.dot.on{background:var(--gold);box-shadow:0 0 9px var(--gold)}.screen{display:none;padding:14px 16px}.screen.active{display:block}.hero{text-align:center;padding:30px 8px 18px}.eyebrow,.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--gold);font-weight:900}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1;margin:10px 0}.hero p{color:var(--muted);max-width:620px;margin:0 auto 22px}.primary,.secondary,.ghost{border-radius:16px;padding:13px 17px;font-weight:900}.primary{background:linear-gradient(135deg,var(--gold),#dca73c);color:#24190a;box-shadow:0 10px 28px #f3cc5520}.secondary{background:var(--panel2);color:var(--cream);border:1px solid var(--line)}.ghost{background:#ffffff08;color:var(--cream);border:1px solid var(--line)}.card{background:linear-gradient(145deg,#171039eF,#120d2beF);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px}.sectionhead h2,.sectionhead h3{margin:0}.profilebar{display:flex;align-items:center;justify-content:space-between;gap:12px}.profile-main{display:flex;align-items:center;gap:9px;background:#ffffff08;color:var(--cream);border:1px solid var(--line);padding:8px 11px;border-radius:16px;font-weight:900}.profile-main img{width:34px;height:34px;border-radius:12px}.streak{color:var(--gold);font-weight:900}.banners{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0}.banner{min-height:140px;border-radius:24px;padding:17px;text-align:left;color:var(--cream);border:1px solid var(--line);position:relative;overflow:hidden}.banner h2{margin:3px 0 5px;font-size:21px}.banner p{color:#e4dff0;font-size:12px;max-width:350px}.banner .art{font-size:36px;float:right}.school{background:linear-gradient(135deg,#3c276d,#172f55)}.ahead{background:linear-gradient(135deg,#164e50,#2d315f)}.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.tile{background:#ffffff08;border:1px solid var(--line);border-radius:18px;padding:15px;color:var(--cream);text-align:left;min-height:95px}.tile .ico{font-size:25px}.tile strong{display:block;margin-top:7px}.tile small{color:var(--muted)}.arabic{font-family:"Noto Naskh Arabic",serif;direction:rtl;unicode-bidi:plaintext;font-feature-settings:"kern" 1,"liga" 1,"calt" 1;text-rendering:optimizeLegibility;line-height:1.55}.challenge{margin-top:14px}.question{font-size:clamp(26px,6vw,42px);text-align:center;margin:22px 0}.question.small{font-size:24px}.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;position:relative;z-index:5}.answer{min-height:68px;background:#ffffff0c;color:var(--cream);border:1px solid var(--line);border-radius:19px;padding:12px;font-size:18px;font-weight:800;touch-action:manipulation;user-select:none;-webkit-tap-highlight-color:transparent}.answer .arabic{font-size:27px}.answer.ok{background:#58c19424;border-color:var(--green);transform:scale(1.02)}.answer.no{background:#df687824;border-color:var(--red)}.feedback{min-height:52px;text-align:center;padding:15px;font-weight:900}.progressbar{height:10px;border-radius:20px;background:#ffffff10;overflow:hidden}.progressbar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:inherit}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:15px}.stat{background:#ffffff08;border:1px solid var(--line);padding:12px;border-radius:17px;text-align:center}.stat b{font-size:22px}.stat span{display:block;color:var(--muted);font-size:11px}.skill{margin:12px 0}.skillrow{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}.reviewitem{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}.reviewitem:last-child{border:0}.zone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.zone{min-height:150px;border-radius:23px;padding:16px;border:1px solid var(--line);background:linear-gradient(145deg,#22194c,#11102d);position:relative}.zone.locked{opacity:.48}.zone .emoji{font-size:34px}.zone h3{margin:8px 0 3px}.zone p{font-size:12px;color:var(--muted)}.tag{display:inline-flex;padding:5px 8px;border-radius:999px;background:#ffffff0b;color:var(--gold);font-size:10px;font-weight:900}.worldmap{background:radial-gradient(circle at 15% 20%,#5d3c93 0,transparent 12%),radial-gradient(circle at 75% 60%,#1f746e 0,transparent 14%),linear-gradient(135deg,#100b27,#191344);min-height:210px;border-radius:26px;padding:15px;position:relative;overflow:hidden}.worldmap:after{content:"✦  ·  ✧   ·  ✦     ·  ✧  ·  ✦";position:absolute;inset:20px;color:#fff7;font-size:20px;line-height:3;pointer-events:none}.path{display:flex;gap:10px;overflow:auto;position:relative;z-index:2;padding:60px 5px 15px}.node{min-width:115px;height:85px;border-radius:22px;background:#ffffff12;border:1px solid var(--line);padding:10px;color:white;text-align:center}.node b{display:block;font-size:26px}.node.done{border-color:var(--gold);box-shadow:0 0 20px #f3cc5520}.node.locked{opacity:.35}.badgegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.badge{padding:15px;border:1px solid var(--line);border-radius:20px;background:#ffffff08;text-align:center}.badge .big{font-size:34px}.badge.locked{opacity:.35;filter:grayscale(1)}.photo-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.photo-thumb{width:75px;height:75px;border-radius:14px;object-fit:cover;border:1px solid var(--line)}.field{margin:11px 0}.field label{display:block;font-size:12px;font-weight:900;color:var(--muted);margin-bottom:5px}.field input,.field textarea,.field select{width:100%;background:#0d0920;color:var(--cream);border:1px solid var(--line);border-radius:14px;padding:12px;font:inherit;outline:none}.field textarea{min-height:100px;resize:vertical}.row{display:flex;gap:8px;flex-wrap:wrap}.weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.day{background:#ffffff07;border:1px solid var(--line);border-radius:17px;padding:10px;min-height:140px}.day strong{display:block;color:var(--gold);font-size:12px}.day h4{margin:7px 0}.day p{font-size:11px;color:var(--muted)}.day.current{border-color:var(--gold)}.childrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.childrow img{width:44px;height:44px;border-radius:14px}.childrow .grow{flex:1}.mini{font-size:11px;color:var(--muted)}.modal{position:fixed;inset:0;background:#0009;display:none;align-items:flex-end;z-index:100}.modal.open{display:flex}.sheet{width:100%;max-width:700px;margin:auto;background:#130d2c;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:20px;max-height:88vh;overflow:auto}.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#fff;color:#18121f;padding:11px 16px;border-radius:999px;font-weight:900;z-index:200;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.choicegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.choice{background:#ffffff08;border:1px solid var(--line);border-radius:17px;padding:10px;color:white;text-align:center}.choice img{width:55px;height:55px;border-radius:16px}
+.visual-review{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:18px;background:#ffffff06}.visual-item{display:grid;grid-template-columns:72px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.visual-item:last-child{border-bottom:0}.visual-item img{width:72px;height:72px;object-fit:cover;border-radius:14px;background:#0b0820}.visual-meta b{display:block}.visual-meta small{color:var(--muted);display:block;margin-top:3px}.visual-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.visual-actions button{padding:7px 9px;border-radius:11px;background:#ffffff0b;color:var(--cream);border:1px solid var(--line);font-weight:800;font-size:11px}.visual-actions .accept{background:#58c19420;border-color:#58c19466}.visual-actions .reject{background:#df687820;border-color:#df687866}.visual-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.visual-crop{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0b0820}.visual-crop img{width:100%;height:100px;object-fit:cover;display:block}.visual-crop span{display:block;padding:6px;font-size:10px;color:var(--muted)}@media(max-width:700px){.visual-item{grid-template-columns:62px 1fr}.visual-item img{width:62px;height:62px}.visual-actions{grid-column:2;justify-content:flex-start}}.empty{padding:18px;color:var(--muted);text-align:center;border:1px dashed var(--line);border-radius:18px}.notice{background:#f3cc5512;border:1px solid #f3cc5530;border-radius:16px;padding:12px;color:#f6e5ae;font-size:12px}.qtext{font-size:19px;line-height:1.55}.footer{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#0b071cf5;border-top:1px solid var(--line);backdrop-filter:blur(12px)}.nav{max-width:700px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px}.nav button{background:none;color:var(--muted);font-size:10px;padding:7px}.nav button b{display:block;font-size:21px}.nav button.on{color:var(--gold)}
+
+/* --- Art direction : le monde magique d'Arabiya --- */
+.world-hero{height:265px;margin:-4px -16px 6px;border-radius:0 0 42px 42px;position:relative;overflow:hidden;background:radial-gradient(circle at 78% 24%,rgba(255,226,132,.18),transparent 10%),radial-gradient(circle at 20% 42%,rgba(93,62,154,.38),transparent 25%),linear-gradient(180deg,#171044 0%,#111331 55%,#10283a 100%);border-bottom:1px solid rgba(255,255,255,.12);box-shadow:inset 0 -40px 70px rgba(3,5,18,.6)}
+.world-hero:before{content:"✦  ·  ✧    · ✦      ·   ✧  ·   ✦     · ✧";position:absolute;inset:18px;color:rgba(255,255,255,.55);font-size:12px;letter-spacing:4px;line-height:3.6;pointer-events:none}
+.world-hero:after{content:"";position:absolute;left:-10%;right:-10%;bottom:-52px;height:110px;background:radial-gradient(ellipse at 50% 0%,#173f48 0 42%,transparent 43%),linear-gradient(180deg,#112f3c,#0a1828);border-radius:50% 50% 0 0/70% 70% 0 0}
+.moon{position:absolute;right:12%;top:30px;width:62px;height:62px;border-radius:50%;font-size:45px;line-height:62px;text-align:center;color:#fff1b0;background:rgba(255,241,176,.07);box-shadow:0 0 35px rgba(244,206,98,.2);z-index:2}
+.cloud{position:absolute;width:150px;height:28px;border-radius:50px;background:rgba(114,91,157,.16);filter:blur(1px)}.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%}.cloud:before{width:55px;height:55px;left:25px;bottom:2px}.cloud:after{width:75px;height:75px;right:20px;bottom:-4px}.c1{left:-20px;top:95px}.c2{right:-50px;top:130px;transform:scale(.75)}
+.mountain{position:absolute;bottom:22px;width:0;height:0;border-left:180px solid transparent;border-right:180px solid transparent;border-bottom:150px solid #171633;z-index:1;filter:drop-shadow(0 -6px 18px rgba(10,5,30,.25))}.m1{left:-110px}.m2{right:-105px;border-bottom-color:#13253b;border-left-width:220px;border-right-width:220px;border-bottom-width:125px}
+.lantern{position:absolute;color:#f4ce62;text-shadow:0 0 14px #f4ce62;z-index:4;font-size:18px;animation:floatLantern 4s ease-in-out infinite}.l1{left:24%;top:72px}.l2{left:58%;top:115px;animation-delay:1s}.l3{left:79%;top:75px;animation-delay:2s}@keyframes floatLantern{50%{transform:translateY(-7px);opacity:.7}}
+.world-title{position:absolute;left:22px;bottom:54px;z-index:5;display:flex;flex-direction:column;align-items:flex-start}.world-title span{font-size:23px}.world-title small{font-size:9px;letter-spacing:.2em;color:#f4ce62;font-weight:900;margin-top:2px}.world-title strong{font-size:20px;margin-top:3px}
+.world-path{position:absolute;z-index:3;bottom:15px;left:30%;right:12%;height:62px;transform:rotate(-7deg);border-top:2px dashed rgba(244,206,98,.45);border-radius:50%}.world-path i{position:absolute;width:14px;height:14px;border-radius:50%;background:#f4ce62;box-shadow:0 0 16px rgba(244,206,98,.55);top:-7px}.world-path i:nth-child(1){left:0}.world-path i:nth-child(2){left:24%}.world-path i:nth-child(3){left:48%}.world-path i:nth-child(4){left:72%}.world-path i:nth-child(5){right:0}
+.choose-world{position:relative;min-height:720px;padding:8px 0 30px;overflow:hidden}.choose-world:before{content:"";position:absolute;left:-18%;right:-18%;bottom:0;height:260px;background:radial-gradient(ellipse at 20% 100%,rgba(58,141,126,.35),transparent 38%),radial-gradient(ellipse at 85% 100%,rgba(86,48,121,.35),transparent 40%);pointer-events:none}
+.choose-landscape{position:absolute;left:-5%;right:-5%;bottom:0;height:330px;z-index:1;pointer-events:none;overflow:hidden;background:linear-gradient(180deg,transparent 0%,rgba(7,12,28,.08) 30%,rgba(8,22,31,.65) 100%)}
+.choose-landscape .hill{position:absolute;bottom:-95px;border-radius:50% 50% 0 0/40% 40% 0 0;filter:blur(.2px)}
+.choose-landscape .hill1{left:-12%;width:62%;height:245px;background:linear-gradient(160deg,#26345a,#101b35)}
+.choose-landscape .hill2{right:-16%;width:68%;height:220px;background:linear-gradient(160deg,#1d3150,#0c1b2c)}
+.choose-landscape .hill3{left:28%;bottom:-120px;width:58%;height:250px;background:linear-gradient(160deg,#17434a,#0d2834);opacity:.96}
+.choose-landscape .pathway{position:absolute;bottom:-35px;left:38%;width:24%;height:235px;background:linear-gradient(90deg,transparent,#c39b5a18 35%,#f0d08a2b 50%,#c39b5a18 65%,transparent);clip-path:polygon(46% 0,55% 0,92% 100%,8% 100%);transform:rotate(2deg)}
+.choose-landscape .river{position:absolute;bottom:-20px;left:58%;width:15%;height:210px;background:linear-gradient(180deg,#2b8f9270,#1b646f99);clip-path:polygon(42% 0,61% 0,72% 27%,48% 50%,78% 100%,24% 100%,48% 51%,30% 27%);filter:blur(1px)}
+.choose-landscape .tree{position:absolute;bottom:74px;width:10px;height:72px;background:#171425;border-radius:6px;z-index:3}.choose-landscape .tree:before,.choose-landscape .tree:after{content:"";position:absolute;background:#173b3d;border-radius:50%;width:58px;height:58px}.choose-landscape .tree:before{left:-24px;top:-38px}.choose-landscape .tree:after{left:-5px;top:-56px;width:46px;height:46px;background:#204a48}.choose-landscape .t1{left:10%;transform:scale(.75)}.choose-landscape .t2{left:82%;transform:scale(.95)}.choose-landscape .lamp{position:absolute;bottom:120px;width:3px;height:64px;background:#29202c;z-index:4}.choose-landscape .lamp:after{content:"✦";position:absolute;left:-8px;top:-17px;color:#f4ce62;font-size:17px;text-shadow:0 0 16px #f4ce62}.choose-landscape .lamp.l1{left:24%}.choose-landscape .lamp.l2{left:70%;bottom:145px}.choose-landscape .tiny-star{position:absolute;color:#f4ce62;opacity:.55;font-size:12px;z-index:3}.choose-landscape .s1{left:14%;top:90px}.choose-landscape .s2{left:48%;top:55px}.choose-landscape .s3{right:18%;top:105px}
+.choose-world .hero,.choose-world .choicegrid{position:relative;z-index:6}
+.choose-world .hero{background:linear-gradient(180deg,rgba(9,7,25,.02),rgba(9,7,25,.18));border-radius:30px}
+.smallmoon{right:10%;top:10px;width:54px;height:54px;font-size:39px;line-height:54px}.stars{position:absolute;left:8%;top:28px;color:rgba(255,255,255,.42);font-size:11px;letter-spacing:3px}.choose-sign{position:absolute;top:34px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.22em;color:#f4ce62;font-weight:900}.choose-world .hero{position:relative;z-index:2;padding-top:75px}.choose-world .hero p{max-width:520px}.choose-world .choicegrid{position:relative;z-index:3;grid-template-columns:repeat(3,1fr);gap:14px}.choose-world .choice{min-height:155px;padding:16px;border-radius:25px;background:linear-gradient(145deg,rgba(35,27,69,.9),rgba(14,14,37,.92));box-shadow:0 18px 35px rgba(0,0,0,.2);transition:transform .2s,border-color .2s,box-shadow .2s}.choose-world .choice:hover{transform:translateY(-5px);border-color:rgba(244,206,98,.55);box-shadow:0 20px 42px rgba(0,0,0,.32),0 0 28px rgba(244,206,98,.08)}.choose-world .choice img{width:auto;height:82px;max-width:88px;object-fit:contain;border-radius:0;display:block;margin:0 auto 5px}.choose-world .choice strong{font-size:16px}.choose-world .choice .mini{font-size:11px}
+.profile-main img{width:auto!important;height:38px!important;max-width:42px!important;object-fit:contain!important;border-radius:0!important}.childrow img{width:auto!important;height:48px!important;max-width:52px!important;object-fit:contain!important;border-radius:0!important}.new-av img{width:auto!important;height:65px!important;max-width:70px!important;object-fit:contain!important;border-radius:0!important}
+.banner{min-height:154px;box-shadow:inset 0 -35px 45px rgba(4,5,20,.18)}.school{background:radial-gradient(circle at 85% 20%,rgba(244,206,98,.16),transparent 18%),linear-gradient(135deg,#4b2e75,#1b3657)}.ahead{background:radial-gradient(circle at 80% 15%,rgba(83,203,183,.18),transparent 18%),linear-gradient(135deg,#174e52,#30366a)}
+.zone{overflow:hidden}.zone:after{content:"✦ · ✧ · ✦";position:absolute;right:10px;bottom:8px;color:rgba(255,255,255,.25);font-size:12px}.zone:nth-child(1){background:linear-gradient(145deg,#3b285f,#171a3b)}.zone:nth-child(2){background:linear-gradient(145deg,#174c50,#172a43)}.zone:nth-child(3){background:linear-gradient(145deg,#4a365c,#25223e)}.zone:nth-child(4){background:linear-gradient(145deg,#57344d,#22203a)}.zone:nth-child(5){background:linear-gradient(145deg,#243d67,#191a3d)}.zone:nth-child(6){background:linear-gradient(145deg,#4a3b6c,#171530)}
+.worldmap{min-height:270px;background:radial-gradient(circle at 12% 22%,rgba(115,69,167,.42),transparent 14%),radial-gradient(circle at 78% 65%,rgba(38,141,132,.3),transparent 16%),linear-gradient(180deg,#141037,#0e162d 65%,#123344);box-shadow:inset 0 -50px 70px rgba(2,5,16,.4)}.worldmap:before{content:"☾";position:absolute;right:25px;top:20px;color:#ffeaa1;font-size:35px;text-shadow:0 0 25px rgba(244,206,98,.25)}.path{padding-top:78px}.node{background:rgba(255,255,255,.07);backdrop-filter:blur(4px)}
+@media(max-width:720px){.choose-world .choicegrid{grid-template-columns:repeat(2,1fr)}.world-hero{height:245px}.world-path{left:34%;right:8%}}
+@media(max-width:720px){.banners{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.zone-grid{grid-template-columns:repeat(2,1fr)}.weekgrid{grid-template-columns:repeat(2,1fr)}.badgegrid{grid-template-columns:repeat(2,1fr)}}
+/* Avatar proportions — preserve the original character ratio, never stretch */
+.profile-main img,.childrow img,.choice img,.new-av img{object-fit:contain;object-position:center bottom;display:block;flex:none;max-width:100%;height:auto;width:auto;background:transparent;}
+.profile-main img{height:34px !important;width:auto !important;aspect-ratio:auto;padding:0;}
+.childrow img{height:44px !important;width:auto !important;aspect-ratio:auto;padding:0;}
+.choice img,.new-av img{height:72px !important;width:auto !important;aspect-ratio:auto;padding:0;}
+.choice,.new-av{min-height:102px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+.new-av{min-height:102px;}
+
+/* V16 — carte d’aventure immersive */
+.adventure-intro{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 4px 14px}.adventure-intro h2{font-size:clamp(28px,5vw,42px);margin:5px 0 4px}.adventure-intro p{margin:0;color:var(--muted);max-width:600px}.level-orb{min-width:92px;height:92px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#fff5bf,#f4ce62 18%,#8f6422 58%,#2a1a42 60%);border:2px solid #f7dc82;box-shadow:0 0 35px #f4ce6240, inset 0 0 20px #fff8}.level-orb span{font-size:11px;font-weight:900;color:#25180b}.level-orb b{font-size:23px}.adventure-map{height:560px;margin:0 -2px 16px;border-radius:34px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.13);background:linear-gradient(180deg,#17104a 0%,#111a43 43%,#0b2634 100%);box-shadow:0 28px 70px rgba(0,0,0,.38)}.adventure-map:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 72% 18%,rgba(244,206,98,.16),transparent 11%),radial-gradient(circle at 15% 50%,rgba(100,63,174,.28),transparent 26%),linear-gradient(0deg,rgba(17,116,105,.18),transparent 45%);pointer-events:none}.moon{position:absolute;right:8%;top:7%;font-size:76px;color:#fff0b7;text-shadow:0 0 35px #f4ce62;transform:rotate(-18deg);z-index:2}.stars{position:absolute;inset:5% 4%;color:#ffffff85;font-size:14px;letter-spacing:4px;line-height:3;opacity:.8;z-index:1;pointer-events:none}.cloud{position:absolute;width:150px;height:42px;border-radius:50px;background:#ffffff08;filter:blur(1px);z-index:1}.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%}.cloud:before{width:70px;height:70px;left:25px;top:-28px}.cloud:after{width:85px;height:85px;right:15px;top:-38px}.c1{left:5%;top:23%;transform:scale(.7)}.c2{right:28%;top:12%;transform:scale(.55)}.mountain{position:absolute;bottom:-1px;width:65%;height:210px;background:linear-gradient(145deg,#1e3150,#111a35);clip-path:polygon(0 100%,34% 36%,52% 67%,69% 22%,100% 100%);opacity:.9;z-index:1}.m1{left:-8%}.m2{right:-18%;transform:scaleX(-1);opacity:.65}.river{position:absolute;left:39%;bottom:-20px;width:26%;height:250px;background:linear-gradient(180deg,transparent,#1d7f7b66 45%,#2a9b9a55);clip-path:polygon(46% 0,61% 0,72% 27%,48% 48%,80% 68%,60% 100%,35% 100%,50% 69%,20% 48%,43% 28%);filter:blur(1px);z-index:1}.journey-line{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}.map-nodes{position:absolute;inset:0;z-index:5}.map-node{position:absolute;transform:translate(-50%,-50%);width:128px;min-height:108px;padding:12px 8px;border-radius:27px;background:linear-gradient(145deg,#22184d,#120d2b);border:2px solid rgba(255,255,255,.12);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 15px 30px #0007;transition:.2s}.map-node.unlocked{border-color:#f4ce625c}.map-node.current{transform:translate(-50%,-50%) scale(1.1);border-color:#f4ce62;box-shadow:0 0 0 7px #f4ce6214,0 0 35px #f4ce6255,0 18px 35px #0008}.map-node.locked{filter:saturate(.5);opacity:.58}.map-node b{font-size:34px;line-height:1}.map-node strong{position:absolute;right:9px;top:8px;width:21px;height:21px;border-radius:50%;background:#ffffff12;font-size:10px;display:grid;place-items:center}.map-node small{font-size:10px;font-weight:900;color:#ddd5e9;margin-top:5px;white-space:nowrap;max-width:112px;overflow:hidden;text-overflow:ellipsis}.map-node em{font-style:normal;font-size:9px;color:#f4ce62;margin-top:4px}.node-glow{position:absolute;inset:-7px;border-radius:30px;box-shadow:0 0 22px #f4ce6230;opacity:0}.map-node.current .node-glow{opacity:1}.map-sign{position:absolute;left:24px;top:20px;z-index:6;background:#100b25cc;border:1px solid #ffffff18;padding:9px 13px;border-radius:999px;font-size:11px;font-weight:900;color:#f4ce62;backdrop-filter:blur(7px)}.map-sign span{color:#eee6f7;margin-left:4px}.world-story{display:flex;align-items:center;gap:14px;padding:15px 17px;margin-bottom:14px;border-radius:23px;background:linear-gradient(135deg,#21164a,#122e3e);border:1px solid #f4ce6230;box-shadow:0 16px 38px #0004}.story-icon{width:56px;height:56px;border-radius:18px;background:#f4ce6215;display:grid;place-items:center;font-size:30px}.world-story h3{margin:3px 0}.world-story p{margin:0;color:var(--muted);font-size:12px}.story-arrow{margin-left:auto;font-size:28px;color:var(--gold)}.zone{display:flex;align-items:center;gap:14px;min-height:116px}.zone .emoji{width:54px;height:54px;flex:0 0 54px;display:grid;place-items:center;border-radius:18px;background:#ffffff08}.zone-copy{flex:1}.zone-copy h3{margin:7px 0 2px}.zone-copy p{margin:0}.zone-arrow{font-size:25px;color:var(--gold)}.active-zone{border-color:#f4ce6245!important;background:linear-gradient(145deg,#2b1e57,#141232)!important}.zone-grid{grid-template-columns:repeat(2,1fr)}
+@media(max-width:720px){.adventure-intro{align-items:flex-start}.level-orb{min-width:72px;height:72px}.level-orb span{font-size:9px}.adventure-map{height:520px;border-radius:27px}.map-node{width:102px;min-height:88px;padding:9px 5px}.map-node b{font-size:28px}.map-node small{font-size:9px;max-width:90px}.map-node.current{transform:translate(-50%,-50%) scale(1.04)}.journey-line{inset:10px 0;width:100%;height:96%}.zone-grid{grid-template-columns:1fr}.moon{font-size:58px}.map-sign{left:13px;top:13px;font-size:9px}.world-story{padding:13px}.story-icon{width:48px;height:48px}.adventure-map .mountain{height:160px}}
+
+/* V17 — direction artistique inspirée de la maquette : monde illustré, chaleureux et immersif */
+:root{--gold:#f7d36a;--gold2:#ffb83e;--night:#09071d;--violet:#24104e;--violet2:#3a1763;--ink:#0a0920}
+body{background:#080719;overflow-x:hidden}
+body:before{opacity:.22;background-size:88px 88px}
+.app{max-width:1180px}
+.top{height:64px;background:linear-gradient(#080619dd,#08061966,transparent);border:0}
+.screen{padding:10px 18px 18px}
+.hero h1{font-family:Nunito,sans-serif;font-weight:900;letter-spacing:-.03em}
+.primary{background:linear-gradient(180deg,#ffd968,#eeb23f);border:1px solid #fff1ae;color:#2b1a06;box-shadow:0 8px 0 #b87a25,0 16px 35px #f6ca5530}
+
+/* Welcome = couverture illustrée */
+#welcome{padding:0 18px 40px;min-height:calc(100vh - 70px);display:none;align-items:center}
+#welcome.active{display:block}
+#welcome .hero{position:relative;min-height:680px;margin:0 -18px;padding:90px 22px 330px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;background:linear-gradient(180deg,#15103c 0%,#28134f 45%,#70365f 68%,#151333 100%)}
+#welcome .hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 76% 16%,#ffe49a 0 3%,transparent 4%),radial-gradient(circle at 76% 16%,#ffe6a733 0 13%,transparent 14%),radial-gradient(circle at 12% 26%,#fff 0 1px,transparent 2px),radial-gradient(circle at 24% 14%,#fff 0 1px,transparent 2px),radial-gradient(circle at 43% 22%,#fff 0 1px,transparent 2px),radial-gradient(circle at 62% 9%,#fff 0 1px,transparent 2px),radial-gradient(circle at 87% 31%,#fff 0 1px,transparent 2px),linear-gradient(180deg,transparent 48%,#0d1027 80%);opacity:.9}
+#welcome .hero:after{content:"";position:absolute;left:-5%;right:-5%;bottom:0;height:48%;background:linear-gradient(180deg,#202653,#0c1124 55%,#09091c);clip-path:polygon(0 52%,8% 43%,14% 54%,22% 35%,31% 53%,40% 31%,48% 48%,58% 27%,67% 47%,76% 34%,85% 51%,94% 39%,100% 51%,100% 100%,0 100%);box-shadow:0 -20px 50px #151b4a}
+#welcome .hero>*{position:relative;z-index:4}
+#welcome .kicker{margin-top:18px;color:#ffe17c;letter-spacing:.22em}
+#welcome .hero h1{font-family:Georgia,serif;font-size:clamp(54px,8vw,90px);color:#ffe59a;text-shadow:0 4px 20px #ffcb5545;margin:12px 0 4px}
+#welcome .hero h1:after{content:"✦";display:block;font-family:Nunito;font-size:18px;letter-spacing:18px;margin-top:8px}
+#welcome .hero p{font-size:18px;color:#fff4dd;max-width:420px}
+#welcome .primary{min-width:220px;margin-top:10px}
+#welcome>.card{display:none}
+
+/* Choix des profils : cartes lumineuses sur un paysage */
+#choose{padding-top:0}
+.choose-world{position:relative;min-height:calc(100vh - 92px);padding:28px 18px 70px;border-radius:34px;overflow:hidden;background:linear-gradient(180deg,#0c1230 0%,#1a1547 45%,#3c2255 67%,#11152c 100%);border:1px solid #ffffff18;box-shadow:0 25px 70px #0008}
+.choose-world:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 74% 13%,#ffe49a 0 3%,transparent 4%),radial-gradient(circle at 74% 13%,#ffd86b24 0 11%,transparent 12%),radial-gradient(circle at 18% 15%,#fff 0 1px,transparent 2px),radial-gradient(circle at 32% 8%,#fff 0 1px,transparent 2px),radial-gradient(circle at 56% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 90% 22%,#fff 0 1px,transparent 2px);opacity:.8}
+.choose-landscape{position:absolute;inset:auto 0 0;height:58%;overflow:hidden;background:linear-gradient(180deg,transparent,#1b2144 15%,#0a1222 100%);z-index:0}
+.choose-landscape:before{content:"";position:absolute;left:-5%;right:-5%;bottom:10%;height:70%;background:linear-gradient(160deg,#273a55,#13253b 55%,#0a1425);clip-path:polygon(0 64%,12% 42%,22% 59%,33% 30%,44% 58%,55% 38%,67% 57%,79% 28%,90% 54%,100% 40%,100% 100%,0 100%)}
+.choose-landscape:after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:radial-gradient(ellipse at 52% 10%,#2b9e9b80 0 7%,transparent 8%),linear-gradient(180deg,#0c4a4c,#071525 72%);clip-path:polygon(39% 0,58% 0,64% 35%,77% 55%,100% 100%,0 100%,23% 55%,36% 34%)}
+.choose-sign{position:relative;z-index:3;width:max-content;margin:auto;background:#120c2bc9;border:1px solid #f7d36a55;border-radius:999px;padding:8px 15px;color:#f7d36a;font-weight:900;letter-spacing:.12em;font-size:10px}
+.choose-world>.hero{position:relative;z-index:4;padding:36px 8px 18px}.choose-world>.hero h1{margin-bottom:8px;color:#fff9ee}.choose-world>.hero p{color:#ded4e9}
+#chooseProfiles{position:relative;z-index:5;max-width:900px;margin:auto;grid-template-columns:repeat(3,1fr);gap:14px}
+#chooseProfiles .choice{min-height:180px;border-radius:25px;padding:15px 12px;background:linear-gradient(145deg,#21164edb,#100d28e8);border:1px solid #ffffff20;box-shadow:0 16px 30px #0006;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:.2s}
+#chooseProfiles .choice:hover{transform:translateY(-5px);border-color:#f7d36a88;box-shadow:0 20px 40px #0008,0 0 30px #f7d36a18}
+#chooseProfiles .choice img{height:92px!important;width:auto!important;max-width:86px!important;object-fit:contain!important;border-radius:0!important;filter:drop-shadow(0 10px 8px #0008)}
+#chooseProfiles .choice b{font-size:17px;margin-top:4px}.choice .mini{margin-top:3px}
+
+/* Accueil : paysage en haut + panneaux façon maquette */
+#home .world-hero{height:360px;margin:-10px -18px 0;border-radius:0 0 42px 42px;background:linear-gradient(180deg,#101032 0%,#1b1550 42%,#62325f 68%,#0b1525 100%);box-shadow:inset 0 -60px 80px #0008;overflow:hidden}
+#home .world-hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 79% 17%,#ffe49a 0 3%,transparent 4%),radial-gradient(circle at 79% 17%,#ffe49a22 0 13%,transparent 14%),radial-gradient(circle at 15% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 27% 31%,#fff 0 1px,transparent 2px),radial-gradient(circle at 45% 13%,#fff 0 1px,transparent 2px),radial-gradient(circle at 65% 25%,#fff 0 1px,transparent 2px),linear-gradient(180deg,transparent 48%,#14132d 100%)}
+#home .world-hero:after{content:"";position:absolute;left:-5%;right:-5%;bottom:-2px;height:48%;background:linear-gradient(180deg,#3a3656,#101629);clip-path:polygon(0 62%,8% 40%,15% 55%,24% 32%,34% 59%,44% 37%,54% 58%,65% 30%,74% 55%,84% 38%,93% 56%,100% 42%,100% 100%,0 100%)}
+#home .world-title{position:relative;z-index:5;text-align:center;padding-top:85px;display:flex;flex-direction:column;align-items:center}.world-title small{letter-spacing:.2em;color:#f7d36a;font-weight:900}.world-title strong{font-family:Georgia,serif;font-size:34px;margin-top:8px}.world-title span{font-size:20px;color:#ffd96c}
+#home .world-path{position:absolute;z-index:4;left:0;right:0;bottom:0;height:120px;background:radial-gradient(ellipse at 50% 100%,#1d7978 0 17%,transparent 18%);opacity:.65}
+#home .profilebar{margin:-24px 8px 0;position:relative;z-index:8;padding:10px 12px;border:1px solid #ffffff1a;border-radius:22px;background:#100c28df;box-shadow:0 12px 30px #0007}
+#home .hero{padding-top:24px}.banners{grid-template-columns:repeat(2,1fr)}
+#home .banner{min-height:145px;border-radius:26px;box-shadow:0 15px 32px #0004}.school{background:linear-gradient(135deg,#3d286c,#1b3154)}.ahead{background:linear-gradient(135deg,#174f51,#28305f)}
+#home .tile{background:linear-gradient(145deg,#19113d,#100c29);border-radius:22px}
+
+/* Carte d'aventure = paysage plein écran, noeuds comme lieux */
+.adventure-map{height:590px!important;border-radius:34px!important;background:linear-gradient(180deg,#101335 0%,#18305a 35%,#2f5b62 61%,#102136 100%)!important;box-shadow:0 25px 55px #0008;overflow:hidden!important}
+.adventure-map:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 13%,#ffe49a 0 3%,transparent 4%),radial-gradient(circle at 82% 13%,#ffd86b22 0 12%,transparent 13%),radial-gradient(circle at 16% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 29% 10%,#fff 0 1px,transparent 2px),radial-gradient(circle at 47% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 66% 8%,#fff 0 1px,transparent 2px),radial-gradient(circle at 92% 27%,#fff 0 1px,transparent 2px)}
+.adventure-map:after{content:"";position:absolute;left:-8%;right:-8%;bottom:-5%;height:62%;background:linear-gradient(180deg,#315d58,#173b3b 55%,#091727);clip-path:polygon(0 57%,10% 38%,18% 50%,27% 29%,37% 55%,47% 36%,57% 56%,67% 28%,78% 51%,89% 35%,100% 48%,100% 100%,0 100%);opacity:.95}
+.adventure-map .mountain{z-index:1;opacity:.8;bottom:13%;filter:saturate(.9)}
+.adventure-map .river{z-index:2;opacity:.9;bottom:-5%;height:430px;width:34%;left:34%}
+.adventure-map .journey-line{z-index:4}
+.map-nodes{z-index:8!important}
+.map-node{background:linear-gradient(145deg,#2d1a57ee,#120e2cf0)!important;border:2px solid #ffffff20!important;box-shadow:0 18px 35px #0009!important}
+.map-node.current{border-color:#f7d36a!important;box-shadow:0 0 0 8px #f7d36a12,0 0 45px #f7d36a44,0 18px 40px #0009!important}
+.map-node b{filter:drop-shadow(0 4px 5px #0008)}
+.world-story{background:linear-gradient(135deg,#24164f,#123b46)!important;border-color:#f7d36a35!important}
+
+/* Écrans de jeu : illustration latérale */
+#mission .card:first-child{background:linear-gradient(135deg,#21144a,#101d3b);border-color:#f7d36a28}
+#mission #challenge .card{background:radial-gradient(circle at 50% 30%,#3b225b,#140d30 58%,#0d0b23);min-height:460px;display:flex;flex-direction:column;justify-content:center}
+.question.arabic{font-size:clamp(48px,8vw,76px);color:#ffe89b;text-shadow:0 4px 15px #0007}
+.answer{background:#1c153cf0;border-color:#ffffff22;min-height:76px}.answer:hover{border-color:#f7d36a88;transform:translateY(-2px)}
+#games .tile{min-height:145px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(145deg,#24164d,#12102f)}
+#games .ico{font-size:38px}
+
+/* Stories / parent panels gardent la même matière visuelle */
+.card{background:linear-gradient(145deg,#1a123beF,#0f0c27ef);border-color:#ffffff14}
+.footer{background:linear-gradient(180deg,#100c2af7,#080719fa);border-top-color:#f7d36a22}.nav button.on{color:#ffe07b;text-shadow:0 0 15px #f7d36a55}
+
+@media(max-width:720px){
+ #welcome .hero{min-height:610px;padding-top:65px;padding-bottom:280px}
+ #welcome .hero h1{font-size:54px}
+ #chooseProfiles{grid-template-columns:repeat(2,1fr);gap:10px}
+ #chooseProfiles .choice{min-height:155px}.choose-landscape{height:52%}
+ #home .world-hero{height:300px}.world-title strong{font-size:27px}
+ .banners{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,1fr)}
+ .adventure-map{height:540px!important}.map-node{width:108px;min-height:92px}.map-node small{font-size:9px;max-width:92px}
+}
+</style></head><body><div class="app">
+<header class="top"><button class="iconbtn" id="parentBtn">⚙️</button><div class="stepdots" id="dots"></div><button class="iconbtn" id="progressBtn">⭐</button></header>
+<main>
+<section id="welcome" class="screen active"><div class="hero"><div class="kicker">ARABIYA FAMILLE</div><h1>✨ Mon aventure arabe</h1><p>Un petit monde à toi pour apprendre, réviser et prendre de l’avance — à ton rythme.</p><button class="primary" id="startBtn">Entrer dans mon monde →</button></div><div class="card"><div class="sectionhead"><h3>Une aventure pour chaque enfant</h3><span>🌙</span></div><p class="mini">Chaque profil possède son niveau, ses erreurs, ses récompenses et son parcours.</p></div></section>
+<section id="choose" class="screen"><div class="choose-world"><div class="moon smallmoon">☾</div><div class="stars">✦　·　✧　·　✦　·　✧　·　✦</div><div class="choose-sign">🌙 ARABIYA</div><div class="choose-landscape"><div class="hill hill1"></div><div class="hill hill2"></div><div class="hill hill3"></div><div class="river"></div><div class="pathway"></div><div class="tree t1"></div><div class="tree t2"></div><div class="lamp l1"></div><div class="lamp l2"></div><span class="tiny-star s1">✦</span><span class="tiny-star s2">✧</span><span class="tiny-star s3">✦</span></div><div class="hero"><div class="kicker">QUI JOUE AUJOURD’HUI ?</div><h1>Choisis ton aventure</h1><p>Chaque enfant possède son propre chemin, ses découvertes et ses trésors.</p></div><div id="chooseProfiles" class="choicegrid"></div></div></section>
+<section id="home" class="screen"><div class="world-hero"><div class="moon">☾</div><div class="cloud c1"></div><div class="cloud c2"></div><div class="mountain m1"></div><div class="mountain m2"></div><div class="lantern l1">✦</div><div class="lantern l2">✦</div><div class="lantern l3">✦</div><div class="world-title"><span>🌙</span><small>MON PETIT MONDE</small><strong id="worldWelcome">Bienvenue dans ton aventure</strong></div><div class="world-path"><i></i><i></i><i></i><i></i><i></i></div></div><div class="profilebar"><button class="profile-main" id="profileBtn"></button><span class="streak">🔥 <span id="streak">0</span> j</span></div><div class="hero" style="padding-top:22px"><div class="kicker">BIENVENUE</div><h1 id="hello">Bonjour ✨</h1><p id="homeSub">Prêt pour ta mission ?</p></div><div class="banners"><button class="banner school" id="dailyBtn"><div class="art">🎒</div><div class="kicker">MON ÉCOLE</div><h2>Défi du jour</h2><p>5 jeux construits à partir de tes leçons et de tes erreurs.</p></button><button class="banner ahead" id="aheadBtn"><div class="art">🚀</div><div class="kicker">JE M’AVANCE</div><h2>Découvrir la suite</h2><p>Explore la prochaine compétence adaptée à ton niveau.</p></button></div><div class="card"><div class="sectionhead"><h3>🗓️ Ma semaine</h3><button class="ghost" id="weekBtn">Voir</button></div><div id="weekSummary" class="mini" style="margin-top:8px"></div></div><div class="tiles"><button class="tile" data-go="map"><div class="ico">🗺️</div><strong>Mon aventure</strong><small>Débloque les mondes</small></button><button class="tile" data-go="progress"><div class="ico">📈</div><strong>Ma progression</strong><small>Compétences & erreurs</small></button><button class="tile" data-go="badges"><div class="ico">🏆</div><strong>Ma collection</strong><small id="badgeCount">0 badges</small></button><button class="tile" data-go="games"><div class="ico">🎮</div><strong>Mes jeux</strong><small>Vocabulaire & lecture</small></button></div></section>
+<section id="mission" class="screen"><div class="card"><div class="sectionhead"><div><div class="kicker">MISSION</div><h2 id="missionTitle">À toi de jouer !</h2></div><span id="missionCount">1/5</span></div><div class="progressbar" style="margin-top:12px"><i id="missionProgress" style="width:0%"></i></div></div><div id="challenge" class="challenge"></div></section>
+<section id="games" class="screen"><div class="card"><div class="kicker">ARÈNE DES JEUX</div><h2>Choisis ton jeu 🎮</h2><p class="mini">Les jeux s’adaptent au niveau de l’enfant.</p><div class="tiles" style="margin-top:14px"><button class="tile" data-game="vocab"><div class="ico">🧩</div><strong>Vocabulaire</strong><small>Associer, mémoriser, écouter</small></button><button class="tile" data-game="listen"><div class="ico">🔊</div><strong>Écoute</strong><small>Entendre puis choisir</small></button><button class="tile" data-game="reading"><div class="ico">📖</div><strong>Lecture</strong><small>Lire des mots et phrases</small></button><button class="tile" data-game="understanding"><div class="ico">💬</div><strong>Compréhension</strong><small>Comprendre une phrase</small></button></div></div></section>
+<section id="map" class="screen"><div class="adventure-intro"><div><div class="kicker">🌙 TON VOYAGE</div><h2>Le monde d’Arabiya</h2><p>Avance de monde en monde, découvre de nouveaux pouvoirs et ouvre les portes de la lecture.</p></div><div class="level-orb"><span id="mapLevel">Niveau 1/6</span><b>✨</b></div></div><div class="adventure-map" id="adventureMap"><div class="moon">☾</div><div class="cloud c1"></div><div class="cloud c2"></div><div class="mountain m1"></div><div class="mountain m2"></div><div class="river"></div><div class="stars">✦　·　✧　·　✦　　·　✧　·　✦　·　✧　·　✦</div><svg class="journey-line" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true"><path d="M90 470 C180 405 155 325 270 300 C390 274 340 185 475 170 C605 155 570 315 700 320 C825 326 760 420 915 385" fill="none" stroke="rgba(244,206,98,.25)" stroke-width="18" stroke-linecap="round"/><path d="M90 470 C180 405 155 325 270 300 C390 274 340 185 475 170 C605 155 570 315 700 320 C825 326 760 420 915 385" fill="none" stroke="#f4ce62" stroke-width="3" stroke-dasharray="9 13" stroke-linecap="round"/></svg><div class="map-nodes" id="worldPath"></div><div class="map-sign">🧭 <span>Ton chemin d’aventure</span></div></div><div class="world-story" id="worldStory"></div><div class="zone-grid" id="worldZones"></div></section>
+<section id="week" class="screen"><div class="card"><div class="sectionhead"><div><div class="kicker">MON ÉCOLE</div><h2>Ma semaine</h2></div><button class="secondary" id="backHome1">Accueil</button></div><div id="weekTrack" class="weekgrid" style="margin-top:14px"></div></div><div class="card"><div class="sectionhead"><h3>🚀 Je m’avance</h3><span class="tag">indépendant</span></div><div id="aheadPlan" style="margin-top:10px"></div></div></section>
+<section id="progress" class="screen"><div class="card"><div class="kicker">MON PROFIL</div><h2 id="progressName">—</h2><div class="stats"><div class="stat"><b id="xp">0</b><span>XP</span></div><div class="stat"><b id="mastery">0%</b><span>Maîtrise</span></div><div class="stat"><b id="stars">0</b><span>Étoiles</span></div><div class="stat"><b id="level">1</b><span>Niveau</span></div></div></div><div class="card"><div class="sectionhead"><h3>🌱 Mes compétences</h3><span id="skillOverall"></span></div><div id="skills"></div></div><div class="card"><h3>⚠️ À revoir en priorité</h3><div id="review"></div></div></section>
+<section id="badges" class="screen"><div class="card"><div class="kicker">COLLECTION</div><h2>Mes récompenses 🏆</h2><div id="badgesGrid" class="badgegrid"></div></div></section>
+<section id="parent" class="screen"><div class="card"><div class="sectionhead"><div><div class="kicker">ESPACE PARENT</div><h2>Construire la semaine</h2></div><button class="ghost" id="closeParent">Fermer</button></div><div class="notice">📸 Tu peux importer une ou plusieurs photos du cours. Le texte extrait sert de base : vérifie-le avant de créer les missions. Les photos restent sur cet appareil.</div><div class="field"><label>Enfant</label><select id="lessonChild"></select></div><div class="field"><label>Semaine du</label><input id="weekDate" type="date"></div><div class="field"><label>Type</label><select id="lessonType"><option value="letters">Lettres</option><option value="harakat">Harakāt</option><option value="syllables">Syllabes</option><option value="vocab">Vocabulaire</option><option value="reading">Lecture</option><option value="quran">Coran — contenu exact à fournir</option><option value="tajwid">Tajwid</option></select></div><div class="field"><label>Contenu du cours</label><textarea id="lessonContent" placeholder="Ex : ب ت ث — بَ تَ ثَ — بَيْتٌ — هَذَا بَيْتٌ"></textarea></div><div class="field"><label>Photos du cours</label><input id="lessonPhotos" type="file" accept="image/*" multiple><div id="photoPreview" class="photo-preview"></div><div id="ocrStatus" class="mini"></div><div id="visualReview" class="visual-review" style="display:none"></div></div><div class="row"><button class="secondary" id="ocrBtn">🔎 Lire les photos</button><button class="primary" id="createWeekBtn">✨ Créer les missions de la semaine</button></div></div><div class="card"><div class="sectionhead"><h3>👧 Mes enfants</h3><span id="childrenCount"></span></div><div id="parentChildren"></div><div class="field"><label>Ajouter un enfant</label><input id="newChildName" placeholder="Prénom"></div><div class="field"><label>Niveau de départ</label><select id="newChildLevel"><option value="1">1 · Alphabet</option><option value="2">2 · Harakāt</option><option value="3">3 · Syllabes</option><option value="4">4 · Mots</option><option value="5">5 · Phrases</option><option value="6">6 · Lecture avancée</option></select></div><div class="field"><label>Avatar</label><div id="newAvatarGrid" class="choicegrid"></div></div><button class="primary" id="addChildBtn">Créer le profil</button></div><div class="card"><h3>📚 Leçons enregistrées</h3><div id="lessonList"></div></div><div class="card"><h3>🔐 Réglages parent</h3><div class="field"><label>Nouveau PIN</label><input id="newPin" inputmode="numeric" type="password" placeholder="4 à 6 chiffres"></div><button class="secondary" id="pinBtn">Modifier le PIN</button></div></section>
+</main></div><footer class="footer"><nav class="nav"><button data-nav="home"><b>🏠</b>Accueil</button><button data-nav="week"><b>🗓️</b>Semaine</button><button data-nav="games"><b>🎮</b>Jeux</button><button data-nav="map"><b>🗺️</b>Aventure</button><button data-nav="progress"><b>📈</b>Progrès</button></nav></footer><div id="toast" class="toast"></div><div id="modal" class="modal"><div class="sheet" id="sheet"></div></div>
+<script>
+const STORE='arabiya_family_v14';
+const DAYS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const LEVELS={1:'Alphabet',2:'Harakāt',3:'Syllabes',4:'Mots',5:'Phrases',6:'Lecture avancée'};
+const SKILLS=['lettres','harakat','syllabes','vocabulaire','lecture','comprehension'];
+const LETTERS=['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
+const HARAKAT=[['َ','a'],['ِ','i'],['ُ','u'],['ْ','sukūn'],['ّ','shadda'],['ً','an'],['ٍ','in'],['ٌ','un']];
+const VOCAB=[
+{id:'house',ar:'بَيْتٌ',fr:'maison',image:'🏠'},
+{id:'book',ar:'كِتَابٌ',fr:'livre',image:'📕'},
+{id:'pen',ar:'قَلَمٌ',fr:'stylo',image:'✏️'},
+{id:'school',ar:'مَدْرَسَةٌ',fr:'école',image:'🏫'},
+{id:'door',ar:'بَابٌ',fr:'porte',image:'🚪'},
+{id:'water',ar:'مَاءٌ',fr:'eau',image:'💧'},
+{id:'tree',ar:'شَجَرَةٌ',fr:'arbre',image:'🌳'},
+{id:'chair',ar:'كُرْسِيٌّ',fr:'chaise',image:'🪑'},
+{id:'boy',ar:'وَلَدٌ',fr:'garçon',image:'👦'},
+{id:'girl',ar:'بِنْتٌ',fr:'fille',image:'👧'},
+{id:'mother',ar:'أُمٌّ',fr:'maman',image:'👩'},
+{id:'father',ar:'أَبٌ',fr:'papa',image:'👨'},
+{id:'bamboo',ar:'بَامْبُو',fr:'bambou',image:'🎋'}
+];
+const PHRASES={1:[['هَذَا بَيْتٌ','Que signifie cette phrase ?',['Ceci est une maison','Ceci est une école','Ceci est un livre'],0]],2:[['هَذَا كِتَابٌ','Que signifie cette phrase ?',['Ceci est un livre','Ceci est une porte','Ceci est une chaise'],0]],3:[['هَذَا بَيْتِي','Que signifie cette phrase ?',['Ceci est ma maison','Ceci est sa maison à lui','Ceci est sa maison à elle'],0]],4:[['أَنَا أَقْرَأُ كِتَابًا','Que fait l’enfant ?',['Il lit un livre','Il ouvre une porte','Il boit de l’eau'],0]],5:[['ذَهَبَ أَحْمَدُ إِلَى الْمَدْرَسَةِ','Où est allé Ahmad ?',['À l’école','À la maison','Au marché'],0]],6:[['ذَهَبَتْ فَاطِمَةُ إِلَى الْمَدْرَسَةِ وَقَرَأَتْ كِتَابًا','Qu’a fait Fatima après être allée à l’école ?',['Elle a lu un livre','Elle a bu de l’eau','Elle a joué'],0]]};
+const BADGES=[['🌟','Premier pas',c=>c.xp>=20],['🔥','Série de 3 jours',c=>c.streak>=3],['🧩','10 mots',c=>c.stats.vocabulaire>=10],['📖','Première phrase',c=>c.stats.comprehension>=3],['🎧','Oreille magique',c=>c.stats.ecoute>=10],['🏆','Maîtrise',c=>mastery(c)>=80]];
+const ZONES=[['🌿','La clairière des lettres',1,'Reconnaître et nommer les lettres'],['🌸','Le jardin des sons',2,'Harakāt et écoute'],['🌉','Le chemin des syllabes',3,'Lire de petites syllabes'],['🏡','Le village des mots',4,'Vocabulaire et mots'],['📚','La grande bibliothèque',5,'Phrases et lecture'],['🌌','La montagne de la compréhension',6,'Comprendre des phrases']];
+let state=load(); let mode='daily', queue=[], qi=0, selectedGame=null, photoFiles=[];
+function defaults(){return {pin:'1234',selected:0,children:[makeChild('Enfant 1',1,0),makeChild('Enfant 2',1,1),makeChild('Enfant 3',1,2),makeChild('Enfant 4',1,3)],lessons:[],weekly:{},photos:{}}}
+function makeChild(name,level,avatar){return {name,level,avatar, xp:0,stars:0,streak:0,lastDay:'',stats:{lettres:0,harakat:0,syllabes:0,vocabulaire:0,lecture:0,comprehension:0,ecoute:0},attempts:{},mistakes:{},badges:[],aheadUnlocked:level,profileReady:false}}
+function load(){try{let s=JSON.parse(localStorage.getItem(STORE));if(s&&s.children)return s}catch(e){}return defaults()}
+function save(){localStorage.setItem(STORE,JSON.stringify(state))} function me(){return state.children[state.selected]}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function todayKey(d=new Date()){return d.toISOString().slice(0,10)} function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1800)}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.nav===id));render();window.scrollTo({top:0,behavior:'smooth'})}
+function mastery(c){let vals=SKILLS.map(k=>Math.min(100,(c.stats[k]||0)*10));return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)}
+function updateDots(){document.getElementById('dots').innerHTML=Array.from({length:6},(_,i)=>`<i class="dot ${i<me().level?'on':''}"></i>`).join('')}
+function render(){updateDots();renderChooser();renderHome();renderProgress();renderMap();renderBadges();renderParent();renderWeek();}
+function renderChooser(){document.getElementById('chooseProfiles').innerHTML=state.children.map((c,i)=>`<button class="choice" data-child="${i}"><img src="avatar-${c.avatar+1}.png"><b>${esc(c.name)}</b><div class="mini">Niveau ${c.level} · ${mastery(c)}%</div></button>`).join('')}
+function renderHome(){const c=me();document.getElementById('profileBtn').innerHTML=`<img src="avatar-${c.avatar+1}.png"><span>${esc(c.name)}</span> ✏️`;document.getElementById('hello').textContent=`Bonjour ${c.name} ✨`;document.getElementById('worldWelcome').textContent=`Bienvenue, ${c.name}`;document.getElementById('streak').textContent=c.streak;document.getElementById('badgeCount').textContent=`${c.badges.length} badge(s)`;const w=state.weekly[state.selected];document.getElementById('weekSummary').textContent=w?`${w.title} · ${w.days.filter(x=>x.school.length).length} jours préparés`:'Aucune semaine préparée pour le moment.'}
+function renderProgress(){const c=me();document.getElementById('progressName').textContent=c.name;document.getElementById('xp').textContent=c.xp;document.getElementById('stars').textContent=c.stars;document.getElementById('mastery').textContent=mastery(c)+'%';document.getElementById('level').textContent=c.level;document.getElementById('skillOverall').textContent=mastery(c)+'%';document.getElementById('skills').innerHTML=SKILLS.map(k=>{let v=Math.min(100,(c.stats[k]||0)*10);return `<div class="skill"><div class="skillrow"><span>${labelSkill(k)}</span><b>${v}%</b></div><div class="progressbar"><i style="width:${v}%"></i></div></div>`}).join('');let m=Object.entries(c.mistakes).sort((a,b)=>b[1]-a[1]).slice(0,6);document.getElementById('review').innerHTML=m.length?m.map(([k,v])=>`<div class="reviewitem"><span><span class="arabic">${esc(k)}</span><br><span class="mini">${v} erreur(s)</span></span><button class="ghost review-now" data-term="${encodeURIComponent(k)}">Revoir</button></div>`).join(''):`<div class="empty">Aucune erreur à revoir. Continue comme ça 🌟</div>`}
+function labelSkill(k){return ({lettres:'Lettres',harakat:'Harakāt',syllabes:'Syllabes',vocabulaire:'Vocabulaire',lecture:'Lecture',comprehension:'Compréhension',ecoute:'Écoute'})[k]||k}
+function renderMap(){const c=me();const positions=[['10%','72%'],['28%','45%'],['46%','25%'],['70%','52%'],['91%','67%'],['78%','22%']];document.getElementById('mapLevel').textContent=`Niveau ${c.level}/6`;document.getElementById('worldPath').innerHTML=ZONES.map((z,i)=>{let unlocked=i+1<=c.level, current=i+1===c.level;return `<button class="map-node ${unlocked?'unlocked':''} ${current?'current':''} ${!unlocked?'locked':''}" style="left:${positions[i][0]};top:${positions[i][1]}" data-zone="${i}"><span class="node-glow"></span><b>${z[0]}</b><strong>${i+1}</strong><small>${z[1].replace(/^La |Le |L’|L'/,'')}</small>${current?'<em>Tu es ici ✨</em>':''}</button>`}).join('');let z=ZONES[Math.max(0,c.level-1)];document.getElementById('worldStory').innerHTML=`<div class="story-icon">${z[0]}</div><div><div class="kicker">🌟 MONDE ACTUEL</div><h3>${z[1]}</h3><p>${z[3]}</p></div><span class="story-arrow">→</span>`;document.getElementById('worldZones').innerHTML=ZONES.map((z,i)=>`<div class="zone ${i+1>c.level?'locked':''} ${i+1===c.level?'active-zone':''}"><div class="emoji">${z[0]}</div><div class="zone-copy"><span class="tag">${i+1<=c.level?(i+1===c.level?'✨ En cours':'✓ Débloqué'):'🔒 À découvrir'}</span><h3>${z[1]}</h3><p>${z[3]}</p></div><div class="zone-arrow">${i+1<=c.level?'›':'🔒'}</div></div>`).join('')}
+function renderBadges(){const c=me();document.getElementById('badgesGrid').innerHTML=BADGES.map(([ico,n,fn],i)=>`<div class="badge ${fn(c)?'':'locked'}"><div class="big">${ico}</div><b>${n}</b><div class="mini">${fn(c)?'Obtenu ✨':'À débloquer'}</div></div>`).join('')}
+function renderWeek(){const c=me(),w=state.weekly[state.selected];document.getElementById('weekTrack').innerHTML=w?w.days.map((d,i)=>{const today=isTodayIndex(i,w.start);return `<div class="day ${today?'current':''}"><strong>${DAYS[i]}${today?' · AUJOURD’HUI':''}</strong><h4>${esc(d.title)}</h4><p>${esc(d.description||'Une séance courte pour apprendre, réviser et ancrer.')}</p><span class="tag">${d.school.length} mini-jeux · ~10 min</span><button class="primary week-start" data-week-day="${i}" style="margin-top:10px;width:100%">${today?'▶ Commencer':'▶ Faire cette séance'}</button></div>`}).join(''):`<div class="empty" style="grid-column:1/-1">Ton parent peut préparer ici les missions de la semaine à partir des cours.</div>`;document.getElementById('aheadPlan').innerHTML=`<div class="notice">🚀 Prochaine étape : <b>${esc(LEVELS[Math.min(6,c.level+1)]||'Maîtrise')}</b>. ${aheadDescription(c.level)}<br><span class="mini">6 mini-jeux progressifs · environ 10 min.</span></div><button class="primary" style="margin-top:10px" id="weekAheadBtn">🚀 Commencer mon avance</button>`}
+function isTodayIndex(i,start){if(!start)return false;let d=new Date(start+'T12:00:00');d.setDate(d.getDate()+i);return todayKey(d)===todayKey()}
+function aheadDescription(l){return ['','les lettres','les harakāt','les syllabes','les mots et images','les petites phrases','la lecture avancée'][Math.min(6,l+1)]||'la suite'}
+function renderParent(){document.getElementById('lessonChild').innerHTML=state.children.map((c,i)=>`<option value="${i}" ${i===state.selected?'selected':''}>${esc(c.name)}</option>`).join('');document.getElementById('childrenCount').textContent=`${state.children.length} / 8`;document.getElementById('parentChildren').innerHTML=state.children.map((c,i)=>`<div class="childrow"><img src="avatar-${c.avatar+1}.png"><div class="grow"><b>${esc(c.name)}</b><div class="mini">Niveau ${c.level} · ${c.xp} XP · ${mastery(c)}%</div></div><button class="ghost edit-child" data-i="${i}">✏️</button><button class="ghost delete-child" data-i="${i}">🗑️</button></div>`).join('');document.getElementById('lessonList').innerHTML=state.lessons.length?state.lessons.slice().reverse().slice(0,8).map(l=>`<div class="reviewitem"><span><b>${esc(l.title)}</b><br><span class="mini">${esc(l.childName)} · ${esc(l.date)} · ${l.photos||0} photo(s)</span></span><span class="tag">${esc(l.type)}</span></div>`).join(''):`<div class="empty">Aucune leçon enregistrée.</div>`;document.getElementById('newAvatarGrid').innerHTML=Array.from({length:6},(_,i)=>`<button class="choice new-av" data-a="${i}"><img src="avatar-${i+1}.png"></button>`).join('')}
+function stripHarakat(s){return String(s||'').normalize('NFD').replace(/[\u064B-\u065F\u0670\u0640]/g,'').normalize('NFC').trim()}
+function normalizeArabic(s){return stripHarakat(String(s||'')).replace(/[\u200f\u200e]/g,'').replace(/[،؛,.!?؟!]/g,'').replace(/\s+/g,' ').trim()}
+function lessonAnalysis(source){
+  const raw=String(source||'');
+  const lines=raw.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  const arabicTokens=extractArabic(raw);
+  const vocabKnown=[...new Map(arabicTokens.map(w=>VOCAB.find(v=>normalizeArabic(v.ar)===normalizeArabic(w))).filter(Boolean).map(v=>[v.id,v])).values()];
+  const phraseBank=[
+    ['هَذَا بَيْتٌ','Ceci est une maison'],
+    ['هَذَا كِتَابٌ','Ceci est un livre'],
+    ['هَذَا بَابٌ','Ceci est une porte'],
+    ['هَذَا كُرْسِيٌّ','Ceci est une chaise'],
+    ['هَذَا قَلَمٌ','Ceci est un stylo'],
+    ['هَذِهِ مَدْرَسَةٌ','Ceci est une école'],
+    ['هَذَا مَاءٌ','Ceci est de l’eau'],
+    ['هَذِهِ شَجَرَةٌ','Ceci est un arbre'],
+    ['هَذَا وَلَدٌ','Ceci est un garçon'],
+    ['هَذِهِ بِنْتٌ','Ceci est une fille'],
+    ['هَذَا بَيْتِي','Ceci est ma maison'],
+    ['أَنَا أَقْرَأُ كِتَابًا','Je lis un livre'],
+    ['ذَهَبَ أَحْمَدُ إِلَى الْمَدْرَسَةِ','Ahmad est allé à l’école'],
+    ['ذَهَبَتْ فَاطِمَةُ إِلَى الْمَدْرَسَةِ وَقَرَأَتْ كِتَابًا','Fatima est allée à l’école puis elle a lu un livre']
+  ];
+  const phrases=[];
+  lines.forEach(line=>{
+    const clean=normalizeArabic(line);
+    if(clean.split(' ').length>=2){
+      const hit=phraseBank.find(x=>normalizeArabic(x[0])===clean);
+      if(hit) phrases.push({ar:hit[0],fr:hit[1],verified:true});
+      else if(arabicTokens.some(t=>normalizeArabic(t)===clean)) phrases.push({ar:line,fr:null,verified:false});
+    }
+  });
+  // Also catch exact phrases embedded in a line.
+  phraseBank.forEach(([ar,fr])=>{if(normalizeArabic(raw).includes(normalizeArabic(ar))&&!phrases.some(p=>normalizeArabic(p.ar)===normalizeArabic(ar)))phrases.push({ar,fr,verified:true})});
+  const uniquePhrases=[...new Map(phrases.map(x=>[normalizeArabic(x.ar),x])).values()];
+  return {raw,arabicTokens:[...new Set(arabicTokens)],vocabKnown,phrases:uniquePhrases,visuals:[]};
+}
+function buildVocabItems(c,lessonData){
+  const n=Math.min(VOCAB.length,6+Math.max(0,c.level-3)*2);
+  const base=VOCAB.slice(0,n);
+  if(lessonData?.visuals?.some(v=>v.approved)){
+    const known=lessonData.vocabKnown.map(v=>{const x=lessonData.visuals.find(z=>normalizeArabic(z.ar)===normalizeArabic(v.ar)&&z.approved); return x?{...v,image:x.imageUrl||v.image,fr:x.fr||v.fr}:v;});
+    const extra=lessonData.visuals.filter(v=>v.approved&&v.ar&&v.fr&&v.imageUrl&&!known.some(k=>normalizeArabic(k.ar)===normalizeArabic(v.ar))).map((v,i)=>({id:'visual_'+i,ar:v.ar,fr:v.fr,image:v.imageUrl}));
+    return [...known,...extra];
+  }
+  if(lessonData?.vocabKnown?.length) return lessonData.vocabKnown;
+  const w=state.weekly[state.selected];
+  if(!w||!w.source)return base;
+  const lesson=lessonAnalysis(w.source);
+  if(lesson.vocabKnown.length)return lesson.vocabKnown;
+  return base;
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function pickVocab(items){return items[Math.floor(Math.random()*items.length)]}
+function vocabOptions(item,items,key){
+  const pool=items.filter(x=>x.id!==item.id);
+  return shuffle([{id:item.id,label:item[key]},...shuffle(pool).slice(0,2).map(x=>({id:x.id,label:x[key]}))]);
+}
+function phraseOptions(item,phrases){
+  const valid=phrases.filter(p=>p.verified&&p.fr&&normalizeArabic(p.ar)!==normalizeArabic(item.ar));
+  const distractors=shuffle(valid).slice(0,2).map((p,i)=>({id:'p'+i,label:p.fr}));
+  return shuffle([{id:'correct',label:item.fr},...distractors]);
+}
+function makeChallenge(type,c,forcedTerm,lessonData){
+  const lvl=c.level;
+  const sourceWords=lessonData?.arabicTokens||[];
+  if(type==='letter'){
+    const lessonLetters=[...new Set(sourceWords.join('').split('').filter(x=>LETTERS.includes(x)))];
+    const pool=lessonLetters.length>=2?lessonLetters:LETTERS.slice(0,Math.min(LETTERS.length,6+lvl*3));
+    const correct=forcedTerm&&LETTERS.includes(forcedTerm)?forcedTerm:pool[Math.floor(Math.random()*pool.length)];
+    return {kind:'choice',skill:'lettres',prompt:'Quelle est cette lettre ?',arabic:correct,opts:uniqueChoices(correct,pool).map(x=>({id:x,label:x})),correctId:correct,speak:correct,target:correct};
+  }
+  if(type==='harakat'){
+    const pool=HARAKAT.slice(0,Math.min(HARAKAT.length,3+lvl));
+    const h=pool[Math.floor(Math.random()*pool.length)];
+    return {kind:'choice',skill:'harakat',prompt:'Quel son correspond à cette marque ?',arabic:'ب'+h[0],opts:uniqueChoices(h[1],pool.map(x=>x[1])).map(x=>({id:x,label:x})),correctId:h[1],speak:'ب'+h[0],target:h[1]};
+  }
+  if(type==='syllable'){
+    const pool=['بَ','بِ','بُ','مَ','مِ','مُ','تَ','تِ','تُ','سَ','سِ','سُ'].slice(0,Math.min(12,6+lvl));
+    const correct=pool[Math.floor(Math.random()*pool.length)];
+    return {kind:'choice',skill:'syllabes',prompt:'Lis la syllabe',arabic:correct,opts:uniqueChoices(correct,pool).map(x=>({id:x,label:x})),correctId:correct,speak:correct,target:correct};
+  }
+  if(type==='pair'){
+    const items=buildVocabItems(c,lessonData); const item=pickVocab(items); const opts=vocabOptions(item,items,'fr');
+    return {kind:'choice',skill:'vocabulaire',prompt:'Quel mot correspond à ce sens ?',arabic:item.ar,opts,correctId:item.id,speak:item.ar,target:item.id,vocabId:item.id,pair:true};
+  }
+  if(type==='vocab'){
+    const items=buildVocabItems(c,lessonData);
+    const item=pickVocab(items);
+    const canImage=!!item?.image;
+    const imageMode=canImage&&Math.random()<.5;
+    if(imageMode){
+      const opts=vocabOptions(item,items,'ar');
+      return {kind:'choice',skill:'vocabulaire',prompt:'Quelle est le mot correspondant à cette image ?',image:item.image,opts,arabicOpts:true,correctId:item.id,speak:item.ar,target:item.id,vocabId:item.id};
+    }
+    const opts=vocabOptions(item,items,'fr');
+    return {kind:'choice',skill:'vocabulaire',prompt:'Que signifie ce mot ?',arabic:item.ar,opts,correctId:item.id,speak:item.ar,target:item.id,vocabId:item.id};
+  }
+  if(type==='listen'){
+    const items=buildVocabItems(c,lessonData),item=pickVocab(items),opts=vocabOptions(item,items,'fr');
+    return {kind:'choice',skill:'ecoute',prompt:'Écoute puis choisis la bonne réponse',audio:item.ar,opts,correctId:item.id,speak:item.ar,target:item.id,vocabId:item.id};
+  }
+  if(type==='reading'){
+    const items=buildVocabItems(c,lessonData),item=pickVocab(items),opts=vocabOptions(item,items,'fr');
+    return {kind:'choice',skill:'lecture',prompt:'Lis le mot puis choisis sa signification',arabic:item.ar,opts,correctId:item.id,speak:item.ar,target:item.id,vocabId:item.id};
+  }
+  // Compréhension : ne traduit que les phrases dont la traduction est vérifiée.
+  const verified=lessonData?.phrases?.filter(p=>p.verified&&p.fr)||[];
+  if(verified.length){
+    const item=verified[Math.floor(Math.random()*verified.length)];
+    const opts=phraseOptions(item,verified);
+    return {kind:'choice',skill:'comprehension',prompt:'Que signifie cette petite phrase ?',arabic:item.ar,opts,correctId:'correct',speak:item.ar,target:item.ar};
+  }
+  const fallback=PHRASES[Math.min(6,Math.max(1,lvl))][0];
+  const opts=fallback[2].map((label,i)=>({id:'p'+i,label}));
+  return {kind:'choice',skill:'comprehension',prompt:fallback[1],arabic:fallback[0],opts,correctId:'p'+fallback[3],speak:fallback[0],target:fallback[0]};
+}
+function normalizeChallenge(ch){
+  ch.opts=shuffle(ch.opts);
+  ch.correct=ch.opts.findIndex(o=>o.id===ch.correctId);
+  if(ch.correct<0){console.warn('Challenge sans bonne réponse',ch);ch.correct=0;}
+  return ch;
+}
+function makeQueue(kind='daily',customTypes=null){
+  const c=me(); let types=customTypes, lessonData=null;
+  if(!types){
+    if(kind==='ahead') types=advanceTypes(c.level);
+    else if(kind==='game') types=[selectedGame||'vocab'];
+    else {
+      types=typesForLevel(c.level);
+      const w=state.weekly[state.selected];
+      if(w){const day=getWeekDay(w); if(day>=0&&w.days[day]){types=typesFromWeek(w.days[day].school,c.level);lessonData=w.lessonData||lessonAnalysis(w.source)}}
+    }
+  } else {
+    const w=state.weekly[state.selected]; lessonData=w?.lessonData||lessonAnalysis(w?.source||'');
+  }
+  if(kind==='daily'&&!lessonData){const w=state.weekly[state.selected];if(w)lessonData=w.lessonData||lessonAnalysis(w.source)}
+  types=(types||[]).filter(Boolean);if(!types.length)types=typesForLevel(c.level);
+  const count=kind==='game'?5:6;
+  queue=Array.from({length:count},(_,i)=>normalizeChallenge(makeChallenge(types[i%types.length],c,null,lessonData)));qi=0;mode=kind;show('mission');renderChallenge();
+}
+function typesForLevel(l){if(l===1)return ['letter','letter','listen','vocab','pair','understanding'];if(l===2)return ['letter','harakat','listen','vocab','pair','understanding'];if(l===3)return ['harakat','syllable','vocab','pair','reading','understanding'];if(l===4)return ['syllable','vocab','listen','pair','reading','understanding'];return ['vocab','pair','listen','reading','understanding','understanding']}
+function advanceTypes(l){return l===1?['letter','letter','listen','vocab','pair','understanding']:l===2?['harakat','harakat','listen','syllable','vocab','pair']:l===3?['syllable','syllable','vocab','pair','reading','understanding']:['vocab','pair','reading','understanding','understanding','listen']}
+function typesFromWeek(arr,l){return arr.map(x=>x==='vocab'?'vocab':x==='pair'?'pair':x==='compréhension'?'understanding':x==='écoute'?'listen':x==='lecture'?'reading':x==='harakat'?'harakat':x==='syllables'?'syllable':x==='syllabes'?'syllable':x==='lettres'?'letter':'understanding')}
+function getWeekDay(w){if(!w||!w.start)return -1;let s=new Date(w.start+'T12:00:00'),t=new Date();s.setHours(0,0,0,0);t.setHours(0,0,0,0);let d=Math.floor((t-s)/86400000);return d>=0&&d<7?d:-1}
+function buildWeek(content,type){
+  let c=me(), data=lessonAnalysis(content), plan=['Découverte','Ancrage','Vocabulaire','Lecture','Compréhension','Révision active','Défi'];
+  let base=type==='vocab'?['vocab','pair','listen','reading','understanding','vocab','pair']:type==='reading'?['reading','pair','vocab','understanding','reading','vocab','understanding']:type==='harakat'?['harakat','harakat','syllable','pair','reading','harakat','syllable']:['letter','letter','vocab','pair','reading','understanding','vocab'];
+  const learned=data.vocabKnown.map(v=>v.ar), phrases=data.phrases.map(p=>p.ar);
+  return {title:'Semaine '+new Date(document.getElementById('weekDate').value+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long'}),start:document.getElementById('weekDate').value,source:content,lessonData:data,
+    days:plan.map((p,i)=>({title:p,description:i===0?'Découvrir les notions du cours':i===1?'Revoir sans regarder':i===2?'Associer les mots et leurs sens':i===3?'Lire et reconnaître':i===4?'Comprendre une petite phrase':i===5?'Revoir les erreurs et consolider':'Petit défi final',school:[base[i],base[(i+1)%base.length],base[(i+2)%base.length],base[(i+3)%base.length],base[(i+4)%base.length],i>=4?'understanding':'pair'],words:learned.slice(0,10),phrases:phrases.slice(0,6)})),
+    ahead:{level:Math.min(6,c.level+1),title:'Découvrir '+aheadDescription(c.level)}}
+}
+function extractArabic(s){return (s.match(/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF][\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\u064B-\u065F\u0670\u0640]*/g)||[]).filter(x=>x.length>0)}
+
+function setVisualReview(html){const z=document.getElementById('visualReview');z.innerHTML=html;z.style.display=html?'block':'none'}
+function visualCandidateImage(v){return v?.imageUrl||v?.image||'🖼️'}
+function normalizeFrenchQuery(s){return String(s||'').replace(/\s+/g,' ').trim()}
+async function translateArabicSuggestion(ar){
+  try{
+    const q=encodeURIComponent(ar);
+    const r=await fetch(`https://api.mymemory.translated.net/get?q=${q}&langpair=ar|fr`);
+    if(!r.ok)return ''; const j=await r.json();
+    const t=j?.responseData?.translatedText||'';
+    return /[A-Za-zÀ-ÿ]/.test(t)?normalizeFrenchQuery(t):'';
+  }catch(e){return ''}
+}
+async function searchWikimediaImage(term){
+  try{
+    const q=encodeURIComponent(term);
+    const url=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&gsrlimit=5&prop=imageinfo&iiprop=url|mime|size&iiurlwidth=240&format=json&origin=*`;
+    const r=await fetch(url); if(!r.ok)return []; const j=await r.json();
+    return Object.values(j?.query?.pages||{}).map(p=>p.imageinfo?.[0]).filter(x=>x&&x.mime?.startsWith('image/')).map(x=>x.thumburl||x.url).filter(Boolean);
+  }catch(e){return []}
+}
+function cropDataUrl(img,box){
+  const scale=Math.min(1,1000/Math.max(img.naturalWidth||img.width,img.naturalHeight||img.height));
+  const c=document.createElement('canvas'); const w=Math.max(1,Math.round((box.x1-box.x0)*scale)),h=Math.max(1,Math.round((box.y1-box.y0)*scale)); c.width=w;c.height=h;
+  c.getContext('2d').drawImage(img,box.x0,box.y0,box.x1-box.x0,box.y1-box.y0,0,0,w,h); return c.toDataURL('image/jpeg',.72);
+}
+async function detectCourseImages(){
+  const zone=document.getElementById('visualReview');
+  if(!photoFiles.length){return}
+  zone.style.display='block'; zone.innerHTML='<div class="kicker">🖼️ IMAGES DU COURS</div><p class="mini">Recherche des illustrations présentes dans les photos…</p>';
+  try{
+    if(!window.tf){await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js')}
+    if(!window.cocoSsd){await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js')}
+    const model=await cocoSsd.load(); let detections=[];
+    for(const file of photoFiles){
+      const url=URL.createObjectURL(file), img=await imageFromUrl(url);
+      const preds=await model.detect(img);
+      preds.filter(p=>p.score>=.55&&p.bbox[2]>=35&&p.bbox[3]>=35).slice(0,10).forEach(p=>{const [x,y,w,h]=p.bbox;detections.push({label:p.class,score:p.score,imageUrl:cropDataUrl(img,{x0:x,y0:y,x1:x+w,y1:y+h})})});
+      URL.revokeObjectURL(url);
+    }
+    const unique=detections.filter((d,i,a)=>i===a.findIndex(x=>x.label===d.label));
+    if(!unique.length){zone.innerHTML='<div class="kicker">🖼️ IMAGES DU COURS</div><p class="mini">Aucune illustration identifiable automatiquement. Tu peux quand même ajouter des images aux mots ci-dessous.</p>';return}
+    zone.innerHTML='<div class="kicker">🖼️ IMAGES DU COURS DÉTECTÉES</div><p class="mini">Je détecte les objets visibles, mais je ne les associe jamais automatiquement à un mot arabe sans validation.</p><div class="visual-grid">'+unique.map((d,i)=>`<div class="visual-crop"><img src="${d.imageUrl}"><span>${esc(d.label)} · ${Math.round(d.score*100)}% <button class="ghost" style="padding:4px 6px;font-size:10px;float:right" onclick="assignDetectedImage(${i})">Associer</button></span></div>`).join('')+'</div>';
+    window.__detectedVisuals=unique;
+  }catch(e){zone.innerHTML='<div class="kicker">🖼️ IMAGES DU COURS</div><p class="mini">Détection visuelle indisponible pour le moment. Les propositions d’images automatiques restent disponibles.</p>'}
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+function imageFromUrl(url){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>res(img);img.onerror=rej;img.src=url})}
+async function proposeImagesForWords(data){
+  const words=[...data.vocabKnown]; const known=new Set(words.map(v=>normalizeArabic(v.ar)));
+  const all=[...data.arabicTokens].filter(x=>x.length>=2&&!known.has(normalizeArabic(x))).slice(0,12);
+  const proposals=[];
+  for(const ar of all){
+    const fr=await translateArabicSuggestion(ar); if(!fr)continue; const imgs=await searchWikimediaImage(fr);
+    proposals.push({ar,fr,imageUrl:imgs[0]||'',alternatives:imgs.slice(1,4),approved:false,source:'auto'});
+  }
+  // known words also get an automatic external image candidate when their built-in emoji is the only visual
+  for(const v of words){
+    if(!v.imageUrl){const imgs=await searchWikimediaImage(v.fr); if(imgs[0])proposals.push({ar:v.ar,fr:v.fr,imageUrl:imgs[0],alternatives:imgs.slice(1,4),approved:false,source:'auto'})}
+  }
+  data.visuals=proposals; renderVisualProposals(data); return data;
+}
+function renderVisualProposals(data){
+  const z=document.getElementById('visualReview'); const items=data.visuals||[]; const detected=window.__detectedVisuals||[];
+  if(!items.length && !detected.length){z.style.display='block';z.innerHTML='<div class="kicker">🖼️ IMAGES À AJOUTER</div><p class="mini">Aucune nouvelle proposition. Les mots connus utilisent déjà leur visuel intégré.</p>';return}
+  z.style.display='block';
+  let html='<div class="kicker">🖼️ IMAGES DU COURS & PROPOSITIONS</div><p class="mini">Les images détectées dans le cours peuvent être associées manuellement. Pour les mots sans image, une illustration externe est proposée. <b>Valide toujours avant utilisation.</b></p>';
+  if(detected.length){html+='<div class="mini" style="margin-top:8px"><b>Images détectées dans la photo</b></div><div class="visual-grid">'+detected.map((d,i)=>`<div class="visual-crop"><img src="${d.imageUrl}"><span>${esc(d.label)} · ${Math.round(d.score*100)}% <button class="ghost" style="padding:4px 6px;font-size:10px;float:right" onclick="assignDetectedImage(${i})">Associer</button></span></div>`).join('')+'</div>'}
+  if(items.length){html+='<div class="mini" style="margin-top:12px"><b>Images proposées pour les mots</b></div>'+items.map((v,i)=>`<div class="visual-item"><img src="${esc(v.imageUrl)}" onerror="this.style.opacity=.25"><div class="visual-meta"><b class="arabic">${esc(v.ar)}</b><small>Suggestion : ${esc(v.fr)}</small><small>${v.source==='auto'?'Image trouvée automatiquement':'Image du cours'}${v.approved?' · ✓ validée':''}</small></div><div class="visual-actions">${v.approved?'<button class="accept">✓ Utilisée</button>':'<button class="accept" data-visual-accept="'+i+'">✓ Utiliser</button><button data-visual-next="'+i+'">↻</button><button class="reject" data-visual-reject="'+i+'">✕</button>'}</div></div>`).join('')}
+  z.innerHTML=html;
+}
+async function chooseVisualAlternative(i){const v=(window.__currentLessonData?.visuals||[])[i];if(!v)return;const next=(v.alternatives||[]).shift();if(next){v.imageUrl=next;renderVisualProposals(window.__currentLessonData);return}const imgs=await searchWikimediaImage(v.fr);v.alternatives=imgs.slice(1);v.imageUrl=imgs[0]||v.imageUrl;renderVisualProposals(window.__currentLessonData)}
+function approveVisual(i){const d=window.__currentLessonData;if(!d?.visuals?.[i])return;d.visuals[i].approved=true;renderVisualProposals(d);toast('Image validée ✓')}
+function rejectVisual(i){const d=window.__currentLessonData;if(!d?.visuals?.[i])return;d.visuals.splice(i,1);renderVisualProposals(d)}
+function assignDetectedImage(i){
+  const d=window.__detectedVisuals?.[i]; if(!d)return; const dta=window.__currentLessonData;
+  const ar=prompt('Quel mot arabe correspond à cette image ?'); if(!ar)return; const fr=prompt('Traduction française (pour les jeux) ?')||'';
+  dta.visuals=dta.visuals||[]; dta.visuals.push({ar:ar.trim(),fr:fr.trim(),imageUrl:d.imageUrl,approved:false,source:'course'}); renderVisualProposals(dta); toast('Image ajoutée — valide-la avant création')}
+async function ocrPhotos(){
+  if(!photoFiles.length){toast('Ajoute au moins une photo');return}
+  const status=document.getElementById('ocrStatus'); status.textContent='Lecture des photos…';
+  try{
+    if(!window.Tesseract){await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js')}
+    let worker=await Tesseract.createWorker('ara'); let all='';
+    for(let i=0;i<photoFiles.length;i++){status.textContent=`Lecture de la photo ${i+1}/${photoFiles.length}…`;let r=await worker.recognize(photoFiles[i]);all+='\n'+r.data.text}
+    await worker.terminate();
+    const field=document.getElementById('lessonContent');field.value=(field.value+'\n'+all).trim();
+    const data=lessonAnalysis(field.value); window.__currentLessonData=data;
+    status.innerHTML=`Photos analysées ✨ <b>${data.vocabKnown.length}</b> mot(s) connu(s) et <b>${data.phrases.filter(p=>p.verified).length}</b> phrase(s) traduisible(s) repéré(s).`;
+    renderVisualProposals(data);
+    await detectCourseImages();
+    await proposeImagesForWords(data);
+    toast('Cours + images analysés ✨')
+  }catch(e){console.error(e);status.textContent='Lecture automatique indisponible : saisis le cours manuellement.';toast('OCR indisponible')}
+}
+
+function createWeek(){
+  let content=document.getElementById('lessonContent').value.trim(),date=document.getElementById('weekDate').value,type=document.getElementById('lessonType').value,idx=+document.getElementById('lessonChild').value;
+  if(!content){toast('Ajoute le contenu du cours');return}if(!date){toast('Choisis le début de semaine');return}
+  state.selected=idx; const parsed=window.__currentLessonData||lessonAnalysis(content); parsed.raw=content; state.weekly[idx]=buildWeek(content,type); state.weekly[idx].lessonData=parsed;
+  state.lessons.push({title:state.weekly[idx].title,childName:me().name,date,type,photos:photoFiles.length,content,analysis:{vocab:state.weekly[idx].lessonData.vocabKnown.map(v=>v.ar),phrases:state.weekly[idx].lessonData.phrases.filter(p=>p.verified).map(p=>p.ar)}});
+  save();render();show('week');toast('✨ Semaine créée à partir du cours !')
+}
+function addChild(){if(state.children.length>=8){toast('Maximum 8 profils');return}let name=document.getElementById('newChildName').value.trim();if(!name){toast('Ajoute un prénom');return}let avatar=+document.querySelector('.new-av.selected')?.dataset.a||state.children.length%6;let c=makeChild(name,+document.getElementById('newChildLevel').value,avatar);c.profileReady=true;state.children.push(c);document.getElementById('newChildName').value='';save();render();toast('Profil créé ✨')}
+function editChild(i){let c=state.children[i],name=prompt('Prénom',c.name);if(name)c.name=name.trim()||c.name;let lv=prompt('Niveau 1 à 6',c.level);if(lv&&+lv>=1&&+lv<=6)c.level=+lv;save();render()}
+function deleteChild(i){if(state.children.length<=1)return toast('Il faut garder au moins un profil');if(confirm('Supprimer ce profil et sa progression ?')){state.children.splice(i,1);if(state.selected>=state.children.length)state.selected=state.children.length-1;save();render();toast('Profil supprimé')}}
+function selectPlayer(i){state.selected=i;state.children[i].profileReady=true;save();show('home');toast('Aventure chargée ✨')}
+function editProfile(){let c=me(),name=prompt('Prénom',c.name);if(name)c.name=name.trim()||c.name;save();render()}
+function createWeekAhead(){makeQueue('ahead')}
+function startWeekDay(i){const w=state.weekly[state.selected];if(!w||!w.days[i]){toast('Cette séance n’est pas encore prête');return}const c=me(),types=typesFromWeek(w.days[i].school,c.level),lessonData=w.lessonData||lessonAnalysis(w.source||'');queue=Array.from({length:6},(_,n)=>normalizeChallenge(makeChallenge(types[n%types.length],c,null,lessonData)));qi=0;mode='daily';show('mission');renderChallenge()}
+function setInitialDate(){let d=new Date();let day=d.getDay();let diff=day===0?-6:1-day;d.setDate(d.getDate()+diff);document.getElementById('weekDate').value=todayKey(d)}
+document.addEventListener('click',e=>{let a=e.target.closest('.answer');if(a){e.preventDefault();answer(+a.dataset.answerIndex);return}let s=e.target.closest('.speak');if(s){speak(decodeURIComponent(s.dataset.text));return}let nav=e.target.closest('[data-nav]');if(nav){show(nav.dataset.nav);return}let go=e.target.closest('[data-go]');if(go){show(go.dataset.go);return}let ch=e.target.closest('[data-child]');if(ch){selectPlayer(+ch.dataset.child);return}let g=e.target.closest('[data-game]');if(g){selectedGame=g.dataset.game;makeQueue('game');return}if(e.target.id==='startBtn'){show('choose');return}if(e.target.id==='parentBtn'){openParent();return}if(e.target.id==='progressBtn'){show('progress');return}if(e.target.id==='profileBtn'){editProfile();return}if(e.target.id==='dailyBtn'){makeQueue('daily');return}if(e.target.id==='aheadBtn'||e.target.id==='weekAheadBtn'){createWeekAhead();return}let wd=e.target.closest('.week-start');if(wd){startWeekDay(+wd.dataset.weekDay);return}if(e.target.id==='weekBtn'){show('week');return}if(e.target.id==='backHome1'||e.target.id==='closeParent'){show('home');return}if(e.target.id==='ocrBtn'){ocrPhotos();return}if(e.target.id==='createWeekBtn'){createWeek();return}if(e.target.id==='addChildBtn'){addChild();return}let ea=e.target.closest('.edit-child');if(ea){editChild(+ea.dataset.i);return}let da=e.target.closest('.delete-child');if(da){deleteChild(+da.dataset.i);return}let av=e.target.closest('.new-av');if(av){document.querySelectorAll('.new-av').forEach(x=>x.classList.remove('selected'));av.classList.add('selected');return}let zn=e.target.closest('.map-node');if(zn){let i=+zn.dataset.zone;if(i+1<=me().level)toast('🌟 '+ZONES[i][1]+' — monde débloqué !');else toast('🔒 Continue ta mission pour débloquer ce monde.');return}let rv=e.target.closest('.review-now');if(rv){let term=decodeURIComponent(rv.dataset.term);const w=state.weekly[state.selected],ld=w?.lessonData||lessonAnalysis(w?.source||'');queue=[normalizeChallenge(makeChallenge('vocab',me(),term,ld)),normalizeChallenge(makeChallenge('letter',me(),term,ld))];qi=0;mode='game';show('mission');renderChallenge();return}});
+document.getElementById('lessonPhotos').addEventListener('change',e=>{photoFiles=[...e.target.files];document.getElementById('photoPreview').innerHTML=photoFiles.map(f=>`<img class="photo-thumb" src="${URL.createObjectURL(f)}">`).join('');document.getElementById('ocrStatus').textContent=`${photoFiles.length} photo(s) sélectionnée(s)`});
+document.addEventListener('click',e=>{let a=e.target.closest('[data-visual-accept]');if(a){approveVisual(+a.dataset.visualAccept);return}let r=e.target.closest('[data-visual-reject]');if(r){rejectVisual(+r.dataset.visualReject);return}let n=e.target.closest('[data-visual-next]');if(n){chooseVisualAlternative(+n.dataset.visualNext);return}});
+document.getElementById('pinBtn').addEventListener('click',()=>{let p=document.getElementById('newPin').value.trim();if(/^\d{4,6}$/.test(p)){state.pin=p;save();document.getElementById('newPin').value='';toast('PIN modifié')}else toast('PIN : 4 à 6 chiffres')});
+setInitialDate();render();
+</script><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});</script></body></html>
